@@ -1,0 +1,46 @@
+---
+import { artworkAltText, getSortedArtworks } from '~/artworks';
+import JsonLd from '~/components/seo/JsonLd.astro';
+import ArtworkCard from '~/components/ui/ArtworkCard.astro';
+import { getLocaleFromUrl, useTranslations } from '~/i18n';
+import BaseLayout from '~/layouts/BaseLayout.astro';
+
+const locale = getLocaleFromUrl(Astro.url);
+const tr = useTranslations(locale);
+
+const artworks = await getSortedArtworks();
+const featured = artworks[0]!;
+
+const EAGER_COUNT = 3;
+---
+
+<BaseLayout
+  locale={locale}
+  title={tr('home.title')}
+  description={tr('site.description')}
+  path="/"
+  ogImage={featured.data.image}
+  ogImageAlt={artworkAltText(featured, locale)}
+>
+  <JsonLd slot="head" locale={locale} path="/" artworks={artworks} />
+
+  <section
+    aria-labelledby="gallery-heading"
+    class="mx-auto w-full max-w-(--container-gallery) px-5 sm:px-8"
+  >
+    <h2 id="gallery-heading" class="sr-only">
+      {tr('gallery.heading')}
+    </h2>
+
+    <ul
+      role="list"
+      class="grid grid-cols-1 items-start gap-x-8 gap-y-20 sm:grid-cols-2 sm:gap-x-10 lg:grid-cols-3 lg:gap-x-12"
+    >
+      {artworks.map((artwork, index) => (
+        <li>
+          <ArtworkCard artwork={artwork} locale={locale} priority={index < EAGER_COUNT} />
+        </li>
+      ))}
+    </ul>
+  </section>
+</BaseLayout>

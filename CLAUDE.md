@@ -1,0 +1,124 @@
+# eduardopavon.com
+
+Art portfolio for Eduardo Pavón (Bic-pen drawings). Astro + TypeScript, static
+output, deployed to Vercel.
+
+Roadmap and phase status: @SPEC.md
+
+## Hard rules
+
+- **No UI framework.** No React/Vue/Svelte/Solid, no hydration directives, no
+  client runtime. `.astro` components and plain TS only. Ship zero client JS; if
+  a feature truly needs a `<script>`, say why first.
+- **pnpm only.** Never npm or yarn — they ignore the lockfile and `.npmrc`.
+- **Never commit artwork originals.** Only the optimized derivatives in
+  `src/assets/artworks/`.
+- **Never deploy the Dockerfile.** It is a local dev artifact. Production is
+  Vercel's Astro framework preset.
+- **Never install on the host.** Docker is the only local dev surface; a host
+  `node_modules` is a bug, not a convenience.
+
+## Commands
+
+**Everything runs in Docker. Nothing is installed on the host** — do not run
+`pnpm` directly on the host, and do not create a host `node_modules`.
+
+```bash
+docker compose up                             # dev server, localhost:4321, HMR
+docker compose run --rm web pnpm check        # type check
+docker compose run --rm web pnpm test         # vitest
+docker compose run --rm web pnpm lint         # eslint
+docker compose run --rm web pnpm format       # prettier --write
+docker compose run --rm web pnpm build        # astro check + astro build
+docker compose --profile tools run --rm images  # import artwork originals
+docker compose down
+```
+
+Inside the Dev Container (`.devcontainer/`), run `pnpm check` / `pnpm test` /
+`pnpm build` directly — you are already in the container.
+
+CI (`.github/workflows/ci.yml`) runs the same steps on PRs and pushes to main.
+Tests live in `tests/`; add one when touching i18n helpers, the slug derivation,
+or the artwork content model.
+
+Installs are always `--frozen-lockfile` (baked into the Dockerfile), never a
+bare `pnpm install`.
+
+## Supply chain
+
+Detail in @SECURITY.md. The rules that must not be violated:
+
+- Installs are `--frozen-lockfile`; direct deps are pinned exact.
+- `pnpm.onlyBuiltDependencies` is empty. Do not add an entry without confirming
+  the package cannot work otherwise, and record why in SECURITY.md.
+- `minimumReleaseAge` (3-day cooldown) stays on.
+- Keep the dependency count low; justify any addition.
+
+## Seams (the non-obvious parts)
+
+**i18n.** Spanish only today, but the seam is live and must stay exercised. No
+user-facing string is hardcoded in a component.
+
+- UI strings: `src/i18n/ui/<locale>.ts`, read via `t()` / `useTranslations()`.
+- Artwork fields (`title`, `medium`, `alt`): locale-keyed maps on the entry,
+  read via `resolveLocalized()`, falling back to the default locale.
+- `src/i18n/config.ts` is the single edit point for the locale list;
+  `astro.config.ts` imports it so routing cannot drift.
+- Adding a language must not require route, component or schema changes. Use the
+  `add-locale` skill.
+
+**SEO.** `src/components/seo/Seo.astro` owns every `<head>` tag; `JsonLd.astro`
+owns structured data. Pages pass title/description as data — never hardcode meta
+tags in a page. Dimensions are stored structurally (`width`/`height`/`unit`) and
+always mean **width × height**; render them with `formatDimensions()`, never by
+string concatenation.
+
+**Static output + serverless seam.** `output: 'static'` with the
+`@astrojs/vercel` adapter configured. A future contact form is one on-demand
+route (`export const prerender = false`), not global SSR. Do not switch the site
+to SSR for SEO — prerendered HTML is already optimal.
+
+**Motion is CSS only.** `@view-transition` and `animation-timeline: view()`,
+both progressively enhanced. Never add a client-side router or animation library
+— that breaks invariant #1. Every reveal must be guarded by `@supports` _and_
+`prefers-reduced-motion` so content is never stranded invisible.
+
+**Artwork field shapes come from the collection.** Import
+`CollectionEntry<'artworks'>` (re-exported as `Artwork` from `~/artworks`)
+rather than re-declaring the fields; `ARTWORK_STATUSES` in `src/site.ts` is the
+one source for the status enum.
+
+**The artwork mat must never crop.** The image is `absolute inset-0` with
+`object-contain` inside an `aspect-ratio` box. Percentage heights do not resolve
+against an aspect-ratio-derived height, so `h-full` alone silently crops the
+work. Tailwind's `@utility` also does not emit nested descendant rules — put
+image styling on the element.
+
+**Licensing is split.** Code is MIT; artwork is CC BY-NC-ND 4.0
+(@ARTWORK-LICENSE.md). Rights constants live in `src/site.ts` and flow into the
+footer, `<head>` and JSON-LD. Do not hardcode the license string.
+
+## Conventions
+
+- `~/*` is a path alias for `src/*` — use it in imports and in the `image:`
+  field of artwork YAML, not `../../`.
+- Shared helpers before new code: `src/artworks.ts` (collection access, alt
+  text), `src/i18n/` (`t`, `statusLabel`, `formatDimensions`,
+  `splitAroundSlot`), `src/site.ts` (names, licence, `rightsStatement`).
+  `scripts/` imports `src/site.ts` directly — Node strips the types.
+- Translated sentences that contain a link use `SLOT` + `splitAroundSlot()`,
+  which throws if a translation drops the placeholder.
+- Components group by role: `layout/`, `seo/`, `ui/`.
+- Content config is `src/content.config.ts` (Astro 5+ location, not the root).
+- Comments: prefer self-explanatory code. Only comment non-obvious _why_, in one
+  short line. Architectural rationale goes in the README, not inline.
+- Scripts must be shell-agnostic (they run on Windows, macOS and Linux). Use
+  Node for anything beyond a plain command. Line endings are LF via
+  `.gitattributes`.
+- Docker gotcha: `compose.yaml` shadows `/app/node_modules` with a named volume.
+  Removing that breaks the container with a host-built tree.
+
+## Adding things
+
+- New artwork → use the `add-artwork` skill.
+- New language → use the `add-locale` skill.

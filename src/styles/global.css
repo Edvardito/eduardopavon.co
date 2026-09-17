@@ -1,0 +1,133 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-paper: oklch(98.4% 0.003 85);
+  --color-paper-muted: oklch(95.2% 0.004 85);
+  --color-ink: oklch(21% 0.008 265);
+  --color-ink-muted: oklch(48% 0.01 265);
+
+  --font-sans: var(--font-urbanist), system-ui, sans-serif;
+
+  --container-gallery: 84rem;
+
+  --text-display: clamp(2.75rem, 1.6rem + 4.4vw, 5.5rem);
+  --text-lede: clamp(1rem, 0.94rem + 0.28vw, 1.175rem);
+
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@layer base {
+  :root {
+    --surface: var(--color-paper);
+    --surface-muted: var(--color-paper-muted);
+    --text: var(--color-ink);
+    --text-muted: var(--color-ink-muted);
+    --hairline: oklch(from var(--text) l c h / 0.14);
+    color-scheme: light dark;
+  }
+
+  /* Follows the OS: a toggle would need client JS, and this site ships none. */
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --surface: oklch(16% 0.006 265);
+      --surface-muted: oklch(21% 0.007 265);
+      --text: oklch(94% 0.004 85);
+      --text-muted: oklch(70% 0.008 85);
+    }
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--surface);
+    color: var(--text);
+    font-family: var(--font-sans);
+    text-wrap: pretty;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--text);
+    outline-offset: 4px;
+    border-radius: 2px;
+  }
+}
+
+/*
+ * Cross-document view transitions: a CSS opt-in, no JavaScript. Browsers
+ * without support navigate normally. The named elements below persist across
+ * navigations, and Phase 3's gallery -> detail morph reuses `--artwork-*`.
+ */
+@view-transition {
+  navigation: auto;
+}
+
+@layer base {
+  .vt-masthead {
+    view-transition-name: masthead;
+  }
+
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 0.36s;
+    animation-timing-function: var(--ease-out-soft);
+  }
+}
+
+@utility skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 50;
+
+  &:focus {
+    left: 1rem;
+    top: 1rem;
+    padding: 0.5rem 1rem;
+    background-color: var(--surface);
+    color: var(--text);
+    outline: 2px solid var(--text);
+  }
+}
+
+/*
+ * A gallery mat: fixed proportion, artwork centred and never cropped.
+ *
+ * `position: relative` is load-bearing. Percentage heights do not resolve
+ * against an aspect-ratio-derived height, so the image is positioned
+ * absolutely instead (see ArtworkCard) — otherwise it overflows and
+ * `overflow: hidden` silently crops the work.
+ */
+@utility artwork-mat {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background-color: var(--surface-muted);
+}
+
+/*
+ * Scroll reveal. Guarded twice: `@supports` so unsupported browsers never see
+ * the hidden start state, and reduced-motion so it is opt-out.
+ */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    @keyframes reveal {
+      from {
+        opacity: 0;
+        transform: translateY(1.5rem);
+      }
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+
+    .reveal {
+      animation: reveal linear both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 18%;
+    }
+  }
+}

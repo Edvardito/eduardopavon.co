@@ -1,0 +1,114 @@
+---
+import { getImage } from 'astro:assets';
+import type { Artwork } from '~/artworks';
+import {
+  formatDimensions,
+  resolveLocalized,
+  statusLabel,
+  t,
+  type Dimensions,
+  type Locale,
+} from '~/i18n';
+import { ARTIST_LEGAL_NAME, ARTIST_NAME, ARTWORK_LICENSE, copyrightNotice } from '~/site';
+
+interface Props {
+  locale: Locale;
+  path: string;
+  artworks: Artwork[];
+}
+
+const { locale, path, artworks } = Astro.props;
+
+// UN/CEFACT codes, which is what schema.org QuantitativeValue expects.
+const UNIT_CODE: Record<Dimensions['unit'], string> = { cm: 'CMT', in: 'INH' };
+
+const site = Astro.site!;
+const pageUrl = new URL(path, site).href;
+const homeUrl = new URL('/', site).href;
+const artistId = `${homeUrl}#eduardo-pavon`;
+
+const artworkNodes = await Promise.all(
+  artworks.map(async ({ id, data: artwork }) => {
+    const rendered = await getImage({ src: artwork.image, width: 1200, format: 'webp' });
+    const node: Record<string, unknown> = {
+      '@type': 'VisualArtwork',
+      '@id': `${pageUrl}#${id}`,
+      name: resolveLocalized(artwork.title, locale),
+      creator: { '@id': artistId },
+      artMedium: resolveLocalized(artwork.medium, locale),
+      artform: 'Drawing',
+      dateCreated: String(artwork.year),
+      size: formatDimensions(artwork.dimensions, locale),
+      width: {
+        '@type': 'QuantitativeValue',
+        value: artwork.dimensions.width,
+        unitCode: UNIT_CODE[artwork.dimensions.unit],
+      },
+      height: {
+        '@type': 'QuantitativeValue',
+        value: artwork.dimensions.height,
+        unitCode: UNIT_CODE[artwork.dimensions.unit],
+      },
+      image: new URL(rendered.src, site).href,
+      inLanguage: locale,
+      copyrightHolder: { '@id': artistId },
+      copyrightNotice: copyrightNotice(artwork.year),
+      creditText: ARTIST_NAME,
+      license: ARTWORK_LICENSE.url,
+      usageInfo: ARTWORK_LICENSE.url,
+    };
+    if (artwork.status) {
+      node.additionalProperty = [
+        {
+          '@type': 'PropertyValue',
+          name: artwork.status === 'sold' ? 'availability' : 'presentation',
+          value: statusLabel(artwork.status, locale),
+        },
+      ];
+    }
+    return node;
+  }),
+);
+
+const graph = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      // schema.org has no VisualArtist type.
+      '@type': 'Person',
+      '@id': artistId,
+      name: ARTIST_NAME,
+      legalName: ARTIST_LEGAL_NAME,
+      jobTitle: t(locale, 'site.tagline'),
+      description: t(locale, 'site.description'),
+      url: homeUrl,
+      knowsAbout: ['Dibujo', 'Pluma bic', 'Arte contemporáneo'],
+    },
+    {
+      '@type': 'WebSite',
+      '@id': `${homeUrl}#website`,
+      url: homeUrl,
+      name: t(locale, 'site.title'),
+      description: t(locale, 'site.description'),
+      inLanguage: locale,
+      publisher: { '@id': artistId },
+    },
+    {
+      '@type': 'CollectionPage',
+      '@id': pageUrl,
+      url: pageUrl,
+      name: t(locale, 'home.title'),
+      description: t(locale, 'site.description'),
+      inLanguage: locale,
+      about: { '@id': artistId },
+      copyrightHolder: { '@id': artistId },
+      license: ARTWORK_LICENSE.url,
+      hasPart: artworkNodes,
+    },
+  ],
+};
+
+const json = JSON.stringify(graph).replace(/</g, '\u003c');
+---
+
+<script type="application/ld+json" is:inline set:html={json}></script>

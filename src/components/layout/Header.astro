@@ -1,0 +1,25 @@
+---
+import { localizePath, useTranslations, type Locale } from '~/i18n';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const tr = useTranslations(locale);
+---
+
+<header class="mx-auto w-full max-w-(--container-gallery) px-5 pt-16 pb-14 sm:px-8 sm:pt-28 sm:pb-20">
+  <a
+    href={localizePath('/', locale)}
+    class="vt-masthead inline-block leading-[0.9] font-light tracking-[-0.035em] text-(length:--text-display)"
+  >
+    {tr('home.heading')}
+  </a>
+  <p
+    class="mt-6 max-w-[36ch] text-(length:--text-lede) leading-relaxed"
+    style="color: var(--text-muted)"
+  >
+    {tr('home.intro')}
+  </p>
+</header>

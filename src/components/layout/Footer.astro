@@ -1,0 +1,33 @@
+---
+import { SLOT, splitAroundSlot, useTranslations, type Locale } from '~/i18n';
+import { ARTWORK_LICENSE } from '~/site';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const tr = useTranslations(locale);
+
+const [before, after] = splitAroundSlot(tr('footer.license', { license: SLOT }));
+---
+
+<footer
+  class="mx-auto mt-32 w-full max-w-(--container-gallery) px-5 pt-10 pb-20 text-sm leading-relaxed sm:px-8"
+  style="color: var(--text-muted); border-top: 1px solid var(--hairline)"
+>
+  <p>{tr('footer.rights')}</p>
+  <p class="mt-1">
+    {before}
+    <a
+      class="underline underline-offset-4"
+      href={ARTWORK_LICENSE.url}
+      rel="license noopener"
+      target="_blank"
+      aria-label={tr('footer.licenseLinkLabel', { license: ARTWORK_LICENSE.id })}
+    >
+      {ARTWORK_LICENSE.id}
+    </a>
+    {after}
+  </p>
+</footer>

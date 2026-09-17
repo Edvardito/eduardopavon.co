@@ -1,0 +1,46 @@
+---
+import type { ImageMetadata } from 'astro';
+import Footer from '~/components/layout/Footer.astro';
+import Header from '~/components/layout/Header.astro';
+import Seo from '~/components/seo/Seo.astro';
+import { Font } from 'astro:assets';
+import { LOCALE_METADATA, t, type Locale } from '~/i18n';
+import '~/styles/global.css';
+
+interface Props {
+  locale: Locale;
+  title: string;
+  description: string;
+  path: string;
+  ogImage: ImageMetadata;
+  ogImageAlt: string;
+}
+
+const { locale, title, description, path, ogImage, ogImageAlt } = Astro.props;
+---
+
+<!doctype html>
+<html lang={LOCALE_METADATA[locale].htmlLang}>
+  <head>
+    <Seo
+      locale={locale}
+      title={title}
+      description={description}
+      path={path}
+      ogImage={ogImage}
+      ogImageAlt={ogImageAlt}
+    />
+    <Font cssVariable="--font-urbanist" preload />
+    <slot name="head" />
+  </head>
+  <body class="flex min-h-dvh flex-col">
+    <a class="skip-link" href="#main">
+      {t(locale, 'a11y.skipToContent')}
+    </a>
+    <Header locale={locale} />
+    <main id="main" class="flex-1">
+      <slot />
+    </main>
+    <Footer locale={locale} />
+  </body>
+</html>

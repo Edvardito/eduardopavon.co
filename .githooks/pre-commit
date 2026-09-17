@@ -1,0 +1,43 @@
+#!/bin/sh
+# Format and lint the staged files before they land.
+#
+# Everything runs in the container, so the host needs nothing installed.
+# Skip a run with: git commit --no-verify
+set -eu
+
+staged() {
+  git diff --cached --name-only --diff-filter=ACMR | grep -E "$1" || true
+}
+
+fmt_files=$(staged '\.(astro|ts|js|mjs|json|css|md|ya?ml)$')
+lint_files=$(staged '\.(astro|ts|js|mjs)$')
+
+if [ -z "$fmt_files" ] && [ -z "$lint_files" ]; then
+  exit 0
+fi
+
+if ! docker info >/dev/null 2>&1; then
+  echo "pre-commit: Docker does not appear to be running." >&2
+  echo "  Start Docker, or commit with --no-verify to skip these checks." >&2
+  exit 1
+fi
+
+if [ -n "$fmt_files" ]; then
+  if ! printf '%s\n' "$fmt_files" | tr '\n' '\0' |
+    xargs -0 docker compose run --rm -T web pnpm exec prettier --check; then
+    echo >&2
+    echo "pre-commit: formatting issues. Fix with:" >&2
+    echo "  docker compose run --rm web pnpm format" >&2
+    exit 1
+  fi
+fi
+
+if [ -n "$lint_files" ]; then
+  if ! printf '%s\n' "$lint_files" | tr '\n' '\0' |
+    xargs -0 docker compose run --rm -T web pnpm exec eslint --no-warn-ignored; then
+    echo >&2
+    echo "pre-commit: lint errors. Try:" >&2
+    echo "  docker compose run --rm web pnpm lint:fix" >&2
+    exit 1
+  fi
+fi

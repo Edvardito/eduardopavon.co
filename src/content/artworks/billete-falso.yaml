@@ -1,0 +1,12 @@
+title:
+  es: Billete falso
+medium:
+  es: Pluma bic sobre papel
+dimensions:
+  width: 37
+  height: 25.5
+  unit: cm
+year: 2023
+status: framed
+order: 1
+image: ~/assets/artworks/billete-falso.webp

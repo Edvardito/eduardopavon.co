@@ -1,0 +1,70 @@
+---
+import type { ImageMetadata } from 'astro';
+import { getImage } from 'astro:assets';
+import { LOCALE_METADATA, getLocaleAlternates, type Locale } from '~/i18n';
+import { ARTIST_NAME, ARTWORK_LICENSE, rightsStatement } from '~/site';
+
+interface Props {
+  locale: Locale;
+  title: string;
+  description: string;
+  path: string;
+  ogImage: ImageMetadata;
+  ogImageAlt: string;
+  ogType?: 'website' | 'article';
+}
+
+const { locale, title, description, path, ogImage, ogImageAlt, ogType = 'website' } = Astro.props;
+
+const site = Astro.site;
+if (!site) {
+  throw new Error('`site` must be set in astro.config.ts for canonical and OG URLs.');
+}
+
+const canonical = new URL(path, site).href;
+const alternates = getLocaleAlternates(path, site);
+
+// Social crawlers ignore srcset, so render one fixed size.
+const ogImageRendered = await getImage({
+  src: ogImage,
+  width: 1200,
+  format: 'jpg',
+  quality: 80,
+});
+const ogImageUrl = new URL(ogImageRendered.src, site).href;
+---
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="generator" content={Astro.generator} />
+
+<title>{title}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+
+{alternates.map((alt) => (
+  <link rel="alternate" hreflang={alt.hreflang} href={alt.href} />
+))}
+
+<meta property="og:type" content={ogType} />
+<meta property="og:site_name" content={ARTIST_NAME} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:locale" content={LOCALE_METADATA[locale].ogLocale} />
+<meta property="og:image" content={ogImageUrl} />
+<meta property="og:image:width" content={String(ogImageRendered.attributes.width ?? 1200)} />
+<meta property="og:image:height" content={String(ogImageRendered.attributes.height ?? 630)} />
+<meta property="og:image:alt" content={ogImageAlt} />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImageUrl} />
+<meta name="twitter:image:alt" content={ogImageAlt} />
+
+<meta name="rights" content={rightsStatement()} />
+<link rel="license" href={ARTWORK_LICENSE.url} />
+
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="sitemap" href="/sitemap-index.xml" />

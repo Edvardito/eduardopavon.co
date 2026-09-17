@@ -1,0 +1,54 @@
+{
+  "name": "eduardopavon-com",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Portafolio del artista Eduardo Pavón.",
+  "license": "MIT",
+  "author": "José Eduardo Hernández Pavón",
+  "packageManager": "pnpm@10.25.0",
+  "engines": {
+    "node": ">=24.0.0 <25",
+    "pnpm": ">=10.0.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro check && astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "astro": "astro",
+    "images:import": "node scripts/optimize-images.mjs"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": []
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "3.7.4",
+    "@astrojs/vercel": "11.0.10",
+    "@tailwindcss/vite": "4.3.3",
+    "astro": "7.3.3",
+    "tailwindcss": "4.3.3",
+    "zod": "4.6.5"
+  },
+  "devDependencies": {
+    "@astrojs/check": "0.9.10",
+    "@eslint/js": "10.0.1",
+    "eslint": "10.10.0",
+    "eslint-config-prettier": "10.1.8",
+    "eslint-plugin-astro": "3.2.1",
+    "prettier": "3.9.7",
+    "prettier-plugin-astro": "1.0.1",
+    "sharp": "0.35.4",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.70.0",
+    "vitest": "5.0.1",
+    "yaml": "2.9.1"
+  }
+}

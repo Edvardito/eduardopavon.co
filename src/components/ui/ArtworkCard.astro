@@ -1,0 +1,54 @@
+---
+import { Picture } from 'astro:assets';
+import { artworkAltText, type Artwork } from '~/artworks';
+import { formatDimensions, resolveLocalized, statusLabel, type Locale } from '~/i18n';
+import Badge from './Badge.astro';
+
+interface Props {
+  artwork: Artwork;
+  locale: Locale;
+  priority?: boolean;
+}
+
+const { artwork, locale, priority = false } = Astro.props;
+const { title, medium, dimensions, year, status, image } = artwork.data;
+
+const resolvedTitle = resolveLocalized(title, locale);
+const resolvedMedium = resolveLocalized(medium, locale);
+const altText = artworkAltText(artwork, locale);
+const badge = status ? statusLabel(status, locale) : null;
+---
+
+<figure class="group reveal flex flex-col">
+  <div class="artwork-mat" style={`view-transition-name: artwork-${artwork.id}`}>
+    <Picture
+      src={image}
+      alt={altText}
+      formats={['avif', 'webp']}
+      fallbackFormat="webp"
+      widths={[400, 640, 840, 1200]}
+      sizes="(min-width: 1024px) 26rem, (min-width: 640px) 44vw, 92vw"
+      loading={priority ? 'eager' : 'lazy'}
+      decoding={priority ? 'sync' : 'async'}
+      fetchpriority={priority ? 'high' : 'auto'}
+      class="absolute inset-0 h-full w-full object-contain motion-safe:transition-transform motion-safe:duration-700 motion-safe:ease-[cubic-bezier(0.22,1,0.36,1)] motion-safe:group-hover:scale-[1.03]"
+    />
+  </div>
+
+  <figcaption class="mt-5">
+    <h3 class="text-lg leading-snug font-medium tracking-[-0.015em]">{resolvedTitle}</h3>
+    <p class="mt-1.5 text-sm leading-relaxed" style="color: var(--text-muted)">
+      {resolvedMedium}
+    </p>
+    <p class="text-sm leading-relaxed" style="color: var(--text-muted)">
+      <span>{formatDimensions(dimensions, locale)}</span>
+      <span aria-hidden="true"> · </span>
+      <span>{year}</span>
+    </p>
+    {badge && (
+      <p class="mt-3">
+        <Badge label={badge} />
+      </p>
+    )}
+  </figcaption>
+</figure>
