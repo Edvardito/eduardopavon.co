@@ -5,6 +5,12 @@ Portfolio of the artist **Eduardo Pavón**, who draws with Bic ballpoint pens.
 A framework-free [Astro](https://astro.build) site: static prerendered HTML,
 zero client-side JavaScript, Tailwind CSS for styling, deployed to Vercel.
 
+> **Two licences.** The **source code** is MIT. The **artworks and their
+> reproductions are not** — they are © José Eduardo Hernández Pavón and licensed
+> [CC BY-NC-ND 4.0](ARTWORK-LICENSE.md): share with credit, no commercial use,
+> no derivatives. Forking the code does not grant any right to the images in
+> `src/assets/artworks/`.
+
 ---
 
 ## Requirements
@@ -123,9 +129,13 @@ measurements. A swap flips the aspect ratio, which the test catches by name.
 ## Adding an artwork
 
 Originals are **not** committed — they are multi-megabyte scans. Point the
-importer at them once, in `.env` (copy `.env.example`):
+importer at them once, in `.env` (copy `.env.example`). Use forward slashes on
+every OS, Windows included:
 
 ```
+# macOS / Linux
+ARTWORK_ORIGINALS=/Users/you/Downloads/eduardopavon-images
+# Windows — forward slashes, drive letter included
 ARTWORK_ORIGINALS=C:/Users/you/Downloads/eduardopavon-images
 ```
 

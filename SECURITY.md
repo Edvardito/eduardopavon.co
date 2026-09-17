@@ -107,7 +107,23 @@ If a future phase needs a secret (for example an email provider key for the
 contact form), it belongs in Vercel's environment variables — never in the repo,
 and never in client-side code.
 
+## Public repository
+
+The repository is public. Two consequences worth stating:
+
+- Pull requests from forks run CI. The workflow uses the `pull_request` trigger
+  (not `pull_request_target`), declares `contents: read`, and consumes no
+  secrets, so fork code cannot reach anything privileged.
+- The optimized artwork masters in `src/assets/artworks/` are downloadable
+  directly from the repository, independently of the site. They are licensed CC
+  BY-NC-ND 4.0 and carry embedded EXIF/XMP rights metadata; that is a legal
+  control, not a technical one. Anything the artist does not want distributed at
+  that resolution should not be committed.
+
 ## Reporting a vulnerability
 
 Open a private security advisory on the repository, or contact the maintainer
 directly. Please do not open a public issue for an unfixed vulnerability.
+
+Private vulnerability reporting must be enabled in the repository's Settings →
+Security for the advisory link to appear.

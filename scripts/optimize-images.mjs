@@ -68,17 +68,17 @@ export function slugFromOriginalName(filename) {
   return slugify(title.trim());
 }
 
+const SOURCE_HELP =
+  'Set ARTWORK_ORIGINALS in .env to the folder holding the originals (see .env.example),\n' +
+  'then run: docker compose --profile tools run --rm images';
+
 const formatBytes = (bytes) => `${(bytes / 1024 / 1024).toFixed(2)} MB`;
 
 async function main() {
   const { src } = parseArgs(process.argv.slice(2));
 
   if (!src) {
-    console.error(
-      'Missing source folder.\n' +
-        '  pnpm images:import --src "<folder with the originals>"\n' +
-        'or set ARTWORK_SOURCE_DIR.',
-    );
+    console.error(SOURCE_HELP);
     process.exitCode = 1;
     return;
   }
@@ -89,7 +89,7 @@ async function main() {
     .sort();
 
   if (entries.length === 0) {
-    console.error(`No importable images found in ${sourceDir}`);
+    console.error(`No importable images found in ${sourceDir}.\n${SOURCE_HELP}`);
     process.exitCode = 1;
     return;
   }
