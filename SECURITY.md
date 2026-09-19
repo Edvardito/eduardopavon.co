@@ -114,11 +114,12 @@ The repository is public. Two consequences worth stating:
 - Pull requests from forks run CI. The workflow uses the `pull_request` trigger
   (not `pull_request_target`), declares `contents: read`, and consumes no
   secrets, so fork code cannot reach anything privileged.
-- The optimized artwork masters in `src/assets/artworks/` are downloadable
-  directly from the repository, independently of the site. They are licensed CC
-  BY-NC-ND 4.0 and carry embedded EXIF/XMP rights metadata; that is a legal
-  control, not a technical one. Anything the artist does not want distributed at
-  that resolution should not be committed.
+- The optimized artwork masters are downloadable directly from the repository,
+  independently of the site. There are **two tiers**: `src/assets/artworks/` at
+  2000px and `src/assets/artworks/detail/` at 3000px, the latter added for the
+  magnifier. They are licensed CC BY-NC-ND 4.0 and carry embedded EXIF/XMP
+  rights metadata; that is a legal control, not a technical one. Anything the
+  artist does not want distributed at 3000px should not be committed.
 
 ## Reporting a vulnerability
 

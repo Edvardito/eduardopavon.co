@@ -99,9 +99,9 @@ page. The schema only requires the default locale to be present, and rejects
 keys that are not registered locales.
 
 Do **not** translate `dimensions`, `year`, `status`, `order` or `image` — they
-are locale-invariant. The status badge text comes from the message file, and
-dimension _numbers_ are localized automatically by `formatDimensions()` (Spanish
-renders `25,5 cm`, English `25.5 cm`).
+are locale-invariant. The status annotation's text comes from the message file,
+and dimension _numbers_ are localized automatically by `formatDimensions()`
+(Spanish renders `25,5 cm`, English `25.5 cm`).
 
 ## 5. Verify
 
@@ -116,7 +116,7 @@ Then confirm on the built output:
 - Both pages carry `hreflang` alternates for `es`, `en` and `x-default`, each an
   absolute URL.
 - `sitemap-0.xml` lists both URLs with `xhtml:link` alternates.
-- The status badges and footer read in the new language.
+- The status annotations and colophon read in the new language.
 - An artwork field left untranslated falls back to Spanish rather than rendering
   blank.
 

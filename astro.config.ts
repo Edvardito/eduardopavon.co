@@ -6,14 +6,19 @@ import { DEFAULT_LOCALE, LOCALES, LOCALE_METADATA, PREFIX_DEFAULT_LOCALE } from 
 
 const SITE = process.env.SITE_URL ?? 'https://eduardopavon.com';
 
-// Bind-mount file events are unreliable on Windows/macOS hosts; compose sets this.
+// Bind-mount file events are unreliable off Linux; compose sets this.
 const usePolling = process.env.CHOKIDAR_USEPOLLING === 'true';
+
+/* Split, so a build in a second container cannot cost the dev server a re-scan. */
+const cacheRoot = process.env.VITE_CACHE_DIR;
+const cacheDir = cacheRoot
+  ? `${cacheRoot}/${process.argv.includes('dev') ? 'dev' : 'other'}`
+  : undefined;
 
 export default defineConfig({
   site: SITE,
 
-  // Static, but with the adapter configured so a future route can opt out
-  // via `export const prerender = false` without a global SSR switch.
+  // Adapter configured so one route can opt out, without global SSR.
   output: 'static',
   adapter: vercel(),
 
@@ -40,27 +45,40 @@ export default defineConfig({
     responsiveStyles: true,
   },
 
-  // Self-hosted at build time: no runtime request to Google, and Astro
-  // generates fallback metrics so swapping the webfont in causes no shift.
   fonts: [
     {
-      name: 'Urbanist',
-      provider: fontProviders.google(),
-      cssVariable: '--font-urbanist',
-      // Variable range, so every weight below comes from one file.
-      weights: ['100 900'],
+      name: 'Irregardless Variable',
+      provider: fontProviders.adobe({ id: 'ulk1nsi' }),
+      cssVariable: '--font-irregardless',
+      weights: ['300 800'],
       styles: ['normal'],
-      subsets: ['latin', 'latin-ext'],
+      display: 'swap',
+      subsets: ['latin'],
+      fallbacks: ['system-ui', 'sans-serif'],
+    },
+    {
+      name: 'Polymath Text',
+      provider: fontProviders.adobe({ id: 'ulk1nsi' }),
+      cssVariable: '--font-polymath',
+      weights: [400, 700],
+      styles: ['normal', 'italic'],
+      display: 'swap',
+      subsets: ['latin'],
       fallbacks: ['system-ui', 'sans-serif'],
     },
   ],
 
+  /* No `fonts` block: Typekit, linked in BaseLayout. DESIGN.md, Typography. */
+
   vite: {
+    ...(cacheDir ? { cacheDir } : {}),
     plugins: [tailwindcss()],
+    /* esbuild, not Lightning CSS: Lightning folds `animation-timeline` into the
+     * `animation` shorthand, which no browser parses, so a minified build drops
+     * every scroll-driven animation. */
+    build: { cssMinify: 'esbuild' },
     server: {
-      // Polling must skip node_modules: chokidar's `ignored` replaces Vite's
-      // defaults, and stat-ing the whole dependency tree stalls startup
-      // outright rather than merely slowing it.
+      // Replaces Vite's defaults, and stat-ing node_modules stalls startup.
       watch: usePolling
         ? {
             usePolling: true,

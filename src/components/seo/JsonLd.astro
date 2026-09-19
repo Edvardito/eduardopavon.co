@@ -19,7 +19,7 @@ interface Props {
 
 const { locale, path, artworks } = Astro.props;
 
-// UN/CEFACT codes, which is what schema.org QuantitativeValue expects.
+// UN/CEFACT codes, which is what QuantitativeValue expects.
 const UNIT_CODE: Record<Dimensions['unit'], string> = { cm: 'CMT', in: 'INH' };
 
 const site = Astro.site!;

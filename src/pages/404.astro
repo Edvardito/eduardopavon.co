@@ -17,13 +17,18 @@ const featured = await getFeaturedArtwork();
   ogImage={featured.data.image}
   ogImageAlt={artworkAltText(featured, locale)}
 >
-  <section class="mx-auto w-full max-w-(--container-gallery) px-5 sm:px-8">
-    <h2 class="text-2xl font-semibold tracking-tight">{tr('notFound.heading')}</h2>
-    <p class="mt-3" style="color: var(--text-muted)">
+  <section class="page mt-(--space-section)">
+    <p class="display enter" aria-hidden="true">
+      404
+    </p>
+    <h1 class="caption__title measure enter mt-(--space-row)" style="--enter-step:1">
+      {tr('notFound.heading')}
+    </h1>
+    <p class="measure enter mt-(--space-caption)" style="--enter-step:2">
       {tr('notFound.body')}
     </p>
-    <p class="mt-6">
-      <a class="underline underline-offset-4" href={localizePath('/', locale)}>
+    <p class="mt-(--space-row)">
+      <a class="link" href={localizePath('/', locale)}>
         {tr('notFound.back')}
       </a>
     </p>

@@ -11,9 +11,12 @@ services:
       # and would break inside the container.
       - node_modules:/app/node_modules
       - pnpm_store:/pnpm-store
+      - vite_cache:/vite-cache
     environment:
       # Bind-mount file events are unreliable on Windows/macOS; watch by polling.
       CHOKIDAR_USEPOLLING: 'true'
+      # Keeps `pnpm build` from invalidating the dev server's dependency cache.
+      VITE_CACHE_DIR: /vite-cache
     stdin_open: true
     tty: true
 
@@ -36,3 +39,4 @@ services:
 volumes:
   node_modules:
   pnpm_store:
+  vite_cache:

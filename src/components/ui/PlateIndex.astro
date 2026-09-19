@@ -1,0 +1,52 @@
+---
+import type { Artwork } from '~/artworks';
+import { resolveLocalized, useTranslations, type Locale } from '~/i18n';
+
+interface Props {
+  artworks: Artwork[];
+  locale: Locale;
+}
+
+const { artworks, locale } = Astro.props;
+const tr = useTranslations(locale);
+const headingId = 'plates-heading';
+
+const entries = artworks.map((artwork, index) => ({
+  id: artwork.id,
+  folio: String(index + 1).padStart(2, '0'),
+  label: tr('gallery.plateLabel', { number: index + 1 }),
+  line: tr('gallery.indexLine', {
+    title: resolveLocalized(artwork.data.title, locale),
+    year: artwork.data.year,
+  }),
+}));
+---
+
+<!-- The duplicate closes the marquee loop: hidden and out of the tab order. -->
+<div class="plate-strip">
+  <h2 class="sr-only" id={headingId}>
+    {tr('gallery.plates')}
+  </h2>
+
+  <div class="plate-strip__track">
+    {[false, true].map((isClone) => (
+      <ol
+        class:list={['plate-index', isClone && 'plate-index--clone']}
+        aria-labelledby={isClone ? undefined : headingId}
+        aria-hidden={isClone ? 'true' : undefined}
+      >
+        {entries.map((entry) => (
+          <li class="plate-index__item">
+            <a class="plate-index__link" href={`#${entry.id}`} tabindex={isClone ? -1 : undefined}>
+              <span class="plate-index__folio">
+                <span aria-hidden="true">{entry.folio}</span>
+                <span class="sr-only">{entry.label}</span>
+              </span>
+              <span class="plate-index__title">{entry.line}</span>
+            </a>
+          </li>
+        ))}
+      </ol>
+    ))}
+  </div>
+</div>

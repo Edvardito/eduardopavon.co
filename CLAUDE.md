@@ -8,8 +8,10 @@ Roadmap and phase status: @SPEC.md
 ## Hard rules
 
 - **No UI framework.** No React/Vue/Svelte/Solid, no hydration directives, no
-  client runtime. `.astro` components and plain TS only. Ship zero client JS; if
-  a feature truly needs a `<script>`, say why first.
+  client runtime. `.astro` components and plain TS only. Zero client JS beyond
+  the one sanctioned script, `src/scripts/magnifier.ts`; never add a second.
+- **Three colours, light mode only, and the work is never cropped.** The design
+  rules unrelated work can break by accident. All three are test-enforced.
 - **pnpm only.** Never npm or yarn — they ignore the lockfile and `.npmrc`.
 - **Never commit artwork originals.** Only the optimized derivatives in
   `src/assets/artworks/`.
@@ -39,7 +41,9 @@ Inside the Dev Container (`.devcontainer/`), run `pnpm check` / `pnpm test` /
 
 CI (`.github/workflows/ci.yml`) runs the same steps on PRs and pushes to main.
 Tests live in `tests/`; add one when touching i18n helpers, the slug derivation,
-or the artwork content model.
+or the artwork content model. `tests/design.test.ts` holds the design guards —
+the closed palette, the single client script and its budget, the reduced-motion
+containment. Do not widen one to make a change pass.
 
 Installs are always `--frozen-lockfile` (baked into the Dockerfile), never a
 bare `pnpm install`.
@@ -55,6 +59,9 @@ Detail in @SECURITY.md. The rules that must not be violated:
 - Keep the dependency count low; justify any addition.
 
 ## Seams (the non-obvious parts)
+
+**Design.** @DESIGN.md owns intent — palette, type, the cadence, the glass
+material, motion, and the magnifier's constraints. `global.css` owns the values.
 
 **i18n.** Spanish only today, but the seam is live and must stay exercised. No
 user-facing string is hardcoded in a component.
@@ -88,11 +95,12 @@ both progressively enhanced. Never add a client-side router or animation library
 rather than re-declaring the fields; `ARTWORK_STATUSES` in `src/site.ts` is the
 one source for the status enum.
 
-**The artwork mat must never crop.** The image is `absolute inset-0` with
-`object-contain` inside an `aspect-ratio` box. Percentage heights do not resolve
-against an aspect-ratio-derived height, so `h-full` alone silently crops the
-work. Tailwind's `@utility` also does not emit nested descendant rules — put
-image styling on the element.
+**The artwork plate must never crop.** The plate's `aspect-ratio` comes from the
+asset's own dimensions, and the image is `absolute inset-0` with
+`object-contain` inside it. Percentage heights do not resolve against an
+aspect-ratio-derived height, so `h-full` alone silently crops the work.
+Tailwind's `@utility` also does not emit nested descendant rules — put image
+styling on the element.
 
 **Licensing is split.** Code is MIT; artwork is CC BY-NC-ND 4.0
 (@ARTWORK-LICENSE.md). Rights constants live in `src/site.ts` and flow into the

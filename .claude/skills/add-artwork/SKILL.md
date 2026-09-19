@@ -9,8 +9,9 @@ description:
 
 # Add an artwork
 
-Two things must land together: an **optimized image asset** and a **content
-entry**. The slug is the link between them and must match exactly.
+Four things must land together: **two optimized image assets** — the gallery
+tier and the detail tier — a **blurred placeholder**, and a **content entry**.
+The slug is the link between all of them and must match exactly.
 
 ## 1. Import the image
 
@@ -25,19 +26,32 @@ Everything runs in the container; nothing is installed on the host. The script
 is idempotent — it reprocesses the whole folder, so it is safe to re-run with
 the full source set.
 
-Canonical settings, defined in `scripts/optimize-images.mjs`:
+One run writes **both tiers**. Canonical settings live in the `TIERS` array in
+`scripts/optimize-images.mjs`:
 
-| Setting          | Value                                        |
-| ---------------- | -------------------------------------------- |
-| Max longest edge | **2000 px** (never upscales, never crops)    |
-| Format           | **WebP**                                     |
-| Quality          | **82**                                       |
-| Output           | `src/assets/artworks/<slug>.webp`            |
-| Size budget      | **< 1 MB** committed; the script warns above |
+| Tier        | Max longest edge | Output                                   | Budget   | Used by                |
+| ----------- | ---------------- | ---------------------------------------- | -------- | ---------------------- |
+| **gallery** | 2000 px          | `src/assets/artworks/<slug>.webp`        | < 1 MB   | every page             |
+| **detail**  | 3000 px          | `src/assets/artworks/detail/<slug>.webp` | < 2.5 MB | the magnifier, Phase 3 |
 
-Do not change these values for one image. If a new work exceeds 1 MB, lower
-`QUALITY` or `MAX_EDGE` for the whole set and re-import, then record the change
-in SPEC.md.
+Both are WebP at quality 82, and neither upscales or crops. **Commit both.** A
+work with only the gallery tier renders, but its magnifier silently does nothing
+— the detail tier is what the lens reads, and `tests/content.test.ts` fails if
+either tier is missing, orphaned or over budget.
+
+The same run rewrites `src/assets/artworks/placeholders.json`, a 20px blurred
+copy of each work inlined as a data URI, which is what a plate shows until its
+image paints. **Commit it too**: it is regenerated wholesale, so it is one file
+for the whole set rather than one per work, and a missing entry fails the suite.
+
+The budgets are the exported `MAX_COMMITTED_BYTES` and `MAX_DETAIL_BYTES`, which
+the test imports; they are never written twice. Do not change any of these
+values for one image. If a new work exceeds its budget, lower `QUALITY` or that
+tier's `maxEdge` for the whole set and re-import, then record the change in
+SPEC.md.
+
+There is **no field to add** for the detail tier: `src/artworks.ts` pairs it to
+the entry by slug.
 
 The script also embeds EXIF and XMP rights metadata (artist, copyright, CC
 BY-NC-ND 4.0). That happens automatically — do not strip it.
@@ -118,18 +132,25 @@ docker compose run --rm web pnpm build
 Then confirm:
 
 - The card appears in the gallery in the right `order`, with title, medium,
-  dimensions, year, and the correct badge (or none when `status: null`).
+  dimensions, year, and the correct status annotation (or none when
+  `status: null`).
 - The work appears in the page's JSON-LD `hasPart` array with `name`,
   `artMedium`, `dateCreated`, `size`, `width`, `height`, `image` and the rights
   fields.
 - The rendered dimensions match the image's orientation.
-- The committed `.webp` is under 1 MB (`ls -la src/assets/artworks/`).
+- Both committed `.webp` files exist and are under their budgets — run
+  `docker compose run --rm web pnpm test`, which checks this for you.
+- Hovering the new work on a fine pointer shows the magnifier, sharp rather than
+  blurred, which is what proves the detail tier landed.
 
 Nothing else needs editing — the gallery, structured data and sitemap all read
 from the collection.
 
 ## Removing an artwork
 
-Delete both `src/content/artworks/<slug>.yaml` and
-`src/assets/artworks/<slug>.webp`, then renumber `order` on the remaining
-entries so there are no gaps.
+Delete all three of `src/content/artworks/<slug>.yaml`,
+`src/assets/artworks/<slug>.webp` and `src/assets/artworks/detail/<slug>.webp`,
+remove the original from the `ARTWORK_ORIGINALS` folder and re-run the import so
+`placeholders.json` loses its entry, then renumber `order` on the remaining
+entries so there are no gaps. The orphan test covers both tiers and the
+placeholder map, so a forgotten asset or a stale entry fails CI.

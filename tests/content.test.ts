@@ -5,10 +5,22 @@ import { parse } from 'yaml';
 import { beforeAll, describe, expect, it } from 'vitest';
 import { DEFAULT_LOCALE, LOCALES } from '~/i18n/config';
 import { ARTWORK_STATUSES } from '~/site';
-import { MAX_COMMITTED_BYTES } from '../scripts/optimize-images.mjs';
+import {
+  MAX_COMMITTED_BYTES,
+  MAX_DETAIL_BYTES,
+  PLACEHOLDER_FILE,
+} from '../scripts/optimize-images.mjs';
 
 const CONTENT_DIR = path.resolve('src/content/artworks');
 const ASSET_DIR = path.resolve('src/assets/artworks');
+const DETAIL_DIR = path.resolve('src/assets/artworks/detail');
+
+const TIERS = [
+  { name: 'gallery', dir: ASSET_DIR, budget: MAX_COMMITTED_BYTES },
+  { name: 'detail', dir: DETAIL_DIR, budget: MAX_DETAIL_BYTES },
+];
+
+const mb = (bytes: number) => `${(bytes / 1024 / 1024).toFixed(2)} MB`;
 
 interface Artwork {
   slug: string;
@@ -71,22 +83,37 @@ describe('artwork collection', () => {
 });
 
 describe('artwork images', () => {
-  it('has a committed asset for every entry, under the size budget', async () => {
+  it.each(TIERS)('has a committed $name asset for every entry, under budget', async (tier) => {
     for (const artwork of artworks) {
-      const file = path.join(ASSET_DIR, `${artwork.slug}.webp`);
+      const file = path.join(tier.dir, `${artwork.slug}.webp`);
       const { size } = await stat(file);
-      expect(size, `${artwork.slug} exceeds the 1 MB budget`).toBeLessThan(MAX_COMMITTED_BYTES);
+      expect(
+        size,
+        `${artwork.slug} exceeds the ${tier.name} budget of ${mb(tier.budget)}`,
+      ).toBeLessThan(tier.budget);
     }
   });
 
-  it('has no orphaned assets', async () => {
-    const assets = (await readdir(ASSET_DIR)).map((f) => path.basename(f, '.webp'));
+  // Generated, so a missing placeholder fails silently rather than loudly.
+  it('has a blurred placeholder for every entry', async () => {
+    const file = path.join(ASSET_DIR, PLACEHOLDER_FILE);
+    const placeholders = JSON.parse(await readFile(file, 'utf8')) as Record<string, string>;
+    expect(Object.keys(placeholders).sort()).toEqual(artworks.map((a) => a.slug).sort());
+    for (const [slug, value] of Object.entries(placeholders)) {
+      expect(value, `${slug} placeholder is not a data URI`).toMatch(
+        /^url\('data:image\/webp;base64,/,
+      );
+    }
+  });
+
+  it.each(TIERS)('has no orphaned $name assets', async (tier) => {
+    const assets = (await readdir(tier.dir))
+      .filter((f) => f.endsWith('.webp'))
+      .map((f) => path.basename(f, '.webp'));
     expect(assets.sort()).toEqual(artworks.map((a) => a.slug).sort());
   });
 
-  // The Phase 1 regression: source filenames mixed "width x height" and
-  // "height x width", so a swapped pair silently published wrong dimensions.
-  // A swap flips the ratio, which this catches.
+  // The Phase 1 regression: a swapped pair flips the ratio, which this catches.
   it('records dimensions in the same orientation as the image', async () => {
     for (const artwork of artworks) {
       const { width = 0, height = 0 } = await sharp(

@@ -2,6 +2,8 @@
 import { artworkAltText, getSortedArtworks } from '~/artworks';
 import JsonLd from '~/components/seo/JsonLd.astro';
 import ArtworkCard from '~/components/ui/ArtworkCard.astro';
+import GlassFilter from '~/components/ui/GlassFilter.astro';
+import PlateIndex from '~/components/ui/PlateIndex.astro';
 import { getLocaleFromUrl, useTranslations } from '~/i18n';
 import BaseLayout from '~/layouts/BaseLayout.astro';
 
@@ -9,9 +11,10 @@ const locale = getLocaleFromUrl(Astro.url);
 const tr = useTranslations(locale);
 
 const artworks = await getSortedArtworks();
-const featured = artworks[0]!;
+const frontispiece = artworks[0]!;
 
-const EAGER_COUNT = 3;
+/* The title card paints first; a plate below the fold only competes. */
+const EAGER_PLATES = 1;
 ---
 
 <BaseLayout
@@ -19,28 +22,44 @@ const EAGER_COUNT = 3;
   title={tr('home.title')}
   description={tr('site.description')}
   path="/"
-  ogImage={featured.data.image}
-  ogImageAlt={artworkAltText(featured, locale)}
+  ogImage={frontispiece.data.image}
+  ogImageAlt={artworkAltText(frontispiece, locale)}
+  masthead={false}
 >
   <JsonLd slot="head" locale={locale} path="/" artworks={artworks} />
+  <GlassFilter />
 
-  <section
-    aria-labelledby="gallery-heading"
-    class="mx-auto w-full max-w-(--container-gallery) px-5 sm:px-8"
-  >
-    <h2 id="gallery-heading" class="sr-only">
-      {tr('gallery.heading')}
-    </h2>
+  <!-- Sticky is bounded by its containing block, so this lives in <main>. -->
+  <div class="masthead">
+    <div class="titlecard">
+      <h1 id="page-heading" class="display vt-masthead titlecard__name">
+        {tr('home.heading')}
+      </h1>
+    </div>
 
-    <ul
-      role="list"
-      class="grid grid-cols-1 items-start gap-x-8 gap-y-20 sm:grid-cols-2 sm:gap-x-10 lg:grid-cols-3 lg:gap-x-12"
-    >
+    <PlateIndex artworks={artworks} locale={locale} />
+  </div>
+
+  <p class="page lede reveal">{tr('home.intro')}</p>
+
+  <section class="page mt-(--space-cycle)" aria-labelledby="gallery-heading">
+    <div class="section-head">
+      <h2 id="gallery-heading" class="furniture">
+        {tr('gallery.heading')}
+      </h2>
+      <hr class="rule mt-(--space-caption)" />
+    </div>
+
+    <ul role="list" class="cadence">
       {artworks.map((artwork, index) => (
-        <li>
-          <ArtworkCard artwork={artwork} locale={locale} priority={index < EAGER_COUNT} />
+        <li id={artwork.id}>
+          <ArtworkCard artwork={artwork} locale={locale} priority={index < EAGER_PLATES} />
         </li>
       ))}
     </ul>
   </section>
 </BaseLayout>
+
+<script>
+  import '~/scripts/magnifier';
+</script>
