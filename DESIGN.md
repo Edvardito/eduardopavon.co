@@ -24,14 +24,14 @@ in question.
 Phase 1 shipped infrastructure, not design. What it shipped visually is
 scaffolding and **not precedent**. Replaced by this pass:
 
-| Replaced                                     | By                                              |
-| -------------------------------------------- | ----------------------------------------------- |
-| `--color-paper/-muted`, `--color-ink/-muted` | a closed three-colour palette, no muted token   |
-| the `prefers-color-scheme: dark` block       | `color-scheme: light`, one ground               |
-| the fixed 4:5 mat with `object-contain`      | a plate carrying the work's own aspect ratio    |
-| the uniform three-column grid                | the cadence (§4)                                |
-| the pill badge, loudest thing on a card      | the status annotation (§6), lowest in hierarchy |
-| the hover scale on the image                 | the magnifier (§7)                              |
+| Replaced                                     | By                                            |
+| -------------------------------------------- | --------------------------------------------- |
+| `--color-paper/-muted`, `--color-ink/-muted` | a closed three-colour palette, no muted token |
+| the `prefers-color-scheme: dark` block       | `color-scheme: light`, one ground             |
+| the fixed 4:5 mat with `object-contain`      | a plate carrying the work's own aspect ratio  |
+| the uniform three-column grid                | the cadence (§4)                              |
+| the pill badge, loudest thing on a card      | nothing — status is record-only now (§6)      |
+| the hover scale on the image                 | the magnifier (§7)                            |
 
 Kept: the SEO layer, the i18n seam, the content schema, the dependency set.
 Urbanist was kept through most of this pass and then replaced by the designer
@@ -48,9 +48,9 @@ optically. _Loses to:_ the masthead, which is a solid ink band and is the reason
 this principle now says "in the gallery" rather than "on the page" — it was
 written as the stricter rule, and the designer's masthead broke it honestly
 rather than by accident. The band is fixed at the top, outside the field the
-plates occupy, and nothing below it may copy the move. Also loses to the status
-annotation's one filled caption-line (§6), and to focus indication, which may be
-as loud as it needs to be.
+plates occupy, and nothing below it may copy the move. Also loses to focus
+indication, which may be as loud as it needs to be. It no longer loses to the
+status annotation, which was removed (§6).
 
 **2. Blue speaks for the site; ink speaks for the work.** `--color-pen` carries
 the site's own voice — masthead, section labels, folios, rules, links. Anything
@@ -534,9 +534,9 @@ line-work and type. Reaching for glass on a UI element is a category error.
 
 **The caption block.** Work title (level 3), then the catalogue line (level 5):
 one line, slash-separated, year parenthesised — catalogue-like rather than a
-stacked block of labelled fields. Then the status annotation, if any. Dimensions
-come from `formatDimensions()` and are interpolated into a translated sentence
-whole; the component never concatenates.
+stacked block of labelled fields, and nothing after it. Dimensions come from
+`formatDimensions()` and are interpolated into a translated sentence whole; the
+component never concatenates.
 
 **The list of plates.** The strongest idea taken from the reference: contents,
 metadata and navigation in one element. One entry per work — folio in pen, title
@@ -586,26 +586,23 @@ stay ink — they name specific drawings (principle 2). In Phase 3 the rows
 retarget to the detail route and gain a current-item marker; nothing else
 changes.
 
-**The status annotation.** The counterweight to the glazing: it describes the
-work rather than being part of it, so it must read as another material.
+**The status annotation — removed.** It was specified and built: a micro-size
+mark below the catalogue line, `Enmarcada` as a hairline outline and `Vendida`
+as a reversed ink field, the system's only filled shape and the one sanctioned
+exception to principle 1. The designer removed it from the page. A caption that
+ends on the catalogue line reads as a catalogue line; a chip after it reads as
+commerce, and whether a work is framed or sold is the record's business, not the
+plate's.
 
-- **Not glass.** No edge treatment, dispersion, specular or thickness token.
-  Sharing a material token with the plate edge breaks the category rule.
-- **Quiet.** Micro size, below the catalogue line — the last thing a curator
-  reads, not the first.
-- **Two states plus absence, in three colours.** `Enmarcada` is a hairline
-  outline with an ink label; `Vendida` reverses to an ink field with a
-  ground-coloured label — 15.4:1, the same verified pair inverted. Fill versus
-  outline, not hue, because there is no third hue and because a terminal state
-  has a solid mark in every printed catalogue. Absence renders nothing.
-- **The system's only filled shape**, exactly one caption line tall: the single
-  sanctioned exception to principle 1, paid once, at the smallest size on the
-  page.
-- **Data-driven.** The enum is `ARTWORK_STATUSES` in `src/site.ts`, the label
-  comes from `statusLabel()`. Never a hardcoded string, never a hardcoded list.
-- **1.4.1 and 7:1.** The label is the meaning, so status is never carried by
-  colour or shape alone, and it holds 7:1 against whatever it sits on, its own
-  fill included.
+**Status is data, not a visible mark**, and it stays that way. The field remains
+in the schema, `ARTWORK_STATUSES` remains the one enum, `statusLabel()` remains
+the one label source, and both still flow into the JSON-LD `additionalProperty`
+and `llms.txt` — machine-readable for a curator's tooling, absent from the page.
+The Spanish labels stay in `src/i18n/ui/es.ts` because those two consumers use
+them. **Do not reintroduce a visible badge, chip, bracketed note or caption
+suffix** on any archetype, the Phase 3 detail page included; if a page ever
+needs to state availability, that is a new decision with its own entry here, not
+a restoration of this one.
 
 **The title card.** The home page's masthead, and the site's one piece of
 theatre. The name is **always one line**, sized to fill the width of the page —
@@ -892,14 +889,10 @@ detail page exists. Narrower would fit every work on one screen and look
 considerably less imposing. Recommend leaving it wide and revisiting when the
 detail page ships, since that is the page whose job is seeing a work whole.
 
-**Bounded chip or bracketed catalogue note?** The pill form is web-UI vocabulary
-and sits slightly against the print posture; a monograph would set `[vendida]`
-in small caps into the caption line with no box. (a) the bounded annotation
-specified in §6 — clearer, one filled shape; (b) a bracketed note — more honest
-to the posture, weaker at a glance, and it loses the outline/fill distinction
-between the two states. Specified (a) because it was asked for. Recommend
-keeping (a) unless the gallery reads as boxy at desktop width; (b) needs no new
-tokens.
+**Bounded chip or bracketed catalogue note? — settled: neither.** The question
+was which form the status mark should take. The designer answered it by removing
+the mark (§6); status is now record-only. Reopen this only with a stated reason
+for the page to carry availability at all.
 
 **Does the gallery keep a visible section label?** It currently does — "Obra" in
 micro pen with a rule. Against: on a page whose whole body is the gallery, the

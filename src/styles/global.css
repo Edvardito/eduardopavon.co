@@ -270,24 +270,6 @@
     font-style: italic;
   }
 
-  .status {
-    display: inline-block;
-    margin-block-start: var(--space-caption);
-    padding-inline: 0.5em;
-    font-size: var(--text-micro);
-    font-weight: var(--font-weight-bold);
-    line-height: calc(var(--space-unit) * 0.9);
-    letter-spacing: var(--tracking-micro);
-    text-transform: uppercase;
-    color: var(--color-ink);
-    border: 1px solid var(--color-ink);
-  }
-
-  .status--sold {
-    background-color: var(--color-ink);
-    color: var(--color-ground);
-  }
-
   .plate-strip {
     background-color: var(--color-pen);
     color: var(--color-ground);

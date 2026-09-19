@@ -2,7 +2,6 @@
 import type { Artwork } from '~/artworks';
 import { formatDimensions, resolveLocalized, useTranslations, type Locale } from '~/i18n';
 import ArtworkPlate from './ArtworkPlate.astro';
-import StatusAnnotation from './StatusAnnotation.astro';
 
 interface Props {
   artwork: Artwork;
@@ -11,7 +10,7 @@ interface Props {
 }
 
 const { artwork, locale, priority = false } = Astro.props;
-const { title, medium, dimensions, year, status } = artwork.data;
+const { title, medium, dimensions, year } = artwork.data;
 
 const tr = useTranslations(locale);
 ---
@@ -28,6 +27,5 @@ const tr = useTranslations(locale);
         year,
       })}
     </p>
-    {status && <StatusAnnotation status={status} locale={locale} />}
   </figcaption>
 </figure>
