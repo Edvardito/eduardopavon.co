@@ -1,39 +1,78 @@
 @import 'tailwindcss';
 
+/* Values live here; intent lives in DESIGN.md. */
 @theme {
-  --color-paper: oklch(98.4% 0.003 85);
-  --color-paper-muted: oklch(95.2% 0.004 85);
-  --color-ink: oklch(21% 0.008 265);
-  --color-ink-muted: oklch(48% 0.01 265);
+  --color-ink: #030a77;
+  --color-ground: #f1ffeb;
+  --color-pen: #0000ff;
+  /* Large text only: 4.0:1 on ink, and nothing smaller clears AA. */
+  --color-pen-red: #f52742;
 
-  --font-sans: var(--font-urbanist), system-ui, sans-serif;
+  /* Self-hosted at build time; the stacks come from astro.config.ts. */
+  --font-display: var(--font-irregardless);
+  --font-text: var(--font-polymath);
 
-  --container-gallery: 84rem;
+  --font-weight-regular: 400;
+  --font-weight-bold: 700;
+  /* The top of this face; there is no 900 in it. */
+  --font-weight-heavy: 800;
 
-  --text-display: clamp(2.75rem, 1.6rem + 4.4vw, 5.5rem);
-  --text-lede: clamp(1rem, 0.94rem + 0.28vw, 1.175rem);
+  --text-label: 2.5rem;
+  --text-strip: 2.5rem;
+  --text-micro: 0.68rem;
+  --text-caption: 0.85rem;
+  --text-body: 1.0625rem;
+  --text-lede: 1.328rem;
+  --text-display: clamp(4.5rem, 1.25rem + 9.3vw, 9.3rem);
 
-  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --leading-display: 0.92;
+  --leading-tight: 1.15;
+  --leading-text: 1.55;
+
+  --tracking-micro: 0.14em;
+  --tracking-label: 0.015em;
+
+  --container-page: 88rem;
+  --container-measure: 66ch;
+
+  --ease-page: cubic-bezier(0.22, 1, 0.36, 1);
+  --duration-short: 180ms;
+  --duration-long: 340ms;
 }
 
 @layer base {
   :root {
-    --surface: var(--color-paper);
-    --surface-muted: var(--color-paper-muted);
-    --text: var(--color-ink);
-    --text-muted: var(--color-ink-muted);
-    --hairline: oklch(from var(--text) l c h / 0.14);
-    color-scheme: light dark;
-  }
+    color-scheme: light;
 
-  /* Follows the OS: a toggle would need client JS, and this site ships none. */
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --surface: oklch(16% 0.006 265);
-      --surface-muted: oklch(21% 0.007 265);
-      --text: oklch(94% 0.004 85);
-      --text-muted: oklch(70% 0.008 85);
-    }
+    --space-unit: calc(var(--text-body) * var(--leading-text));
+    --space-caption: calc(var(--space-unit) * 0.35);
+    --space-pair: calc(var(--space-unit) * 1.5);
+    --space-row: calc(var(--space-unit) * 2);
+    --space-cycle: calc(var(--space-unit) * 5);
+    --space-section: calc(var(--space-unit) * 4);
+    --space-margin: clamp(1.25rem, 6vw, 7rem);
+
+    --glass-thickness: 0.28rem;
+    /* Raising these turns the glazing into a drawn border. */
+    --glass-arris: 0.13;
+    --glass-band: 0.05;
+    --glass-dispersion: 0.09;
+    --glass-cast: 0.1;
+    --glass-sheen: 0.4;
+    --glass-light: 214deg;
+
+    --titlecard-min: 50px;
+
+    --masthead-collapsed: calc(
+      var(--titlecard-min) * var(--leading-display) + var(--text-strip) * var(--leading-text) +
+        var(--space-caption) * 4
+    );
+
+    --loupe-size: 11rem;
+    --loupe-zoom: 3.3;
+    --loupe-pad: 4rem;
+
+    --container-plate: 56rem;
   }
 
   html {
@@ -41,25 +80,414 @@
   }
 
   body {
-    background-color: var(--surface);
-    color: var(--text);
-    font-family: var(--font-sans);
+    background-color: var(--color-ground);
+    color: var(--color-ink);
+    font-family: var(--font-text);
+    font-size: var(--text-body);
+    line-height: var(--leading-text);
     text-wrap: pretty;
     -webkit-font-smoothing: antialiased;
   }
 
+  /* Two-ply, so one ply always contrasts. */
   :focus-visible {
-    outline: 2px solid var(--text);
-    outline-offset: 4px;
-    border-radius: 2px;
+    outline: 2px solid var(--color-ink);
+    outline-offset: 3px;
+    box-shadow: 0 0 0 3px var(--color-ground);
+    border-radius: 1px;
   }
 }
 
-/*
- * Cross-document view transitions: a CSS opt-in, no JavaScript. Browsers
- * without support navigate normally. The named elements below persist across
- * navigations, and Phase 3's gallery -> detail morph reuses `--artwork-*`.
- */
+@layer components {
+  .page {
+    margin-inline: auto;
+    inline-size: 100%;
+    max-inline-size: var(--container-page);
+    padding-inline: var(--space-margin);
+  }
+
+  .measure {
+    max-inline-size: var(--container-measure);
+  }
+
+  .display,
+  .furniture {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+  }
+
+  .display {
+    font-size: var(--text-display);
+    font-feature-settings: 'ss02' 1;
+    font-weight: var(--font-weight-heavy);
+    line-height: var(--leading-display);
+    /* These alternates collide under negative tracking. */
+    letter-spacing: 0;
+    color: var(--color-pen);
+    text-wrap: balance;
+  }
+
+  .masthead {
+    position: sticky;
+    inset-block-start: 0;
+    z-index: 20;
+  }
+
+  /* No `isolation`, or the backdrop root becomes this element. */
+  .titlecard {
+    padding-inline: var(--space-margin);
+    padding-block: var(--space-caption);
+    background-color: oklch(from var(--color-ground) l c h / 0.62);
+    backdrop-filter: blur(calc(var(--glass-thickness) * 3)) saturate(1.2);
+  }
+
+  /* 4.912 is this name's advance per 1px. Re-measure if the name changes. */
+  .titlecard__name {
+    display: block;
+    inline-size: 100%;
+    /* Resting small: without scroll timelines it would never shrink. */
+    font-size: var(--titlecard-min);
+    line-height: var(--leading-display);
+    white-space: nowrap;
+    text-align: center;
+    text-wrap: nowrap;
+  }
+
+  .furniture {
+    font-size: var(--text-label);
+    font-weight: var(--font-weight-heavy);
+    line-height: var(--leading-text);
+    letter-spacing: var(--tracking-label);
+    color: var(--color-pen);
+  }
+
+  /* Under the masthead's z-index, so it tucks rather than overlaps. */
+  .section-head {
+    position: sticky;
+    inset-block-start: var(--masthead-collapsed);
+    z-index: 10;
+    background-color: oklch(from var(--color-ground) l c h / 0.62);
+    backdrop-filter: blur(calc(var(--glass-thickness) * 3)) saturate(1.2);
+  }
+
+  .rule {
+    border: 0;
+    border-block-start: 1px solid var(--color-pen);
+  }
+
+  .lede {
+    font-size: clamp(1.75rem, 1rem + 3.5vw, 3.4rem);
+    line-height: var(--leading-tight);
+    text-align: center;
+    text-transform: uppercase;
+    text-wrap: balance;
+    margin-block-start: var(--space-section);
+  }
+
+  .link {
+    color: var(--color-pen);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
+  /* Percentage heights do not resolve against this ratio — the Phase 1 crop. */
+  .plate {
+    position: relative;
+    display: block;
+    inline-size: 100%;
+    aspect-ratio: var(--plate-w) / var(--plate-h);
+    /* Clips the placeholder blur; the box still matches the asset. */
+    overflow: clip;
+    background-color: oklch(from var(--color-ink) l c h / 0.04);
+
+    /* Inset: painted outside, this reads as a drop shadow. */
+    box-shadow: inset 0 0 0 1px oklch(from var(--color-ink) l c h / var(--glass-arris));
+  }
+
+  @supports (mask-composite: exclude) {
+    .plate::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      padding: calc(var(--glass-thickness) * 1.5);
+      pointer-events: none;
+      background: conic-gradient(
+        from var(--glass-light),
+        oklch(from var(--color-ground) l c h / calc(var(--glass-sheen) * 0.9)) 0deg,
+        oklch(from var(--color-pen) l c h / var(--glass-dispersion)) 44deg,
+        oklch(from var(--color-ink) l c h / var(--glass-band)) 96deg,
+        oklch(from var(--color-ink) l c h / var(--glass-arris)) 176deg,
+        oklch(from var(--color-pen) l c h / calc(var(--glass-dispersion) * 1.4)) 224deg,
+        oklch(from var(--color-ink) l c h / var(--glass-band)) 300deg,
+        oklch(from var(--color-ground) l c h / calc(var(--glass-sheen) * 0.9)) 360deg
+      );
+      mask:
+        linear-gradient(currentColor 0 0) content-box,
+        linear-gradient(currentColor 0 0);
+      mask-composite: exclude;
+    }
+  }
+
+  /* Every layer here states its z-index, or DOM order decides. */
+  .plate::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background-image: var(--plate-lqip, none);
+    background-size: cover;
+    background-position: center;
+    filter: blur(14px);
+    transform: scale(1.08);
+  }
+
+  .plate img {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    /* Load-bearing: `inset: 0` alone renders at intrinsic size. */
+    block-size: 100%;
+    inline-size: 100%;
+    object-fit: contain;
+  }
+
+  .caption {
+    margin-block-start: var(--space-row);
+    max-inline-size: var(--container-measure);
+  }
+
+  .caption__title {
+    font-size: var(--text-lede);
+    font-weight: var(--font-weight-bold);
+    line-height: var(--leading-tight);
+    letter-spacing: -0.015em;
+  }
+
+  .caption__line {
+    margin-block-start: var(--space-caption);
+    font-size: var(--text-caption);
+    font-style: italic;
+  }
+
+  .status {
+    display: inline-block;
+    margin-block-start: var(--space-caption);
+    padding-inline: 0.5em;
+    font-size: var(--text-micro);
+    font-weight: var(--font-weight-bold);
+    line-height: calc(var(--space-unit) * 0.9);
+    letter-spacing: var(--tracking-micro);
+    text-transform: uppercase;
+    color: var(--color-ink);
+    border: 1px solid var(--color-ink);
+  }
+
+  .status--sold {
+    background-color: var(--color-ink);
+    color: var(--color-ground);
+  }
+
+  .plate-strip {
+    background-color: var(--color-pen);
+    color: var(--color-ground);
+    padding-block: var(--space-caption);
+    /* Scrollable even when static: the only path without the marquee. */
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+    scroll-padding-inline-start: var(--space-margin);
+    scrollbar-width: none;
+  }
+
+  .plate-strip::-webkit-scrollbar {
+    display: none;
+  }
+
+  .plate-strip__track {
+    display: flex;
+    inline-size: max-content;
+  }
+
+  .plate-index {
+    display: flex;
+    gap: 0.9em;
+    padding-inline: var(--space-margin);
+    font-family: var(--font-display);
+    font-size: var(--text-strip);
+    font-weight: var(--font-weight-bold);
+    text-transform: uppercase;
+  }
+
+  .plate-index--clone {
+    display: none;
+  }
+
+  .plate-index__item {
+    flex: none;
+  }
+
+  /* No second readable colour on pen: red 2.15:1, ink 1.86:1. */
+  .plate-index__folio {
+    font-variant-numeric: tabular-nums;
+    font-weight: var(--font-weight-regular);
+  }
+
+  .plate-index__link {
+    display: flex;
+    align-items: baseline;
+    gap: 0.14em;
+    min-block-size: 1.5rem;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  /* Every row is a link, so an underline is texture, not signal. */
+  .plate-index__link:hover .plate-index__title,
+  .plate-index__link:focus-visible .plate-index__title {
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+
+  /* Cadence slots follow position, not `order`, so renumbering is safe. */
+  .cadence {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+    margin-block-start: var(--space-section);
+  }
+
+  .cadence > * {
+    inline-size: 100%;
+    max-inline-size: var(--container-plate);
+    /* The strip jumps here; a work on the edge reads as a failed load. */
+    scroll-margin-block-start: var(--space-row);
+  }
+
+  .cadence > :nth-child(5n + 1) {
+    margin-block-start: var(--space-cycle);
+  }
+  .cadence > :nth-child(5n + 2),
+  .cadence > :nth-child(5n + 4) {
+    margin-block-start: var(--space-row);
+  }
+  .cadence > :nth-child(5n + 3),
+  .cadence > :nth-child(5n + 5) {
+    margin-block-start: var(--space-pair);
+  }
+  .cadence > :first-child {
+    margin-block-start: 0;
+  }
+
+  .cadence > :last-child::after {
+    content: '';
+    display: block;
+    margin-block-start: var(--space-row);
+    border-block-start: 1px solid var(--color-pen);
+  }
+
+  .loupe {
+    position: absolute;
+    z-index: 3;
+    inset-block-start: 0;
+    inset-inline-start: 0;
+    inline-size: var(--loupe-size);
+    block-size: var(--loupe-size);
+    margin: calc(var(--loupe-size) / -2);
+    border-radius: 50%;
+    overflow: hidden;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity var(--duration-short) var(--ease-page);
+    transform: translate3d(var(--lens-x, 0), var(--lens-y, 0), 0);
+
+    box-shadow:
+      inset 0 0 0 1px oklch(from var(--color-ink) l c h / calc(var(--glass-arris) * 1.2)),
+      inset 0 calc(var(--glass-thickness) * 1.5) calc(var(--glass-thickness) * 2.5)
+        calc(var(--glass-thickness) * -1.2)
+        oklch(from var(--color-ground) l c h / var(--glass-sheen)),
+      inset 0 calc(var(--glass-thickness) * -1.5) calc(var(--glass-thickness) * 3)
+        calc(var(--glass-thickness) * -1.2)
+        oklch(from var(--color-pen) l c h / calc(var(--glass-dispersion) * 2.5)),
+      0 0 0 1px oklch(from var(--color-ink) l c h / calc(var(--glass-arris) * 1.2)),
+      0 calc(var(--glass-thickness) * 2) calc(var(--glass-thickness) * 7)
+        calc(var(--glass-thickness) * -1.5)
+        oklch(from var(--color-ink) l c h / calc(var(--glass-cast) * 3));
+  }
+
+  .loupe__view {
+    position: absolute;
+    /* Larger than the lens, clipped back: the rim bends real image. */
+    inset: calc(-1 * var(--loupe-pad));
+    filter: url('#glass-refraction');
+    background-image: var(--lens-image);
+    background-repeat: no-repeat;
+    background-size: calc(var(--lens-w, 0px) * var(--loupe-zoom))
+      calc(var(--lens-h, 0px) * var(--loupe-zoom));
+    background-position: calc(
+        var(--loupe-size) / 2 + var(--loupe-pad) - var(--lens-px, 0) * var(--lens-w, 0px) *
+          var(--loupe-zoom)
+      )
+      calc(
+        var(--loupe-size) / 2 + var(--loupe-pad) - var(--lens-py, 0) * var(--lens-h, 0px) *
+          var(--loupe-zoom)
+      );
+  }
+
+  .loupe__sheen {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: radial-gradient(
+      circle at 30% 24%,
+      oklch(from var(--color-ground) l c h / var(--glass-sheen)),
+      oklch(from var(--color-ground) l c h / 0) 46%
+    );
+  }
+
+  @supports (mask-composite: exclude) {
+    .loupe::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      padding: calc(var(--glass-thickness) * 2.2);
+      pointer-events: none;
+      background: conic-gradient(
+        from var(--glass-light),
+        oklch(from var(--color-ground) l c h / calc(var(--glass-sheen) * 1.6)) 0deg,
+        oklch(from var(--color-pen) l c h / calc(var(--glass-dispersion) * 2)) 52deg,
+        oklch(from var(--color-ink) l c h / calc(var(--glass-band) * 1.6)) 104deg,
+        oklch(from var(--color-ink) l c h / calc(var(--glass-arris) * 1.5)) 180deg,
+        oklch(from var(--color-pen) l c h / calc(var(--glass-dispersion) * 2.6)) 236deg,
+        oklch(from var(--color-ink) l c h / calc(var(--glass-band) * 1.6)) 302deg,
+        oklch(from var(--color-ground) l c h / calc(var(--glass-sheen) * 1.6)) 360deg
+      );
+      mask:
+        linear-gradient(currentColor 0 0) content-box,
+        linear-gradient(currentColor 0 0);
+      mask-composite: exclude;
+    }
+  }
+
+  /* Visible while empty: waiting reads as loading. */
+  .plate[data-lens-active] .loupe {
+    opacity: 1;
+  }
+
+  .plate[data-lens-active] {
+    cursor: none;
+  }
+
+  .loupe__view {
+    opacity: 0;
+    transition: opacity var(--duration-long) var(--ease-page);
+  }
+
+  .plate[data-lens-ready] .loupe__view {
+    opacity: 1;
+  }
+}
+
 @view-transition {
   navigation: auto;
 }
@@ -71,8 +499,113 @@
 
   ::view-transition-old(root),
   ::view-transition-new(root) {
-    animation-duration: 0.36s;
-    animation-timing-function: var(--ease-out-soft);
+    animation-duration: var(--duration-long);
+    animation-timing-function: var(--ease-page);
+  }
+}
+
+/* Every displaced start state lives in here, or content strands invisible. */
+@media (prefers-reduced-motion: no-preference) {
+  /* Under 600ms total, so an entrance cannot cost the LCP. */
+  @keyframes enter {
+    from {
+      opacity: 0;
+      transform: translateY(0.75rem);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  .enter {
+    animation: enter var(--duration-long) var(--ease-page) both;
+    animation-delay: calc(var(--enter-step, 0) * 70ms);
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  @supports (animation-timeline: view()) {
+    @keyframes reveal {
+      from {
+        opacity: 0;
+        transform: translateY(3rem);
+      }
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+
+    /* `entry` alone: a plate taller than the viewport never reaches `cover`. */
+    .reveal {
+      animation: reveal linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 90%;
+    }
+
+    /* Half the track, which holds the list twice, so no seam shows. */
+    @keyframes plate-strip {
+      to {
+        transform: translateX(-50%);
+      }
+    }
+
+    .plate-index--clone {
+      display: flex;
+    }
+
+    .plate-strip__track {
+      animation: plate-strip 48s linear infinite;
+    }
+
+    .plate-strip:hover .plate-strip__track,
+    .plate-strip:active .plate-strip__track,
+    .plate-strip:focus-within .plate-strip__track {
+      animation-play-state: paused;
+    }
+
+    /* No transform gives "one line, full width, getting smaller". */
+    @keyframes titlecard {
+      from {
+        font-size: max(var(--titlecard-min), calc((100vw - 2 * var(--space-margin)) / 4.912));
+      }
+      to {
+        font-size: var(--titlecard-min);
+      }
+    }
+
+    @keyframes plate-waiting {
+      50% {
+        opacity: 0.55;
+      }
+    }
+
+    .plate::after {
+      /* Finite: an endless pulse keeps every plate composited forever. */
+      animation: plate-waiting 1.8s ease-in-out 8;
+    }
+
+    @keyframes loupe-waiting {
+      50% {
+        opacity: 0.4;
+      }
+    }
+
+    .plate[data-lens-active]:not([data-lens-ready]) .loupe {
+      animation: loupe-waiting 1.1s ease-in-out infinite;
+    }
+
+    .titlecard__name {
+      animation: titlecard linear both;
+      /* `scroll()`, not `scroll(root)`: the minifier folds this into the
+         `animation` shorthand, where a timeline with an argument fails to
+         parse and takes the whole declaration with it. */
+      animation-timeline: scroll();
+      animation-range: 0 30svh;
+    }
   }
 }
 
@@ -86,48 +619,8 @@
     left: 1rem;
     top: 1rem;
     padding: 0.5rem 1rem;
-    background-color: var(--surface);
-    color: var(--text);
-    outline: 2px solid var(--text);
-  }
-}
-
-/*
- * A gallery mat: fixed proportion, artwork centred and never cropped.
- *
- * `position: relative` is load-bearing. Percentage heights do not resolve
- * against an aspect-ratio-derived height, so the image is positioned
- * absolutely instead (see ArtworkCard) — otherwise it overflows and
- * `overflow: hidden` silently crops the work.
- */
-@utility artwork-mat {
-  position: relative;
-  aspect-ratio: 4 / 5;
-  overflow: hidden;
-  background-color: var(--surface-muted);
-}
-
-/*
- * Scroll reveal. Guarded twice: `@supports` so unsupported browsers never see
- * the hidden start state, and reduced-motion so it is opt-out.
- */
-@media (prefers-reduced-motion: no-preference) {
-  @supports (animation-timeline: view()) {
-    @keyframes reveal {
-      from {
-        opacity: 0;
-        transform: translateY(1.5rem);
-      }
-      to {
-        opacity: 1;
-        transform: none;
-      }
-    }
-
-    .reveal {
-      animation: reveal linear both;
-      animation-timeline: view();
-      animation-range: entry 0% cover 18%;
-    }
+    background-color: var(--color-ground);
+    color: var(--color-ink);
+    outline: 2px solid var(--color-ink);
   }
 }

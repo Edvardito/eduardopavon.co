@@ -3,7 +3,15 @@
 Portfolio of the artist **Eduardo Pavón**, who draws with Bic ballpoint pens.
 
 A framework-free [Astro](https://astro.build) site: static prerendered HTML,
-zero client-side JavaScript, Tailwind CSS for styling, deployed to Vercel.
+Tailwind CSS for styling, deployed to Vercel. It ships **one** client script — a
+hover magnifier over each drawing, which needs pointer tracking that CSS cannot
+express — gated to fine pointers and budgeted at 3 KB. There is no framework, no
+hydration and no other runtime.
+
+Four documents, and each owns one thing: [DESIGN.md](DESIGN.md) owns design
+intent (`src/styles/global.css` owns the values), [SPEC.md](SPEC.md) owns the
+roadmap and the decisions log, [SECURITY.md](SECURITY.md) owns supply-chain
+posture, and `CLAUDE.md` owns the working rules for coding agents.
 
 > **Two licences.** The **source code** is MIT. The **artworks and their
 > reproductions are not** — they are © José Eduardo Hernández Pavón and licensed
@@ -48,6 +56,24 @@ only the mountpoint Docker creates for the named volume — the packages
 themselves live in the volume, not on your disk. It stays at 0 bytes, and it is
 gitignored.
 
+### If the dev server takes minutes to start (Windows)
+
+Docker Desktop reads a bind-mounted Windows path through a translation layer,
+and it is slow for the many small reads a dev server does while resolving
+imports. Measured in this project: **15.4 ms per file** on the bind mount
+against **~0 ms** on a named volume. Vite's dependency scan makes tens of
+thousands of those calls, which is how a start becomes eight minutes.
+
+The fix is not in this repo — put the working copy on a filesystem Docker reads
+natively. Clone it inside WSL2 and run the same `docker compose up` from there;
+startup drops to seconds. macOS and Linux are unaffected.
+
+Two things here already help and are worth keeping: `astro dev` gets its own
+Vite cache directory (`VITE_CACHE_DIR`) so running `pnpm build` or `pnpm test`
+in a second container cannot invalidate it, and the detail-tier image glob in
+`src/artworks.ts` is lazy so several megabytes of derivatives are not pulled
+into the module graph before the first page is served.
+
 Rebuild the image after changing dependencies:
 
 ```bash
@@ -69,14 +95,16 @@ is expected; run `pnpm check` in the container instead.
 All commands run in the container. `run --rm` starts a throwaway container that
 shares the same dependency volume.
 
-| Command                                    | Purpose                        |
-| ------------------------------------------ | ------------------------------ |
-| `docker compose up`                        | Dev server with hot-reload     |
-| `docker compose run --rm web pnpm check`   | Type check                     |
-| `docker compose run --rm web pnpm test`    | Run the test suite             |
-| `docker compose run --rm web pnpm build`   | Type check, then build `dist/` |
-| `docker compose run --rm web pnpm preview` | Serve the production build     |
-| `docker compose down`                      | Stop and remove the container  |
+| Command                                    | Purpose                       |
+| ------------------------------------------ | ----------------------------- |
+| `docker compose up`                        | Dev server with hot-reload    |
+| `docker compose run --rm web pnpm check`   | Type check                    |
+| `docker compose run --rm web pnpm test`    | Run the test suite            |
+| `docker compose run --rm web pnpm lint`    | ESLint                        |
+| `docker compose run --rm web pnpm format`  | Prettier, writing in place    |
+| `docker compose run --rm web pnpm build`   | Type check, then build        |
+| `docker compose run --rm web pnpm preview` | Serve the production build    |
+| `docker compose down`                      | Stop and remove the container |
 
 Inside the Dev Container terminal, drop the prefix and run `pnpm check`,
 `pnpm test`, `pnpm build` and so on directly. `pnpm test:watch` reruns on
@@ -118,9 +146,11 @@ chasing coverage:
 - **i18n** — default-locale fallback, path localization, message interpolation,
   dimension formatting
 - **Slugs** — the filename → slug derivation used by the importer
-- **Content integrity** — every entry has an asset under 1 MB, no orphaned
-  assets, unique `order`, known `status`, and **dimensions recorded in the same
-  orientation as the image**
+- **Content integrity** — both image tiers present and within their own budgets,
+  a placeholder per entry, no orphans on either side, unique `order`, known
+  `status`, and **dimensions recorded in the same orientation as the image**
+- **Design guards** — the palette stays closed, exactly one client script within
+  its budget, every animation inside a reduced-motion guard
 
 That last test exists because of a real Phase 1 bug: the source filenames mixed
 width-first and height-first, so a swapped pair silently published wrong
@@ -148,10 +178,17 @@ docker compose --profile tools run --rm images
 The path comes from `.env` rather than a shell variable so the same command
 works in PowerShell, bash and zsh, and so no shell mangles the container paths.
 
-The importer downscales to 2000px on the longest edge, encodes WebP at quality
-82, and embeds EXIF/XMP rights metadata, writing
-`src/assets/artworks/<slug>.webp`. Then add the matching
-`src/content/artworks/<slug>.yaml` entry.
+The importer writes **two tiers** from each original, both WebP at quality 82
+with EXIF/XMP rights metadata embedded:
+
+| Tier    | Longest edge | Output                                   | Used by                    |
+| ------- | ------------ | ---------------------------------------- | -------------------------- |
+| gallery | 2000px       | `src/assets/artworks/<slug>.webp`        | every page                 |
+| detail  | 3000px       | `src/assets/artworks/detail/<slug>.webp` | the magnifier, and Phase 3 |
+
+Each tier has its own size budget, asserted by `tests/content.test.ts`. The two
+files are paired by slug, so there is no extra field to fill in — then add the
+matching `src/content/artworks/<slug>.yaml` entry.
 
 Full checklist: `.claude/skills/add-artwork/SKILL.md`.
 
@@ -159,16 +196,18 @@ Full checklist: `.claude/skills/add-artwork/SKILL.md`.
 
 ```
 src/
-├── assets/artworks/     Optimized WebP, processed by astro:assets
+├── assets/artworks/     Optimized WebP (gallery tier), and detail/ (detail tier)
 ├── components/
 │   ├── layout/          Header, Footer
 │   ├── seo/             Seo (head tags), JsonLd (structured data)
-│   └── ui/              ArtworkCard, Badge
+│   └── ui/              ArtworkPlate, ArtworkCard, PlateIndex,
+│                         StatusAnnotation, GlassFilter
 ├── content/artworks/    One YAML entry per artwork
 ├── content.config.ts    Collection schema (Zod)
 ├── i18n/                Locale config, message files, t() and resolvers
 ├── layouts/             BaseLayout — <html lang>, head, chrome
 ├── pages/               File-based routes
+├── scripts/             The one client script (magnifier)
 └── styles/global.css    Tailwind entry + design tokens
 ```
 
@@ -184,13 +223,15 @@ better for SEO and latency than SSR for content that does not vary per request.
 
 ### Design and motion
 
-Type is **Urbanist**, a variable family self-hosted through Astro's Fonts API:
-fetched and subset at build time, served from our own origin with preload and
-fallback metrics, so there is no request to Google at runtime and no layout
-shift when the webfont arrives.
+Type is **Irregardless Variable** for headings and **Polymath Text** for body,
+both Adobe Typekit families, self-hosted at build time through Astro's Adobe
+provider. No runtime request to Adobe, generated fallback metrics, and only the
+display face preloaded. What had to be verified to make that safe — the variable
+axis, the `ss02` alternates, the name's measured advance — is in
+[DESIGN.md](DESIGN.md).
 
-All motion is CSS. No JavaScript is shipped for it, which keeps the
-zero-client-JS invariant intact:
+All motion is CSS — the one client script is the magnifier, and it drives no
+animation:
 
 - **View transitions** — `@view-transition { navigation: auto; }` opts into
   cross-document transitions. Each artwork already carries a
@@ -201,11 +242,13 @@ zero-client-JS invariant intact:
   and `prefers-reduced-motion: no-preference`. Browsers without support never
   see the hidden start state, so content cannot be stranded invisible.
 
-Artworks sit in a fixed-ratio **mat** so captions align across a row and the
-gallery keeps an even rhythm. The image is absolutely positioned and uses
-`object-fit: contain` — **percentage heights do not resolve against an
-aspect-ratio-derived height**, and relying on them silently crops the artwork.
-Never reintroduce `height: 100%` sizing there.
+The gallery is **one column at every width**, every plate at the same measure,
+so height is the only thing that varies and it varies because the drawing does.
+Each plate takes its `aspect-ratio` from the asset's own dimensions, and the
+image is absolutely positioned inside it with `object-fit: contain` —
+**percentage heights do not resolve against an aspect-ratio-derived height**,
+and relying on them silently crops the artwork. Never reintroduce `height: 100%`
+sizing there.
 
 ### Localization
 

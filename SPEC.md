@@ -78,6 +78,35 @@ lightbox or any client-side interaction.
   static figures would add empty stops. They become links in Phase 3.
 - **`acquireLicensePage` omitted from JSON-LD.** It needs a real contact page;
   add it in Phase 6.
+- **Invariant #1 amended in Phase 1.7 to allow one client script.** A lens that
+  follows the cursor requires pointer tracking and CSS has no equivalent, so the
+  magnifier cannot exist under "zero client JS". The exception is bounded by
+  mechanism rather than by prose: a test fails if a second script appears or if
+  the first exceeds its budget. The alternative — dropping the magnifier — was
+  the designer's call, and they took the exception knowingly.
+- **A second image derivative tier, revising the Phase 1 single-tier decision.**
+  The gallery tier stays at 2000px; a detail tier at 3000px feeds the magnifier
+  and Phase 3, at its own 2.5 MB budget rather than a loosened one. Committed
+  artwork grows from ~3.0 MB to ~10 MB. The pairing is derived by slug in
+  `src/artworks.ts`, so no schema field and no half-configured entry.
+- **The cadence was specified as a composed page and then reduced to one
+  column.** Five slots with differing spans, a facing spread and a vertical drop
+  were built and reviewed; the designer replaced them with a single column at a
+  common measure, because works at differing sizes read as some being too large.
+  Rhythm is now the cadence's only instrument. Recorded so the offsets are not
+  reinstated from the section that once described them.
+- **The typeface was replaced, reversing the Phase 1 self-hosting decision.**
+  Urbanist gave way to Irregardless Variable for headings and Polymath Text for
+  body, both from Adobe Typekit, at the designer's direction. The cost is real
+  and recorded in DESIGN.md: a render-blocking third-party stylesheet,
+  `font-display: auto`, no generated fallback metrics, and a privacy surface —
+  all properties Phase 1 had bought by self-hosting. Resolved later in the
+  phase: Astro's Adobe provider self-hosts the same families at build time and
+  restores all of them. Confirm the licence permits it.
+- **The glazing's first build read as a border.** Concentric box-shadow rings
+  are uniform all the way round, and uniform is what a mount looks like. The rim
+  is now a conic gradient masked to the ring, with one shared light angle, so
+  the edge varies the way glass does.
 
 ### Open questions
 
@@ -104,10 +133,10 @@ Vercel builds and deploys on push, so CI is the **gate in front of** it.
 - [x] Prettier + ESLint (`eslint-plugin-astro`, a11y rules,
       `eslint-config-prettier` last), enforced by a container-aware
       `.githooks/pre-commit` on staged files and re-checked in CI
-- [x] 28 Vitest tests: i18n helpers, slug derivation, and content integrity
-      (asset exists and is under budget, no orphans, unique `order`, known
-      `status`, and dimensions in the same orientation as the image — the exact
-      class of bug found in Phase 1, verified to fail on a swap)
+- [x] Vitest suite (37 tests today): i18n helpers, slug derivation, and content
+      integrity (asset exists and is under budget, no orphans, unique `order`,
+      known `status`, and dimensions in the same orientation as the image — the
+      exact class of bug found in Phase 1, verified to fail on a swap)
 
 Playwright/E2E deliberately deferred; there is no client-side behaviour to
 exercise yet.
@@ -170,6 +199,72 @@ Two review findings were rejected after testing them:
   `inset: 0` renders at its intrinsic size, measured at 1542×2000 inside a
   200×250 box.
 
+## Phase 1.7 — Design system ✅ complete
+
+Phase 1 shipped infrastructure with placeholder styling. This pass made the
+design decisions, wrote them down, and proved them in the pages that exist.
+
+- [x] `DESIGN.md` at the project root: intent, principles, foundations, the
+      cadence, page archetypes, components, motion, accessibility,
+      anti-patterns, and the open questions the direction did not settle
+- [x] Closed palette — ink, ground, pen, plus `pen-red` for large text on dark
+      grounds — light mode only, no muted token; hierarchy from weight, size,
+      space and rule
+- [x] `global.css` rebuilt from the document; the dark-mode block deleted and
+      `color-scheme: light` declared
+- [x] Gallery rebuilt as one column at a common plate measure, paced by a
+      five-slot spacing cycle; plates carry each work's own aspect ratio, so
+      nothing can be cropped
+- [x] Glazing and loupe as one glass material sharing tokens, drawn on the work
+      rather than around it, built from the palette colours
+- [x] Sticky title card — the name on one line at page width, shrinking on
+      scroll — with the list of plates beneath it, linking to each work
+- [x] The one sanctioned client script: the hover magnifier, ~1.2 KB shipped,
+      gated to fine pointers, progressive, dismissible
+- [x] Second image derivative tier at 3000px for the magnifier and Phase 3
+- [x] New guards in `tests/`: palette containment, script singularity and
+      budget, reduced-motion containment, and both image budgets — each observed
+      failing before it passed
+
+### Explicitly out of scope for Phase 1.7
+
+Any new page · the about page · per-artwork detail pages · any route or endpoint
+· a second locale · a CMS · any new dependency.
+
+### Decisions from Phase 1.7
+
+- **Six things were specified, built, found wrong and replaced**, each corrected
+  in DESIGN.md as well as in the code: the cadence's per-slot geometry and
+  height caps; the glazing's concentric rings, which read as a border, and then
+  its weight, which read as a mount; the specular rail, which ran off the plate
+  and across the caption; the `backdrop-filter` rim; the hero's phone reading
+  order, which put the list of plates ahead of the first drawing; and a spacing
+  rule tied to a vertical drop that no longer exists.
+- **The hero was removed outright**, after the gallery became one column. A
+  frontispiece spread privileges one work, which is a claim the single column
+  had already given up making. The home page now runs name → contents → work.
+- **Refraction was written off as non-interoperable, and that was wrong.** Only
+  `backdrop-filter: url(…)` is Chromium-only, and the loupe never needed it: it
+  carries its own image layer, so the displacement runs through plain `filter`.
+  The lens really does bend light, via `public/glass-displacement.svg`.
+- **The palette went from three values to four.** `--color-pen-red` was added
+  when the masthead moved to an ink field and the accent measured 1.86:1 on it.
+  It arrived bounded to large text on dark grounds — the price of a fifth would
+  be the same: a measured failure no existing value solves, plus a written rule
+  for where it may not go.
+
+## Phase 1.8 — Site structure
+
+The next phase, and the reason Phase 1.7 stopped where it did: decide what the
+site _is_ — which pages exist, what each is for, and in what order they ship. It
+sequences the existing Phases 2, 3 and 6 rather than replacing them, and it
+builds against a design system that is already proven rather than theoretical.
+
+Inherited from @DESIGN.md's Outstanding list: the about and detail archetypes,
+prev/next, the list of plates becoming route navigation, and closing the
+magnifier's accessible-equivalent gap (the lens shipped before the full-bleed
+detail page it points at).
+
 ## Phase 2 — About page
 
 A biography/statement page at `/sobre` (localized), reusing `BaseLayout` and the
@@ -207,7 +302,10 @@ Also the point at which `acquireLicensePage` gets a real target.
 These hold across every phase. Breaking one is a foundation change, not a
 feature.
 
-1. **No UI framework, no client runtime.** Zero client JS by default.
+1. **No UI framework, and one sanctioned client script.** Zero client JS by
+   default; `src/scripts/magnifier.ts` is the single exception, gated to fine
+   pointers and budgeted. Amended in Phase 1.7 — see the decisions log and
+   @DESIGN.md. A second script is a foundation change, not a feature.
 2. **pnpm only**, frozen lockfile, exact pins, no unsanctioned lifecycle
    scripts, release cooldown on.
 3. **Static output.** On-demand rendering is per-route and exceptional; never

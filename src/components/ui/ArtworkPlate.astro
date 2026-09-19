@@ -1,0 +1,42 @@
+---
+import { Picture } from 'astro:assets';
+import { artworkAltText, detailImage, placeholderFor, type Artwork } from '~/artworks';
+import type { Locale } from '~/i18n';
+
+interface Props {
+  artwork: Artwork;
+  locale: Locale;
+  priority?: boolean;
+}
+
+const { artwork, locale, priority = false } = Astro.props;
+
+/* Tracks --container-plate; change one and change the other. */
+const SIZES = '(min-width: 60rem) 56rem, 92vw';
+const { image } = artwork.data;
+
+const detail = await detailImage(artwork);
+
+const placeholder = placeholderFor(artwork);
+
+const style = [
+  `--plate-w:${image.width}`,
+  `--plate-h:${image.height}`,
+  ...(placeholder ? [`--plate-lqip:${placeholder}`] : []),
+  `view-transition-name:artwork-${artwork.id}`,
+].join(';');
+---
+
+<div class="plate" style={style} data-lens={detail?.src}>
+  <Picture
+    src={image}
+    alt={artworkAltText(artwork, locale)}
+    formats={['avif', 'webp']}
+    fallbackFormat="webp"
+    widths={[480, 768, 1088, 1600, 2000]}
+    sizes={SIZES}
+    loading={priority ? 'eager' : 'lazy'}
+    decoding={priority ? 'sync' : 'async'}
+    fetchpriority={priority ? 'high' : 'auto'}
+  />
+</div>

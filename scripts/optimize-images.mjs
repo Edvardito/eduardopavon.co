@@ -1,9 +1,8 @@
 #!/usr/bin/env node
 /**
- * Imports artwork originals as slug-named, downscaled WebP under
- * src/assets/artworks/. Originals stay out of the repo.
+ * Imports artwork originals as two WebP tiers plus a blurred placeholder.
  *
- *   docker compose --profile tools run --rm images
+ * docker compose --profile tools run --rm images
  */
 
 import { mkdir, readdir, stat, writeFile } from 'node:fs/promises';
@@ -12,17 +11,35 @@ import { fileURLToPath } from 'node:url';
 import sharp from 'sharp';
 import { ARTIST_NAME, ARTWORK_LICENSE, rightsStatement } from '../src/site.ts';
 
-// 2000px was chosen empirically: at 2400 the scanned bond-paper work exceeds 1 MB.
-const MAX_EDGE = 2000;
 const FORMAT = 'webp';
 const QUALITY = 82;
+
+/* 2000px: at 2400 the scanned work exceeds 1 MB. 3000px: the loupe needs 3.3x. */
+/* Small enough to inline, large enough to stand in. */
+const PLACEHOLDER_EDGE = 20;
+export const PLACEHOLDER_FILE = 'placeholders.json';
+
 export const MAX_COMMITTED_BYTES = 1024 * 1024;
+export const MAX_DETAIL_BYTES = 2.5 * 1024 * 1024;
+
+export const TIERS = [
+  {
+    label: 'gallery',
+    dir: ['src', 'assets', 'artworks'],
+    maxEdge: 2000,
+    budget: MAX_COMMITTED_BYTES,
+  },
+  {
+    label: 'detail',
+    dir: ['src', 'assets', 'artworks', 'detail'],
+    maxEdge: 3000,
+    budget: MAX_DETAIL_BYTES,
+  },
+];
 
 const RIGHTS = rightsStatement();
 
-// Protects the committed masters, which are downloadable from the repo.
-// astro:assets re-encodes for delivery and strips this, so the rights markup
-// in the page (meta/JSON-LD) is what covers the served images.
+// Covers the committed masters; astro:assets strips this from what it serves.
 const XMP_RIGHTS = `<?xpacket begin="" id="W5M0MpCehiHzreSzNTczkc9d"?>
 <x:xmpmeta xmlns:x="adobe:ns:meta/">
  <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
@@ -42,7 +59,7 @@ const XMP_RIGHTS = `<?xpacket begin="" id="W5M0MpCehiHzreSzNTczkc9d"?>
 const SOURCE_EXTENSIONS = new Set(['.jpg', '.jpeg', '.png', '.tif', '.tiff', '.webp']);
 
 const PROJECT_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const OUTPUT_DIR = path.join(PROJECT_ROOT, 'src', 'assets', 'artworks');
+const outputDir = (tier) => path.join(PROJECT_ROOT, ...tier.dir);
 
 function parseArgs(argv) {
   const args = { src: process.env.ARTWORK_SOURCE_DIR ?? '' };
@@ -94,10 +111,13 @@ async function main() {
     return;
   }
 
-  await mkdir(OUTPUT_DIR, { recursive: true });
+  for (const tier of TIERS) {
+    await mkdir(outputDir(tier), { recursive: true });
+  }
 
   const seen = new Map();
   const results = [];
+  const placeholders = {};
 
   for (const name of entries) {
     const slug = slugFromOriginalName(name);
@@ -108,42 +128,67 @@ async function main() {
 
     const sourcePath = path.join(sourceDir, name);
     const sourceBytes = (await stat(sourcePath)).size;
-    const image = sharp(sourcePath, { failOn: 'error' });
-    const { width = 0, height = 0 } = await image.metadata();
+    const { width = 0, height = 0 } = await sharp(sourcePath, { failOn: 'error' }).metadata();
 
-    const buffer = await image
-      .rotate()
-      .resize({ width: MAX_EDGE, height: MAX_EDGE, fit: 'inside', withoutEnlargement: true })
-      .withExif({ IFD0: { Artist: ARTIST_NAME, Copyright: RIGHTS } })
-      .withXmp(XMP_RIGHTS)
-      .webp({ quality: QUALITY })
-      .toBuffer();
+    for (const tier of TIERS) {
+      // A sharp pipeline is not reusable once run.
+      const buffer = await sharp(sourcePath, { failOn: 'error' })
+        .rotate()
+        .resize({
+          width: tier.maxEdge,
+          height: tier.maxEdge,
+          fit: 'inside',
+          withoutEnlargement: true,
+        })
+        .withExif({ IFD0: { Artist: ARTIST_NAME, Copyright: RIGHTS } })
+        .withXmp(XMP_RIGHTS)
+        .webp({ quality: QUALITY })
+        .toBuffer();
 
-    await writeFile(path.join(OUTPUT_DIR, `${slug}.${FORMAT}`), buffer);
+      await writeFile(path.join(outputDir(tier), `${slug}.${FORMAT}`), buffer);
+      results.push({ tier, slug, width, height, sourceBytes, outputBytes: buffer.length });
 
-    results.push({ slug, width, height, sourceBytes, outputBytes: buffer.length });
+      if (tier.label === 'gallery') {
+        const tiny = await sharp(buffer)
+          .resize({ width: PLACEHOLDER_EDGE, height: PLACEHOLDER_EDGE, fit: 'inside' })
+          .webp({ quality: 40 })
+          .toBuffer();
+        placeholders[slug] = `url('data:image/webp;base64,${tiny.toString('base64')}')`;
+      }
+    }
   }
 
-  console.log(`\nImported ${results.length} artwork image(s)`);
-  console.log(`  max edge ${MAX_EDGE}px · ${FORMAT} q${QUALITY} · -> src/assets/artworks/\n`);
-  for (const r of results) {
-    const saved = (100 - (r.outputBytes / r.sourceBytes) * 100).toFixed(1);
+  await writeFile(
+    path.join(PROJECT_ROOT, 'src', 'assets', 'artworks', PLACEHOLDER_FILE),
+    `${JSON.stringify(placeholders, null, 2)}
+`,
+  );
+
+  for (const tier of TIERS) {
+    const tierResults = results.filter((r) => r.tier === tier);
+    console.log(`\n${tierResults.length} image(s) -> ${tier.dir.join('/')}/`);
     console.log(
-      `  ${r.slug.padEnd(16)} ${String(r.width).padStart(5)}x${String(r.height).padEnd(5)}` +
-        ` ${formatBytes(r.sourceBytes).padStart(9)} -> ${formatBytes(r.outputBytes).padStart(9)} (-${saved}%)`,
+      `  max edge ${tier.maxEdge}px - ${FORMAT} q${QUALITY} - budget ${formatBytes(tier.budget)}\n`,
     );
-  }
+    for (const r of tierResults) {
+      const saved = (100 - (r.outputBytes / r.sourceBytes) * 100).toFixed(1);
+      console.log(
+        `  ${r.slug.padEnd(16)} ${String(r.width).padStart(5)}x${String(r.height).padEnd(5)}` +
+          ` ${formatBytes(r.sourceBytes).padStart(9)} -> ${formatBytes(r.outputBytes).padStart(9)} (-${saved}%)`,
+      );
+    }
 
-  const oversized = results.filter((r) => r.outputBytes > MAX_COMMITTED_BYTES);
-  if (oversized.length > 0) {
-    console.warn(
-      `\nWarning: ${oversized.map((r) => r.slug).join(', ')} exceeded 1 MB. ` +
-        'Lower QUALITY or MAX_EDGE before committing.',
-    );
+    const oversized = tierResults.filter((r) => r.outputBytes > tier.budget);
+    if (oversized.length > 0) {
+      console.warn(
+        `\nWarning: ${oversized.map((r) => r.slug).join(', ')} exceeded the ${tier.label} ` +
+          `budget of ${formatBytes(tier.budget)}. Lower QUALITY or the tier's maxEdge before committing.`,
+      );
+    }
   }
 }
 
-// Only run when invoked directly, so tests can import the helpers above.
+// Not on import, so the tests can reuse the helpers above.
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
   await main();
 }

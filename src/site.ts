@@ -10,6 +10,12 @@ export const ARTWORK_LICENSE = {
   url: 'https://creativecommons.org/licenses/by-nc-nd/4.0/',
 } as const;
 
+/** Credit for the site itself — distinct from the authorship of the work. */
+export const SITE_AUTHOR = {
+  name: 'Eduardo Aire Torres',
+  url: 'https://github.com/eduairet',
+} as const;
+
 export const ARTWORK_STATUSES = ['framed', 'sold'] as const;
 
 export type ArtworkStatus = (typeof ARTWORK_STATUSES)[number];
@@ -18,7 +24,6 @@ export function copyrightNotice(year?: number): string {
   return `© ${year ? `${year} ` : ''}${ARTIST_LEGAL_NAME}`;
 }
 
-/** Copyright plus licence, for the page `<head>` and the image metadata. */
 export function rightsStatement(year?: number): string {
   return `${copyrightNotice(year)} — ${ARTWORK_LICENSE.id}`;
 }
