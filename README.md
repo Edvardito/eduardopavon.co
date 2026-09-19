@@ -1,4 +1,4 @@
-# eduardopavon.com
+# eduardopavon.co
 
 Portfolio of the artist **Eduardo Pavón**, who draws with Bic ballpoint pens.
 
@@ -299,7 +299,7 @@ One-time setup in the Vercel dashboard:
    writes `.vercel/output`).
 5. Install command: `pnpm install --frozen-lockfile`
 6. Node.js version: **24.x**, to match `.nvmrc`.
-7. Add the custom domain `eduardopavon.com`.
+7. Add the custom domain `eduardopavon.co`.
 
 `site` in `astro.config.ts` is the production URL and drives canonical, OG and
 sitemap URLs. It can be overridden per environment with the `SITE_URL`

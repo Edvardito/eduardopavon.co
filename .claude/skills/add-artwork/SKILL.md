@@ -1,7 +1,7 @@
 ---
 name: add-artwork
 description:
-  Add a new artwork to the eduardopavon.com portfolio — optimize and import the
+  Add a new artwork to the eduardopavon.co portfolio — optimize and import the
   image, create the content entry, and verify it reaches the gallery and
   structured data. Use when adding, importing, replacing or removing an artwork,
   or when asked about artwork images, slugs, or the image optimization settings.

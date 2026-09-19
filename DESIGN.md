@@ -1,4 +1,4 @@
-# eduardopavon.com — design system
+# eduardopavon.co — design system
 
 The single source of design **intent**. `src/styles/global.css` is the single
 source of design **values**; this file never restates one, with the palette as

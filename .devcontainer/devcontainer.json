@@ -1,6 +1,6 @@
 {
   "$schema": "https://raw.githubusercontent.com/devcontainers/spec/main/schemas/devContainer.schema.json",
-  "name": "eduardopavon.com",
+  "name": "eduardopavon.co",
   "dockerComposeFile": "../compose.yaml",
   "service": "web",
   "workspaceFolder": "/app",

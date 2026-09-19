@@ -1,8 +1,8 @@
 ---
 name: add-locale
 description:
-  Add a new language to eduardopavon.com, or work on its i18n seam — register
-  the locale, create its UI message file, translate artwork fields, and verify
+  Add a new language to eduardopavon.co, or work on its i18n seam — register the
+  locale, create its UI message file, translate artwork fields, and verify
   routing, hreflang and html lang. Use when adding or removing a language,
   translating strings, or asked how localization, t(), or locale fallback works.
 ---

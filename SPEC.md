@@ -1,4 +1,4 @@
-# eduardopavon.com — roadmap
+# eduardopavon.co — roadmap
 
 ## Vision
 

@@ -1,4 +1,4 @@
-# eduardopavon.com
+# eduardopavon.co
 
 Art portfolio for Eduardo Pavón (Bic-pen drawings). Astro + TypeScript, static
 output, deployed to Vercel.

@@ -9,7 +9,7 @@ import {
   t,
 } from '~/i18n';
 
-const SITE = new URL('https://eduardopavon.com');
+const SITE = new URL('https://eduardopavon.co');
 
 describe('resolveLocalized', () => {
   it('returns the requested locale when present', () => {
@@ -71,7 +71,7 @@ describe('getLocaleAlternates', () => {
     const alternates = getLocaleAlternates('/', SITE);
     expect(alternates.map((a) => a.hreflang)).toContain('x-default');
     for (const alternate of alternates) {
-      expect(alternate.href.startsWith('https://eduardopavon.com')).toBe(true);
+      expect(alternate.href.startsWith('https://eduardopavon.co')).toBe(true);
     }
   });
 });

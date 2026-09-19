@@ -14,7 +14,7 @@ The **artworks and their reproductions** are licensed separately, under
 - Every image under `src/assets/artworks/` — both the 2000px gallery tier and
   the 3000px `detail/` tier
 - Every rendition of those images produced by the build (`dist/_astro/*`) and
-  served from eduardopavon.com
+  served from eduardopavon.co
 - The artwork titles, media descriptions and related text in
   `src/content/artworks/`
 

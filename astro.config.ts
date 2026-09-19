@@ -4,7 +4,7 @@ import tailwindcss from '@tailwindcss/vite';
 import { defineConfig, fontProviders } from 'astro/config';
 import { DEFAULT_LOCALE, LOCALES, LOCALE_METADATA, PREFIX_DEFAULT_LOCALE } from './src/i18n/config';
 
-const SITE = process.env.SITE_URL ?? 'https://eduardopavon.com';
+const SITE = process.env.SITE_URL ?? 'https://eduardopavon.co';
 
 // Bind-mount file events are unreliable off Linux; compose sets this.
 const usePolling = process.env.CHOKIDAR_USEPOLLING === 'true';

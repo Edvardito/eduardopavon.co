@@ -8,7 +8,7 @@ import { ARTIST_LEGAL_NAME, ARTIST_NAME, ARTWORK_LICENSE, rightsStatement } from
 export const GET: APIRoute = async ({ site }) => {
   const locale = DEFAULT_LOCALE;
   const artworks = await getSortedArtworks();
-  const origin = site ?? new URL('https://eduardopavon.com');
+  const origin = site ?? new URL('https://eduardopavon.co');
 
   const work = artworks.map((artwork) => {
     const { title, medium, dimensions, year, status } = artwork.data;
