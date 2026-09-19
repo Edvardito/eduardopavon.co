@@ -100,9 +100,9 @@ lightbox or any client-side interaction.
   body, both from Adobe Typekit, at the designer's direction. The cost is real
   and recorded in DESIGN.md: a render-blocking third-party stylesheet,
   `font-display: auto`, no generated fallback metrics, and a privacy surface —
-  all properties Phase 1 had bought by self-hosting. Astro's Adobe provider
-  would restore them; whether the licence allows self-hosting is an open
-  question for the artist, not a technical one.
+  all properties Phase 1 had bought by self-hosting. Resolved later in the
+  phase: Astro's Adobe provider self-hosts the same families at build time and
+  restores all of them. Confirm the licence permits it.
 - **The glazing's first build read as a border.** Concentric box-shadow rings
   are uniform all the way round, and uniform is what a mount looks like. The rim
   is now a conic gradient masked to the ring, with one shared light angle, so

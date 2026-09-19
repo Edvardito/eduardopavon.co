@@ -224,25 +224,27 @@ Relationships that live nowhere in CSS:
 Text-spacing overrides (1.4.12) must break nothing: no step sets line height in
 px, and no box holding text has a fixed height.
 
-**Delivery, and what it costs.** Both faces are Adobe Typekit, linked from
-`use.typekit.net` at runtime. This reverses a Phase 1 decision — Urbanist was
-self-hosted at build time through Astro's Fonts API, with no third-party request
-and generated fallback metrics — and the reversal is not free:
+**Delivery.** Both faces are Adobe Typekit families, **self-hosted at build
+time** through Astro's Adobe provider — `fontProviders.adobe({ id })` against
+the kit id, in `astro.config.ts`. They shipped briefly as a runtime
+`use.typekit.net` stylesheet, which cost two render-blocking requests on a
+third-party origin, a `font-display: auto` we could not override, no fallback
+metrics, and Adobe seeing every visitor's IP. Self-hosting removes all four.
 
-- a render-blocking stylesheet on a third-party origin, with the font files a
-  second round trip behind it (`preconnect` for both origins mitigates, does not
-  remove);
-- `font-display: auto` in Typekit's own CSS, which blocks rather than swaps, and
-  which we cannot override;
-- no fallback metrics, so a swap can shift layout — against a stated Core Web
-  Vitals commitment;
-- Adobe sees every visitor's IP.
+Three properties of the pairing had to be verified against the self-hosted
+files, because each would have broken the design silently:
 
-**Astro ships an Adobe font provider** that would self-host these same families
-at build time and restore every one of those properties. It is one config block.
-It is not what runs today because self-hosting Adobe Fonts is a licensing
-question for the artist, not a technical one for this document. Recorded in Open
-questions.
+- **The weight axis survives.** The kit publishes Irregardless as a single
+  variation and the provider treats Adobe faces as static, so the expectation
+  was to lose everything but 400. Asking for `['300 800']` emits a real variable
+  range, and 700 and 800 are instances rather than synthesised.
+- **`ss02` survives**, so the name keeps the wide round alternates, and its
+  measured advance is still 4.912 per 1px — the title card's divisor is
+  unchanged.
+- **Fallback metrics are generated**, so the swap cannot shift layout.
+
+`font-display: swap`, and only the display face is preloaded: it sets the name,
+which is the largest thing on the page.
 
 ### Space and grid
 
@@ -882,15 +884,6 @@ Specified here, exercised by no page yet; the structure phase inherits these.
 ---
 
 ## 11. Open questions
-
-**Should the faces be self-hosted?** Astro's Adobe provider would serve
-Irregardless and Polymath from our own origin at build time, with preloading and
-generated fallback metrics — removing the render-blocking third-party request,
-the `font-display: auto` block, the layout-shift risk and the privacy leak, all
-of which Phase 1 had already bought and this change gave back. The blocker is
-licensing: Adobe Fonts is normally served from their CDN, and whether the plan
-permits self-hosting is the artist's call. Recommend asking Adobe and switching
-if the answer is yes; it is one config block.
 
 **How wide should the common measure be?** It is one token. Wider is more
 magnificent, which is what was asked for; at its current value a portrait work

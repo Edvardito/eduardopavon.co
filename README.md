@@ -224,10 +224,11 @@ better for SEO and latency than SSR for content that does not vary per request.
 ### Design and motion
 
 Type is **Irregardless Variable** for headings and **Polymath Text** for body,
-both served from Adobe Typekit. Phase 1 self-hosted Urbanist at build time
-through Astro's Fonts API; the designer replaced the faces, and the trade that
-came with it — a third-party request on the critical path, and no generated
-fallback metrics — is recorded in [DESIGN.md](DESIGN.md).
+both Adobe Typekit families, self-hosted at build time through Astro's Adobe
+provider. No runtime request to Adobe, generated fallback metrics, and only the
+display face preloaded. What had to be verified to make that safe — the variable
+axis, the `ss02` alternates, the name's measured advance — is in
+[DESIGN.md](DESIGN.md).
 
 All motion is CSS — the one client script is the magnifier, and it drives no
 animation:
