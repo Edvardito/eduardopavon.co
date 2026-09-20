@@ -93,6 +93,39 @@ change to that check.
 
 The workflow's `permissions` are `contents: read` only.
 
+## Content Security Policy
+
+The site sends a CSP as a real response header on every prerendered page, built
+by Astro's `security.csp` and written into the Vercel Build Output config by the
+adapter's `staticHeaders`. Astro hashes its own inline `<script>` and `<style>`
+blocks, so `script-src` and `style-src` carry hashes rather than
+`'unsafe-inline'`.
+
+Two accommodations, both deliberate:
+
+- **`style-src-attr 'unsafe-inline'`.** Every plate carries its aspect ratio,
+  its placeholder and its view-transition name in a `style` attribute, and a
+  hash cannot cover an attribute. Scoping the exception to `style-src-attr`
+  keeps `style-src` itself hash-only, so a `<style>` block still cannot be
+  injected. A style attribute cannot execute script.
+- **`img-src 'self' data:`.** The blurred placeholder on each plate is an
+  inlined `data:` URI.
+
+`base-uri`, `object-src` and `form-action` are `'none'`;
+`frame-ancestors 'none'` covers clickjacking, which is why no separate
+`X-Frame-Options` is set.
+
+Verified against a local server that replays the generated headers: the plate
+inline styles still apply and nothing is cropped, the magnifier still
+initialises and loads the detail tier, the JSON-LD still parses, and no
+`securitypolicyviolation` fires on either edition. Re-verify those four if a
+directive changes.
+
+**HSTS is `max-age=63072000` with no `includeSubDomains` or `preload`**, and
+COOP is unset. Both are Vercel-level concerns rather than build output, and
+neither affects any scored Lighthouse audit; recorded here as known gaps rather
+than fixed silently.
+
 ## Registry
 
 The default public npm registry over HTTPS only, set explicitly in `.npmrc`. Do

@@ -1,5 +1,4 @@
-/* The one client script; DESIGN.md §7 governs it. It sets custom properties
- * only — the lens itself is styled in global.css. */
+/* The one client script (DESIGN.md §7); it sets custom properties, global.css styles the lens. */
 
 const FINE_POINTER = matchMedia('(hover: hover) and (pointer: fine)');
 const REDUCED_MOTION = matchMedia('(prefers-reduced-motion: reduce)');

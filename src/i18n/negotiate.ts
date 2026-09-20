@@ -20,10 +20,7 @@ function parseAcceptLanguage(header: string): Preference[] {
     .sort((a, b) => b.quality - a.quality);
 }
 
-/**
- * Match on the primary subtag, so `es-MX` and `es-419` both reach Spanish. A
- * wildcard tells us nothing about the reader, so it falls through.
- */
+/** Matches the primary subtag, so `es-MX` reaches Spanish; a wildcard falls through. */
 export function negotiateLocale(header: string | null | undefined): Locale {
   if (!header) return FALLBACK_LOCALE;
 

@@ -1,7 +1,10 @@
-/** Public/professional name, used for display and credit. */
+/** The host we serve; `astro.config.ts` imports it so routing cannot drift. */
+export const SITE_ORIGIN = 'https://www.eduardopavon.co';
+
+/** The name the work is shown under. */
 export const ARTIST_NAME = 'Eduardo Pavón';
 
-/** Legal name, used in copyright and licensing statements. */
+/** The name the work is copyrighted and licensed under. */
 export const ARTIST_LEGAL_NAME = 'José Eduardo Hernández Pavón';
 
 export const ARTWORK_LICENSE = {

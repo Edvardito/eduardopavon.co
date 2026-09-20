@@ -337,6 +337,92 @@ decides a visitor's language instead of serving one. That took
   reaches English only by URL. Deliberate for now, and the reason Phase 5 stays
   open rather than closing here.
 
+## Phase 5.5 — Performance pass
+
+Lighthouse 100 in all four categories, mobile and desktop, on every page that
+exists. In progress; the before/after table lives on the PR.
+
+### Measured baseline
+
+Lighthouse 13.4.1, `/en/`, against production before this pass:
+
+| Category       | Mobile | Desktop |
+| -------------- | ------ | ------- |
+| Performance    | 99     | 100     |
+| Accessibility  | 96     | 96      |
+| Best Practices | 96     | 96      |
+| SEO            | 100    | 100     |
+
+Mobile metrics: FCP 1.2 s · SI 1.2 s · LCP 1.7 s · TBT 80 ms · CLS 0. The two
+categories short of 100 were one audit each — `color-contrast` (weight 7) and
+`inspector-issues` (weight 1).
+
+### Decisions
+
+- **`www` is the canonical host, and it is a code decision, not a dashboard
+  one.** Vercel serves `www`; every URL the site published said apex —
+  canonical, hreflang, `x-default`, sitemap `<loc>`, `robots.txt`, `og:url` and
+  the JSON-LD `@id`. Lighthouse's SEO canonical audit objects when the canonical
+  names a different host than the page, and every crawler arriving at the apex
+  paid an extra hop. Either half of the mismatch could have moved; the artist
+  chose `www`. `SITE_ORIGIN` in `src/site.ts` is now the single edit point and
+  `astro.config.ts` imports it, the way it already imports the locale list.
+- **`robots.txt` became a route.** A committed `public/robots.txt` is a second
+  place for the host to be wrong, and it cannot read `site`. Generated now, for
+  the same reason `llms.txt` is.
+- **Every face shipped `font-display: auto`, for the whole life of the
+  self-hosted build.** @DESIGN.md records self-hosting as having bought `swap`
+  back from the runtime Typekit stylesheet. It had not: Typekit publishes its
+  kit CSS with `font-display: auto`, unifont's Adobe provider extracts that
+  value into `data.display`, and Astro resolves `data.display ?? family.display`
+  — so the provider silently beat the `display: 'swap'` this repo had always
+  configured. Chrome treats `auto` as block, so ~252 KB of faces could hold text
+  invisible for up to three seconds, and the LCP element is text in the display
+  face. Only the five _generated fallback_ faces carried `swap`, which is why
+  the built HTML looked right at a glance — it showed five of each.
+- **The kit was fixed at the source, and the config was made authoritative
+  anyway.** The Adobe kit now publishes `swap`. That is dashboard state outside
+  the repo that can regress without a diff, which is the kind of invisible
+  guarantee @SECURITY.md exists to refuse, so `astro.config.ts` also wraps the
+  Adobe provider to drop `display`. Verified by setting the config to `optional`
+  and watching the five real faces follow it while the fallbacks stayed `swap`;
+  before the wrapper the config had no effect at all. A CI step fails if any
+  built page ships `font-display:auto`.
+- **`Polymath Text 700 italic` is configured and never requested, and stays.**
+  It costs nothing on the wire — the browser never asks for it. Removing it is
+  not expressible in the current config: `weights: [400, 700]` ×
+  `styles: ['normal', 'italic']` is a cross product, and splitting it would mean
+  two family entries and two CSS variables for one face.
+- **The canonical mismatch was not costing an SEO point, and the fix stands
+  anyway.** Lighthouse's `canonical` audit scored 1 despite the page being
+  served from `www` while every published URL said apex, and SEO was
+  already 100. The prediction that it blocked the category was wrong. It is
+  still a duplicate identity, an extra hop for every crawler arriving at the
+  apex, and a `robots.txt` naming a host the site does not serve — fixed on
+  those grounds, not for a score.
+- **The scroll reveal cost the Accessibility category, and the fade was
+  removed.** `.reveal` faded `opacity: 0 → 1` across `entry 0% → entry 90%`, and
+  Lighthouse measured a caption at 2.76:1. Because `animation-timeline: view()`
+  makes opacity a function of scroll position, that is a resting state rather
+  than a transition, so it is a real 1.4.3 failure and not a measurement
+  artifact. See @DESIGN.md §7 for the thresholds and for why flooring the fade
+  was refused in favour of transform-only.
+- **Best Practices was one weight-1 audit, and the security headers that look
+  like the fix are not.** `csp-xss`, `has-hsts`, `clickjacking-mitigation`,
+  `origin-isolation` and `trusted-types-xss` are all **weight 0** in Lighthouse
+  13 — confirmed from the report's own `auditRefs`, not from memory — so none of
+  them can move a score. The whole 96 was `inspector-issues` reporting a
+  "Content security policy" issue. A CSP is now emitted as a real header
+  (@SECURITY.md has the directives and the two accommodations the design
+  requires); `frame-ancestors` came with it, so the weight-0 clickjacking
+  finding clears as a side effect rather than as a goal.
+- **Subsetting is not available through Astro for a provider font.**
+  `unicodeRange` writes the descriptor; it does not re-subset the provider's
+  file, so it cannot shrink these. Real subsetting is an Adobe Fonts kit
+  decision with glyph-coverage consequences, and belongs to the designer.
+
+---
+
 ## Phase 6 — Contact form
 
 A single on-demand route (`src/pages/api/contact.ts`,

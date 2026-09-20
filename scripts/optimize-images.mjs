@@ -14,7 +14,6 @@ import { ARTIST_NAME, ARTWORK_LICENSE, rightsStatement } from '../src/site.ts';
 const FORMAT = 'webp';
 const QUALITY = 82;
 
-/* 2000px: at 2400 the scanned work exceeds 1 MB. 3000px: the loupe needs 3.3x. */
 /* Small enough to inline, large enough to stand in. */
 const PLACEHOLDER_EDGE = 20;
 export const PLACEHOLDER_FILE = 'placeholders.json';
@@ -22,6 +21,7 @@ export const PLACEHOLDER_FILE = 'placeholders.json';
 export const MAX_COMMITTED_BYTES = 1024 * 1024;
 export const MAX_DETAIL_BYTES = 2.5 * 1024 * 1024;
 
+/* 2000: at 2400 the scanned work exceeds 1 MB. 3000: the loupe needs 3.3x. */
 export const TIERS = [
   {
     label: 'gallery',

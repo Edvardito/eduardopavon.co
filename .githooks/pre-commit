@@ -1,8 +1,6 @@
 #!/bin/sh
-# Format and lint the staged files before they land.
-#
-# Everything runs in the container, so the host needs nothing installed.
-# Skip a run with: git commit --no-verify
+# Formats and lints staged files in the container; the host needs nothing.
+# Skip with: git commit --no-verify
 set -eu
 
 staged() {

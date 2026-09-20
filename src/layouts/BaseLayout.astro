@@ -33,8 +33,7 @@ const { locale, title, description, path, ogImage, ogImageAlt, masthead = true }
       ogImage={ogImage}
       ogImageAlt={ogImageAlt}
     />
-    <!-- Only the display face is preloaded: it sets the name, which is the
-      largest thing on the page. Polymath swaps in behind generated metrics. -->
+    <!-- Only the display face is preloaded: it sets the largest text on the page. -->
     <Font cssVariable="--font-irregardless" preload />
     <Font cssVariable="--font-polymath" />
     <slot name="head" />

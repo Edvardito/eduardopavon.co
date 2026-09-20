@@ -3,8 +3,9 @@ import vercel from '@astrojs/vercel';
 import tailwindcss from '@tailwindcss/vite';
 import { defineConfig, fontProviders } from 'astro/config';
 import { DEFAULT_LOCALE, LOCALES, LOCALE_METADATA, PREFIX_DEFAULT_LOCALE } from './src/i18n/config';
+import { SITE_ORIGIN } from './src/site';
 
-const SITE = process.env.SITE_URL ?? 'https://eduardopavon.co';
+const SITE = process.env.SITE_URL ?? SITE_ORIGIN;
 
 // Bind-mount file events are unreliable off Linux; compose sets this.
 const usePolling = process.env.CHOKIDAR_USEPOLLING === 'true';
@@ -15,12 +16,46 @@ const cacheDir = cacheRoot
   ? `${cacheRoot}/${process.argv.includes('dev') ? 'dev' : 'other'}`
   : undefined;
 
+// Typekit's own font-display would beat the `display` below. See SPEC.md.
+type AdobeProvider = ReturnType<typeof fontProviders.adobe>;
+
+function adobe(config: { id: string }): AdobeProvider {
+  const provider = fontProviders.adobe(config);
+  return {
+    ...provider,
+    async resolveFont(options) {
+      const resolved = await provider.resolveFont(options);
+      if (!resolved) return resolved;
+      return {
+        fonts: resolved.fonts.map(({ display: _display, ...face }) => face),
+      };
+    },
+  };
+}
+
 export default defineConfig({
   site: SITE,
 
   // Adapter configured so one route can opt out, without global SSR.
   output: 'static',
-  adapter: vercel(),
+  adapter: vercel({ staticHeaders: true }),
+
+  security: {
+    csp: {
+      directives: [
+        "default-src 'self'",
+        "base-uri 'none'",
+        "object-src 'none'",
+        "form-action 'none'",
+        "frame-ancestors 'none'",
+        'upgrade-insecure-requests',
+        // Every plate inlines its placeholder as a data: URI.
+        "img-src 'self' data:",
+      ],
+      // The plate carries its aspect ratio in a style attribute; hashes cannot cover one.
+      styleDirective: { resources: [{ resource: "'unsafe-inline'", kind: 'attribute' }] },
+    },
+  },
 
   i18n: {
     defaultLocale: DEFAULT_LOCALE,
@@ -50,7 +85,7 @@ export default defineConfig({
   fonts: [
     {
       name: 'Irregardless Variable',
-      provider: fontProviders.adobe({ id: 'ulk1nsi' }),
+      provider: adobe({ id: 'ulk1nsi' }),
       cssVariable: '--font-irregardless',
       weights: ['300 800'],
       styles: ['normal'],
@@ -60,7 +95,7 @@ export default defineConfig({
     },
     {
       name: 'Polymath Text',
-      provider: fontProviders.adobe({ id: 'ulk1nsi' }),
+      provider: adobe({ id: 'ulk1nsi' }),
       cssVariable: '--font-polymath',
       weights: [400, 700],
       styles: ['normal', 'italic'],
@@ -70,14 +105,10 @@ export default defineConfig({
     },
   ],
 
-  /* No `fonts` block: Typekit, linked in BaseLayout. DESIGN.md, Typography. */
-
   vite: {
     ...(cacheDir ? { cacheDir } : {}),
     plugins: [tailwindcss()],
-    /* esbuild, not Lightning CSS: Lightning folds `animation-timeline` into the
-     * `animation` shorthand, which no browser parses, so a minified build drops
-     * every scroll-driven animation. */
+    /* esbuild: Lightning folds `animation-timeline` into the shorthand and drops it. */
     build: { cssMinify: 'esbuild' },
     server: {
       // Replaces Vite's defaults, and stat-ing node_modules stalls startup.

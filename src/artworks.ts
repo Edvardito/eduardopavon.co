@@ -5,8 +5,7 @@ import { resolveLocalized, t, type Locale } from '~/i18n';
 
 export type Artwork = CollectionEntry<'artworks'>;
 
-/* Paired by slug, so no work ships half-configured. Lazy: eager walks every
- * 3000px derivative on each dev start. `~/` does not apply inside a glob. */
+/* Lazy: eager walks every 3000px derivative on dev start. `~/` fails in a glob. */
 const DETAIL_ASSETS = import.meta.glob<{ default: ImageMetadata }>(
   './assets/artworks/detail/*.webp',
 );

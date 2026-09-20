@@ -229,7 +229,8 @@ time** through Astro's Adobe provider — `fontProviders.adobe({ id })` against
 the kit id, in `astro.config.ts`. They shipped briefly as a runtime
 `use.typekit.net` stylesheet, which cost two render-blocking requests on a
 third-party origin, a `font-display: auto` we could not override, no fallback
-metrics, and Adobe seeing every visitor's IP. Self-hosting removes all four.
+metrics, and Adobe seeing every visitor's IP. Self-hosting removes three of the
+four; the fourth followed the faces home and is treated below.
 
 Three properties of the pairing had to be verified against the self-hosted
 files, because each would have broken the design silently:
@@ -243,8 +244,20 @@ files, because each would have broken the design silently:
   unchanged.
 - **Fallback metrics are generated**, so the swap cannot shift layout.
 
-`font-display: swap`, and only the display face is preloaded: it sets the name,
-which is the largest thing on the page.
+**`font-display: swap` — and it took a second fix to actually be true.** This
+line was written when the faces were self-hosted, and it was wrong for the whole
+life of that build. Typekit publishes its kit CSS with `font-display: auto`, the
+provider reads that value out of it, and Astro resolves the provider's value
+ahead of the configured one, so every real face shipped `auto` — block in
+Chrome, and therefore up to three seconds of invisible text across ~252 KB of
+faces, with the LCP element being text in the display face. It read as correct
+because the _generated fallback_ faces did carry `swap`, so the built HTML
+showed five of each. The kit now publishes `swap` and `astro.config.ts` drops
+the provider's value besides, so the configured one governs. @SPEC.md's Phase
+5.5 log has the mechanism; a CI step keeps it honest.
+
+Only the display face is preloaded: it sets the name, which is the largest thing
+on the page.
 
 ### Space and grid
 
@@ -722,6 +735,18 @@ silently resequence it, and **total duration including the longest stagger must
 not exceed 600 ms** — an entrance must never be what pushes a passing page into
 a failing LCP. **Plates never animate on load**, only on scroll.
 
+**The scroll reveal moves, it does not fade.** It was built as `opacity: 0 → 1`
+plus a 3rem rise, and the opacity half was removed after Lighthouse measured a
+caption at **2.76:1** — `--color-ink` at 42% over the ground. The trap is
+specific to scroll-driven animation: with `animation-timeline: view()` opacity
+is a _function of scroll position_, not a transition that finishes, so a reader
+who stops mid-entry sits at that contrast for as long as they stay there. Ink
+needs **0.712** opacity to hold this project's 7:1 floor and **0.580** to clear
+AA at all, so no fade that starts at zero is survivable. Flooring the fade was
+considered and refused: it tunes to one palette value and says nothing about the
+next element put inside a `.reveal`. Transform-only is the rule because it
+cannot fail — and it is the same rule §9 already states as "no muted ink".
+
 **There is no scroll-linked specular.** A travelling highlight was built twice —
 once as a rail outside the plate, once sweeping across the drawing — and the
 designer removed it both times. On a light ground it reads as a reflex passing
@@ -897,6 +922,7 @@ Load-bearing; everything else here is advisory prose.
 | Exactly one client script, within its byte budget    | `tests/design.test.ts`  |
 | Every `animation` sits inside a reduced-motion guard | `tests/design.test.ts`  |
 | Both image tiers, own budgets, no orphans            | `tests/content.test.ts` |
+| No face ships `font-display:auto`                    | `ci.yml`, post-build    |
 
 The colour guard allows derived forms — any colour function whose arguments
 reference a `--color-*` token — because the glass edge needs alpha variants of
