@@ -20,9 +20,8 @@ services:
     stdin_open: true
     tty: true
 
-  # One-shot artwork import. Behind a profile so `docker compose up` ignores it.
-  # ARTWORK_ORIGINALS comes from .env (see .env.example) rather than a shell
-  # variable, so the same command works in PowerShell, bash and zsh.
+  # One-shot artwork import; the profile keeps `docker compose up` off it.
+  # ARTWORK_ORIGINALS comes from .env, so one command works in every shell.
   images:
     build:
       context: .

@@ -1,7 +1,7 @@
 import type { APIRoute } from 'astro';
 import { localizePath, negotiateLocale } from '~/i18n';
 
-/* The one on-demand route: the edition depends on the request header. */
+/* The one on-demand route; every page it points at is prerendered. */
 export const prerender = false;
 
 export const GET: APIRoute = ({ request }) => {

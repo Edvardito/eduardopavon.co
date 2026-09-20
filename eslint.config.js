@@ -23,8 +23,7 @@ export default tseslint.config(
   },
 
   {
-    // Node CLI scripts. Globals declared inline rather than pulling in the
-    // `globals` package for two names.
+    // Globals inline rather than the `globals` package for two names.
     files: ['scripts/**/*.mjs'],
     languageOptions: {
       globals: { process: 'readonly', console: 'readonly' },

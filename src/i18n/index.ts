@@ -22,8 +22,7 @@ export {
 };
 export { negotiateLocale } from './negotiate';
 
-/* Values widen to string: one locale's wording cannot satisfy another's
- * literal types, and `as const` gives every message file literal types. */
+/* Values widen to string: one locale's wording cannot satisfy another's literals. */
 export type UiMessages = { [K in keyof typeof es]: string };
 export type MessageKey = keyof UiMessages;
 
@@ -58,11 +57,7 @@ export function statusLabel(status: ArtworkStatus, locale: Locale): string {
 /** Marks where an inline element belongs inside a translated sentence. */
 export const SLOT = '<<slot>>';
 
-/**
- * Split a translated sentence around {@link SLOT} so a link can be spliced in
- * while each language keeps its own word order. Throws rather than silently
- * truncating the sentence when a translation drops the placeholder.
- */
+/** Splits around {@link SLOT} so a link keeps each language's word order. Throws if absent. */
 export function splitAroundSlot(message: string): [before: string, after: string] {
   const parts = message.split(SLOT);
   if (parts.length !== 2) {

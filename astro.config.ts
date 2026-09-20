@@ -49,7 +49,7 @@ export default defineConfig({
         "form-action 'none'",
         "frame-ancestors 'none'",
         'upgrade-insecure-requests',
-        // The lens loads the detail tier, and every plate inlines a data: placeholder.
+        // Every plate inlines its placeholder as a data: URI.
         "img-src 'self' data:",
       ],
       // The plate carries its aspect ratio in a style attribute; hashes cannot cover one.
@@ -108,9 +108,7 @@ export default defineConfig({
   vite: {
     ...(cacheDir ? { cacheDir } : {}),
     plugins: [tailwindcss()],
-    /* esbuild, not Lightning CSS: Lightning folds `animation-timeline` into the
-     * `animation` shorthand, which no browser parses, so a minified build drops
-     * every scroll-driven animation. */
+    /* esbuild: Lightning folds `animation-timeline` into the shorthand and drops it. */
     build: { cssMinify: 'esbuild' },
     server: {
       // Replaces Vite's defaults, and stat-ing node_modules stalls startup.

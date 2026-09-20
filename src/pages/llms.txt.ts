@@ -18,8 +18,7 @@ import {
   rightsStatement,
 } from '~/site';
 
-/* Generated from the collection rather than written by hand, so it cannot
- * drift from the gallery the way a committed copy would. */
+/* Generated from the collection, so it cannot drift from the gallery. */
 export const GET: APIRoute = async ({ site }) => {
   /* This file is English prose, so it catalogues the English edition. */
   const locale = FALLBACK_LOCALE;

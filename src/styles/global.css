@@ -603,9 +603,7 @@
 
     .titlecard__name {
       animation: titlecard linear both;
-      /* `scroll()`, not `scroll(root)`: the minifier folds this into the
-         `animation` shorthand, where a timeline with an argument fails to
-         parse and takes the whole declaration with it. */
+      /* `scroll()`, not `scroll(root)`: minified into the shorthand, an argument kills it. */
       animation-timeline: scroll();
       animation-range: 0 30svh;
     }
