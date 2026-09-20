@@ -22,6 +22,11 @@ export default {
   'artwork.alt': '{title}, {medium}, por Eduardo Pavón',
   'artwork.catalogueLine': '{medium} / {dimensions} ({year})',
 
+  'contact.heading': 'Contacto',
+  'contact.intro': 'Para exposiciones, prensa y adquisiciones.',
+  'contact.email': 'Correo {address}',
+  'contact.instagram': 'Instagram {handle}',
+
   'footer.colophon': 'Colofón',
   'footer.rights': 'Todas las obras son propiedad del artista.',
   'footer.license': 'Las imágenes se publican bajo licencia {license}.',
@@ -29,6 +34,8 @@ export default {
   'footer.licenseLinkLabel': 'Ver los términos de la licencia {license}',
 
   'a11y.skipToContent': 'Saltar al contenido',
+
+  'seo.knowsAbout': 'Dibujo, Pluma bic, Arte contemporáneo',
 
   'notFound.title': 'Página no encontrada — Eduardo Pavón',
   'notFound.heading': 'Página no encontrada',

@@ -198,10 +198,10 @@ Full checklist: `.claude/skills/add-artwork/SKILL.md`.
 src/
 ├── assets/artworks/     Optimized WebP (gallery tier), and detail/ (detail tier)
 ├── components/
-│   ├── layout/          Header, Footer
+│   ├── layout/          Header, Footer, Contact
+│   ├── pages/           Gallery, NotFound — one body, every locale
 │   ├── seo/             Seo (head tags), JsonLd (structured data)
-│   └── ui/              ArtworkPlate, ArtworkCard, PlateIndex,
-│                         StatusAnnotation, GlassFilter
+│   └── ui/              ArtworkPlate, ArtworkCard, PlateIndex, GlassFilter
 ├── content/artworks/    One YAML entry per artwork
 ├── content.config.ts    Collection schema (Zod)
 ├── i18n/                Locale config, message files, t() and resolvers
@@ -220,6 +220,9 @@ overhead and extra attack surface.
 
 **Static output.** Every page is prerendered HTML on Vercel's CDN. That is
 better for SEO and latency than SSR for content that does not vary per request.
+The single exception is `/`, which cannot be prerendered because its answer
+depends on the request: it reads `Accept-Language` and redirects to an edition.
+It is one function; every page it points at is static.
 
 ### Design and motion
 
@@ -252,8 +255,19 @@ sizing there.
 
 ### Localization
 
-The site ships in Spanish only, but the i18n seam is real and exercised: nothing
-user-facing is hardcoded in a component.
+The site ships in **Spanish and English**, and nothing user-facing is hardcoded
+in a component.
+
+**Routing.** Every edition is prefixed — `/es/` and `/en/` — and `/` is an
+on-demand route that reads the browser's `Accept-Language`, which is its reading
+of the system language, and redirects (302, `Vary: Accept-Language`). A language
+we do not publish gets English: `FALLBACK_LOCALE` in `src/i18n/config.ts`, which
+is also where `hreflang="x-default"` points. That is a different job from
+`DEFAULT_LOCALE`, which stays `es` — it is the authoring language, the one a
+missing translation falls back to.
+
+There is **no language switcher yet**: a reader who wants the other edition
+types or links its URL. Phase 5 in [SPEC.md](SPEC.md) owns that UI.
 
 - **UI strings** live in `src/i18n/ui/<locale>.ts` and are read via
   `t(locale, key)` / `useTranslations(locale)`.
@@ -266,8 +280,9 @@ user-facing is hardcoded in a component.
 - `<html lang>`, `hreflang` alternates and sitemap alternates are all derived
   from that list.
 
-Adding a language requires no route, component or schema changes. The exact
-steps are in `.claude/skills/add-locale/SKILL.md`.
+Adding a language requires no route, component or schema changes — the locale
+routes are one `[locale]` dynamic route generated from the list. The exact steps
+are in `.claude/skills/add-locale/SKILL.md`.
 
 ### SEO
 
@@ -283,7 +298,8 @@ steps are in `.claude/skills/add-locale/SKILL.md`.
 Artwork dimensions are stored as structured `width`/`height`/`unit` and always
 mean width × height, so JSON-LD publishes real `width` and `height`
 `QuantitativeValue`s with UN/CEFACT unit codes. Numbers are formatted through
-`Intl.NumberFormat` for the active locale — Spanish renders `25,5 cm`.
+`Intl.NumberFormat` for the active locale — Spanish renders `25,5 cm`, English
+`25.5 cm`.
 
 ## Deploying
 

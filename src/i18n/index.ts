@@ -1,7 +1,9 @@
 import type { ArtworkStatus } from '~/site';
+import en from './ui/en';
 import es from './ui/es';
 import {
   DEFAULT_LOCALE,
+  FALLBACK_LOCALE,
   LOCALES,
   LOCALE_METADATA,
   PREFIX_DEFAULT_LOCALE,
@@ -9,12 +11,23 @@ import {
   type Locale,
 } from './config';
 
-export { DEFAULT_LOCALE, LOCALES, LOCALE_METADATA, PREFIX_DEFAULT_LOCALE, isLocale, type Locale };
+export {
+  DEFAULT_LOCALE,
+  FALLBACK_LOCALE,
+  LOCALES,
+  LOCALE_METADATA,
+  PREFIX_DEFAULT_LOCALE,
+  isLocale,
+  type Locale,
+};
+export { negotiateLocale } from './negotiate';
 
-export type UiMessages = typeof es;
+/* Values widen to string: one locale's wording cannot satisfy another's
+ * literal types, and `as const` gives every message file literal types. */
+export type UiMessages = { [K in keyof typeof es]: string };
 export type MessageKey = keyof UiMessages;
 
-const MESSAGES: Record<Locale, UiMessages> = { es };
+const MESSAGES: Record<Locale, UiMessages> = { es, en };
 
 export type Localized<T> = Record<string, T>;
 
@@ -76,9 +89,10 @@ export function formatDimensions(dimensions: Dimensions, locale: Locale): string
   return `${format.format(dimensions.width)} × ${format.format(dimensions.height)} ${dimensions.unit}`;
 }
 
+/** The locale in the path, or the fallback: an unprefixed page is the host's. */
 export function getLocaleFromUrl(url: URL): Locale {
   const [, first] = url.pathname.split('/');
-  return first && isLocale(first) ? first : DEFAULT_LOCALE;
+  return first && isLocale(first) ? first : FALLBACK_LOCALE;
 }
 
 export function localizePath(path: string, locale: string): string {
@@ -97,7 +111,7 @@ export function getLocaleAlternates(
   }));
   alternates.push({
     hreflang: 'x-default',
-    href: new URL(localizePath(path, DEFAULT_LOCALE), site).href,
+    href: new URL(localizePath(path, FALLBACK_LOCALE), site).href,
   });
   return alternates;
 }

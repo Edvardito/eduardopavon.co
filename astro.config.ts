@@ -27,6 +27,8 @@ export default defineConfig({
     locales: [...LOCALES],
     routing: {
       prefixDefaultLocale: PREFIX_DEFAULT_LOCALE,
+      // We own `/`; see src/pages/index.ts.
+      redirectToDefaultLocale: false,
     },
   },
 

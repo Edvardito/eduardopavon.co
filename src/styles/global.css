@@ -190,6 +190,28 @@
     text-underline-offset: 0.2em;
   }
 
+  .contact {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-caption) var(--space-row);
+  }
+
+  .contact__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    color: var(--color-pen);
+    /* 2.5.8: the row clears 24px whatever the leading resolves to. */
+    min-block-size: 24px;
+  }
+
+  /* The label carries the underline, so it never runs under the glyph. */
+  .contact__icon {
+    flex: none;
+    inline-size: 1em;
+    block-size: 1em;
+  }
+
   /* Percentage heights do not resolve against this ratio — the Phase 1 crop. */
   .plate {
     position: relative;

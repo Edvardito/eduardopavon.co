@@ -381,7 +381,7 @@ two stick together and the name shrinks inside them. Then the **statement** —
 the one element at the top of the page that scrolls away, which is what tells
 the reader the page has started moving: display-sized, centred, in caps. Then
 the gallery: section label, rule, and a single column of plates at the common
-measure. Then the colophon.
+measure. Then contact, then the colophon.
 
 **There is no hero.** A frontispiece spread was specified, built and removed: it
 put one work in a privileged position ahead of the others, which is a claim the
@@ -604,6 +604,46 @@ suffix** on any archetype, the Phase 3 detail page included; if a page ever
 needs to state availability, that is a new decision with its own entry here, not
 a restoration of this one.
 
+**The contact section.** The last thing the gallery says, sitting between the
+closing rule and the colophon: section label, rule, one line of prose at the
+measure, then the contact points as links. It is the site's voice, not a work's
+— pen, underlined, ordinary body size (principle 2). Its head does **not**
+stick: the gallery's head pins because a reader scrolls a long column under it
+and needs to know what they are in, and a section three lines tall has nothing
+to pin for. Two sticky heads at one offset would also have to negotiate the same
+inset, which is a mechanism to maintain for no gain.
+
+The addresses are **data, not strings**: `ARTIST_CONTACT` in `src/site.ts` holds
+the mail address and the Instagram handle and URL, the way `SITE_AUTHOR` holds
+the credit, and the visible line is a translated template they are interpolated
+into. Adding a contact point is one entry there and one key in
+`src/i18n/ui/<locale>.ts`.
+
+**Icons are inline line-work SVG, drawn here, and that is the whole policy.**
+Each glyph is written into the component as a `<svg>` on a 24 unit box,
+`fill: none`, stroked in `currentColor` so it inherits the link's pen and can
+never introduce a fifth colour, sized in `em` so it tracks the type it sits
+beside. The reasons this beats every alternative, in order: an icon set
+(`astro-icon`, Lucide, Simple Icons) is a dependency, and @SECURITY.md prices
+those; an icon font ships a face for two glyphs and fails when it does not load;
+a sprite or `<img>` costs a request and cannot take `currentColor`. Two glyphs
+is not a system — **if a fourth or fifth glyph ever appears, that is the moment
+to reconsider, not before.**
+
+Each glyph is `aria-hidden` with `focusable="false"`, because **the label
+carries the meaning**: the visible text names the channel and the address, so
+nothing is conveyed by the mark alone (1.4.1), and a reader with images off
+loses nothing. The underline sits on that label rather than on the link box, so
+the rule does not run under the glyph. Rows clear 24px (2.5.8).
+
+The Instagram glyph is **our own line drawing of a camera, not the brand mark.**
+The official asset is a filled, gradient-capable logo that would have to arrive
+as its own colour and its own file; this is the same shape in the site's
+line-work, which is what the material rule asks for — a record _about_ the work
+is line and type. If Instagram's brand terms ever require the exact mark, that
+is a fourth colour and a fourth glyph at once, and it goes through the same door
+as any other palette addition (§3).
+
 **The title card.** The home page's masthead, and the site's one piece of
 theatre. The name is **always one line**, sized to fill the width of the page —
 never wrapped, never two lines. What changes on scroll is its **font-size**,
@@ -807,6 +847,10 @@ already is. Test-enforced.
 **No second script, no framework, no animation or utility library.** Zero
 hydration, zero client runtime beyond the lens; a library that interpolates two
 numbers costs more than the feature.
+
+**No icon set, icon font or sprite sheet.** The two contact glyphs are inline
+SVG in the component, stroked in `currentColor` (§6). A library for them is a
+dependency, a font for them is a face, and both lose the palette's guarantee.
 
 **No lightbox or modal viewer.** It is a page pretending to be a page. The
 detail route is a real URL: linkable, indexable, shareable with a curator, and

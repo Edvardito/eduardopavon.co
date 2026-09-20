@@ -1,12 +1,22 @@
 import type { APIRoute } from 'astro';
 import { getSortedArtworks } from '~/artworks';
-import { DEFAULT_LOCALE, formatDimensions, resolveLocalized, statusLabel, t } from '~/i18n';
+import {
+  FALLBACK_LOCALE,
+  LOCALES,
+  LOCALE_METADATA,
+  formatDimensions,
+  localizePath,
+  resolveLocalized,
+  statusLabel,
+  t,
+} from '~/i18n';
 import { ARTIST_LEGAL_NAME, ARTIST_NAME, ARTWORK_LICENSE, rightsStatement } from '~/site';
 
 /* Generated from the collection rather than written by hand, so it cannot
  * drift from the gallery the way a committed copy would. */
 export const GET: APIRoute = async ({ site }) => {
-  const locale = DEFAULT_LOCALE;
+  /* This file is English prose, so it catalogues the English edition. */
+  const locale = FALLBACK_LOCALE;
   const artworks = await getSortedArtworks();
   const origin = site ?? new URL('https://eduardopavon.co');
 
@@ -21,6 +31,11 @@ export const GET: APIRoute = async ({ site }) => {
     return `- ${resolveLocalized(title, locale)} — ${parts.join(' · ')}`;
   });
 
+  const galleries = LOCALES.map(
+    (l) =>
+      `- [Gallery — ${LOCALE_METADATA[l].label}](${new URL(localizePath('/', l), origin).href}): every work in sequence, with full catalogue data.`,
+  ).join('\n');
+
   const body = `# ${ARTIST_NAME}
 
 > ${t(locale, 'site.description')}
@@ -30,7 +45,10 @@ plastic canvas. This site is his portfolio: a catalogue of original works for
 galleries, curators, collectors and press. It is a content site — there is
 nothing to buy, book or submit here.
 
-Site language: Spanish (${locale}). Canonical origin: ${origin.origin}
+Site languages: ${LOCALES.map((l) => `${LOCALE_METADATA[l].label} (${l})`).join(', ')}. The
+work below is listed in ${LOCALE_METADATA[locale].label}. Canonical origin: ${origin.origin}
+The root path negotiates on Accept-Language and redirects; each edition has its
+own stable URL.
 
 ## Work
 
@@ -38,7 +56,7 @@ ${work.join('\n')}
 
 ## Pages
 
-- [Gallery](${origin.origin}/): every work in sequence, with full catalogue data.
+${galleries}
 - [Sitemap](${new URL('/sitemap-index.xml', origin).href})
 
 ## Licensing

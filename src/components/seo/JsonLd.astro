@@ -3,6 +3,7 @@ import { getImage } from 'astro:assets';
 import type { Artwork } from '~/artworks';
 import {
   formatDimensions,
+  localizePath,
   resolveLocalized,
   statusLabel,
   t,
@@ -23,7 +24,8 @@ const { locale, path, artworks } = Astro.props;
 const UNIT_CODE: Record<Dimensions['unit'], string> = { cm: 'CMT', in: 'INH' };
 
 const site = Astro.site!;
-const pageUrl = new URL(path, site).href;
+const pageUrl = new URL(localizePath(path, locale), site).href;
+/* Unlocalized, so the artist and the site keep one identity across editions. */
 const homeUrl = new URL('/', site).href;
 const artistId = `${homeUrl}#eduardo-pavon`;
 
@@ -82,7 +84,7 @@ const graph = {
       jobTitle: t(locale, 'site.tagline'),
       description: t(locale, 'site.description'),
       url: homeUrl,
-      knowsAbout: ['Dibujo', 'Pluma bic', 'Arte contemporáneo'],
+      knowsAbout: t(locale, 'seo.knowsAbout').split(', '),
     },
     {
       '@type': 'WebSite',
