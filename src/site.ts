@@ -10,6 +10,15 @@ export const ARTWORK_LICENSE = {
   url: 'https://creativecommons.org/licenses/by-nc-nd/4.0/',
 } as const;
 
+/** The artist's public contact points, for the contact section and JSON-LD. */
+export const ARTIST_CONTACT = {
+  email: 'hola@eduardopavon.co',
+  instagram: {
+    handle: '@_eduardopavon',
+    url: 'https://www.instagram.com/_eduardopavon',
+  },
+} as const;
+
 /** Credit for the site itself — distinct from the authorship of the work. */
 export const SITE_AUTHOR = {
   name: 'Eduardo Aire Torres',

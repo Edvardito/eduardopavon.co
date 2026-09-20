@@ -22,6 +22,11 @@ export default {
   'artwork.alt': '{title}, {medium}, por Eduardo Pavón',
   'artwork.catalogueLine': '{medium} / {dimensions} ({year})',
 
+  'contact.heading': 'Contacto',
+  'contact.intro': 'Para exposiciones, prensa y adquisiciones.',
+  'contact.email': 'Correo {address}',
+  'contact.instagram': 'Instagram {handle}',
+
   'footer.colophon': 'Colofón',
   'footer.rights': 'Todas las obras son propiedad del artista.',
   'footer.license': 'Las imágenes se publican bajo licencia {license}.',

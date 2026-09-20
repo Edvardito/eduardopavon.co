@@ -1,5 +1,6 @@
 ---
 import { artworkAltText, getSortedArtworks } from '~/artworks';
+import Contact from '~/components/layout/Contact.astro';
 import JsonLd from '~/components/seo/JsonLd.astro';
 import ArtworkCard from '~/components/ui/ArtworkCard.astro';
 import GlassFilter from '~/components/ui/GlassFilter.astro';
@@ -58,6 +59,8 @@ const EAGER_PLATES = 1;
       ))}
     </ul>
   </section>
+
+  <Contact locale={locale} />
 </BaseLayout>
 
 <script>
