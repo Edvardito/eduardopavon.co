@@ -112,19 +112,22 @@ Two accommodations, both deliberate:
   inlined `data:` URI.
 
 `base-uri`, `object-src` and `form-action` are `'none'`;
-`frame-ancestors 'none'` covers clickjacking, which is why no separate
-`X-Frame-Options` is set.
+`frame-ancestors 'none'` covers clickjacking, so no separate `X-Frame-Options`
+is set.
 
-Verified against a local server that replays the generated headers: the plate
-inline styles still apply and nothing is cropped, the magnifier still
-initialises and loads the detail tier, the JSON-LD still parses, and no
-`securitypolicyviolation` fires on either edition. Re-verify those four if a
-directive changes.
+**Every CSP route needs both spellings of its path.** `@astrojs/vercel` writes
+the route as `src: '/en'`, and Vercel matches the raw request path, so `/en/` —
+the canonical URL — would get no header. `astro.config.ts` adds the slashed
+spelling, and CI fails if any URL in the sitemap has no CSP route.
 
-**HSTS is `max-age=63072000` with no `includeSubDomains` or `preload`**, and
-COOP is unset. Both are Vercel-level concerns rather than build output, and
-neither affects any scored Lighthouse audit; recorded here as known gaps rather
-than fixed silently.
+If a directive changes, re-check that the plate `style` attributes still apply,
+the magnifier still initialises, the JSON-LD still parses and no
+`securitypolicyviolation` fires. Test against the raw request path, without
+normalising the trailing slash, or the check is weaker than the platform.
+
+**Known gaps:** HSTS is `max-age=63072000` with no `includeSubDomains` or
+`preload`, and COOP is unset. Both are Vercel dashboard settings rather than
+build output.
 
 ## Registry
 

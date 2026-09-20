@@ -10,8 +10,8 @@ hydration and no other runtime.
 
 Four documents, and each owns one thing: [DESIGN.md](DESIGN.md) owns design
 intent (`src/styles/global.css` owns the values), [SPEC.md](SPEC.md) owns the
-roadmap and the decisions log, [SECURITY.md](SECURITY.md) owns supply-chain
-posture, and `CLAUDE.md` owns the working rules for coding agents.
+roadmap, [SECURITY.md](SECURITY.md) owns supply-chain posture, and `CLAUDE.md`
+owns the working rules for coding agents.
 
 > **Two licences.** The **source code** is MIT. The **artworks and their
 > reproductions are not** — they are © José Eduardo Hernández Pavón and licensed
