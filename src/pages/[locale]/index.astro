@@ -1,0 +1,14 @@
+---
+import Gallery from '~/components/pages/Gallery.astro';
+import { LOCALES, isLocale } from '~/i18n';
+
+/* One route per locale, so adding a language stays a content change. */
+export function getStaticPaths() {
+  return LOCALES.map((locale) => ({ params: { locale } }));
+}
+
+const { locale } = Astro.params;
+if (!locale || !isLocale(locale)) throw new Error(`Unknown locale: ${locale}`);
+---
+
+<Gallery locale={locale} />

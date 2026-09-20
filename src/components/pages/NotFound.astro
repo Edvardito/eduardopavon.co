@@ -1,0 +1,40 @@
+---
+import { artworkAltText, getFeaturedArtwork } from '~/artworks';
+import { localizePath, useTranslations, type Locale } from '~/i18n';
+import BaseLayout from '~/layouts/BaseLayout.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const tr = useTranslations(locale);
+
+const featured = await getFeaturedArtwork();
+---
+
+<BaseLayout
+  locale={locale}
+  title={tr('notFound.title')}
+  description={tr('notFound.body')}
+  path="/404"
+  ogImage={featured.data.image}
+  ogImageAlt={artworkAltText(featured, locale)}
+>
+  <section class="page mt-(--space-section)">
+    <p class="display enter" aria-hidden="true">
+      404
+    </p>
+    <h1 class="caption__title measure enter mt-(--space-row)" style="--enter-step:1">
+      {tr('notFound.heading')}
+    </h1>
+    <p class="measure enter mt-(--space-caption)" style="--enter-step:2">
+      {tr('notFound.body')}
+    </p>
+    <p class="mt-(--space-row)">
+      <a class="link" href={localizePath('/', locale)}>
+        {tr('notFound.back')}
+      </a>
+    </p>
+  </section>
+</BaseLayout>

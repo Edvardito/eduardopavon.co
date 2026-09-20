@@ -5,10 +5,14 @@ import JsonLd from '~/components/seo/JsonLd.astro';
 import ArtworkCard from '~/components/ui/ArtworkCard.astro';
 import GlassFilter from '~/components/ui/GlassFilter.astro';
 import PlateIndex from '~/components/ui/PlateIndex.astro';
-import { getLocaleFromUrl, useTranslations } from '~/i18n';
+import { useTranslations, type Locale } from '~/i18n';
 import BaseLayout from '~/layouts/BaseLayout.astro';
 
-const locale = getLocaleFromUrl(Astro.url);
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
 const tr = useTranslations(locale);
 
 const artworks = await getSortedArtworks();

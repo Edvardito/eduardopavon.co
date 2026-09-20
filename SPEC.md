@@ -281,11 +281,61 @@ become links. Adds `VisualArtwork` pages and sitemap entries.
 Let the artist add work without touching the repo. Must preserve the image
 optimization step and the locale-keyed field model.
 
-## Phase 5 — Additional language(s)
+## Phase 5 — Additional language(s) — English shipped
 
-English first, via the `add-locale` skill. No route, component or schema changes
-expected — this is the test of the Phase 1 i18n seam. Adds a language-switcher
-UI.
+English is live at `/en/`, Spanish at `/es/`, both generated from the locale
+list. **The language-switcher UI is still outstanding**, and is the rest of this
+phase.
+
+### What the seam cost, honestly
+
+The promise was "no route, component or schema changes". The schema and the
+components held: the content model, `ArtworkCard`, `BaseLayout`, `Footer`,
+`Header` and `PlateIndex` are untouched, and English was a message file plus two
+lines per artwork entry. **Routing did not hold, and could not have** — not
+because the seam leaked, but because the requirement changed: the site now
+decides a visitor's language instead of serving one. That took
+
+- `PREFIX_DEFAULT_LOCALE` flipped to `true`, so Spanish moved from `/` to
+  `/es/`. Every edition is now prefixed and none is privileged by URL.
+- one `src/pages/[locale]/` route generated from `LOCALES`, so the _next_
+  language still needs no route work, and the page bodies moved to
+  `src/components/pages/` (a file under `src/pages/` is a route, so it cannot be
+  the shared body).
+- `FALLBACK_LOCALE`, a second locale constant. `DEFAULT_LOCALE` answers "what
+  does a missing translation fall back to" — still `es`, the authoring language.
+  `FALLBACK_LOCALE` answers "what does a visitor get when we do not speak their
+  language" — `en`. One constant could not have carried both without making
+  Spanish-only artwork entries fail validation.
+- `Seo`/`JsonLd` localizing the canonical URL, because with the default locale
+  prefixed a page's canonical is no longer its logical path.
+
+### Decisions
+
+- **The root is the one on-demand route.** `/` reads `Accept-Language` — the
+  browser's reading of the system language — and 302s to an edition, with
+  `Vary: Accept-Language` so a shared cache cannot serve one visitor's language
+  to another. This is the serverless seam invariant 3 reserves, spent on
+  language rather than on the contact form; the contact form is the same shape
+  and will be the second function.
+- **Detection beats a static root, and a script was never an option.** A static
+  `/` cannot read a request header, Vercel's header-conditional redirects are
+  not merged into the adapter's Build Output config, and a client-side redirect
+  would be a second script — a foundation change (invariant 1) for something a
+  302 does before first paint.
+- **English is the fallback**, on the reasoning that a reader whose language we
+  do not publish is likelier to read English than Spanish. `x-default` points
+  there, and so does the host-level `404.html`, the one page that is served
+  without a locale in its path.
+- **Artwork titles are translated**, not left in Spanish with a gloss.
+  `Crisálida` → `Chrysalis`, `Retazos (serie)` → `Remnants (series)`. A
+  monograph would often keep the original and bracket the translation; this
+  reads better for a curator scanning an English page, and reverting any one of
+  them is deleting a line — the entry then falls back to Spanish on its own.
+  **The artist should confirm the eight.**
+- **No language switcher yet**, so a reader whose system language is Spanish
+  reaches English only by URL. Deliberate for now, and the reason Phase 5 stays
+  open rather than closing here.
 
 ## Phase 6 — Contact form
 
@@ -309,10 +359,12 @@ feature.
 2. **pnpm only**, frozen lockfile, exact pins, no unsanctioned lifecycle
    scripts, release cooldown on.
 3. **Static output.** On-demand rendering is per-route and exceptional; never
-   global SSR.
+   global SSR. One route is on-demand today: `/`, which negotiates the visitor's
+   language. Every page it points at is prerendered.
 4. **Prettier owns formatting.** No hand-formatting, no stylistic lint rules.
 5. **The i18n seam holds.** No user-facing string hardcoded in a component; the
-   locale list stays a single edit point.
+   locale list stays a single edit point, and the locale routes are generated
+   from it rather than written per language.
 6. **Images go through the import script and `astro:assets`.** Originals never
    enter the repo; `public/` is only for unprocessed files.
 7. **Licensing stays split** — code MIT, artwork CC BY-NC-ND 4.0 — and stays

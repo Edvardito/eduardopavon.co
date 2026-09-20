@@ -205,7 +205,7 @@
     min-block-size: 24px;
   }
 
-  /* Sized in em so the glyph tracks the type; the label carries the rule. */
+  /* The label carries the underline, so it never runs under the glyph. */
   .contact__icon {
     flex: none;
     inline-size: 1em;

@@ -35,6 +35,8 @@ export default {
 
   'a11y.skipToContent': 'Saltar al contenido',
 
+  'seo.knowsAbout': 'Dibujo, Pluma bic, Arte contemporáneo',
+
   'notFound.title': 'Página no encontrada — Eduardo Pavón',
   'notFound.heading': 'Página no encontrada',
   'notFound.body': 'La página que buscas no existe o cambió de dirección.',
