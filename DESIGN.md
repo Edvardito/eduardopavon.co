@@ -8,8 +8,7 @@ the stated exception. Roadmap: @SPEC.md · Hard rules and seams: @CLAUDE.md
 the whole token set, because those files are portable context for an agent with
 no codebase to read — nothing else holds the values. Ours has a live `@theme`
 one file away, and a copied scale drifts on the first tune. We take the
-convention's prose-and-rationale half and decline its token-table half. Do not
-add one.
+convention's prose-and-rationale half and decline its token-table half.
 
 ---
 
@@ -496,9 +495,8 @@ Therefore:
   work it surrounds.
 
 **Glazing is uniform** across every plate regardless of status. Glazing only
-`Enmarcada` works is semantically honest and still wrong: it makes half the
-gallery inconsistent to encode a distinction belonging to the record, not the
-object. Do not propose it.
+`Enmarcada` works would make half the gallery inconsistent to encode a
+distinction belonging to the record, not the object.
 
 **Materials encode categories.** Glass means _the work_ — the plate, the loupe,
 anything that is the drawing or an instrument for looking at it. Anything that
@@ -568,10 +566,9 @@ in the schema, `ARTWORK_STATUSES` remains the one enum, `statusLabel()` remains
 the one label source, and both still flow into the JSON-LD `additionalProperty`
 and `llms.txt` — machine-readable for a curator's tooling, absent from the page.
 The Spanish labels stay in `src/i18n/ui/es.ts` because those two consumers use
-them. **Do not reintroduce a visible badge, chip, bracketed note or caption
-suffix** on any archetype, the Phase 3 detail page included; if a page ever
-needs to state availability, that is a new decision with its own entry here, not
-a restoration of this one.
+them. This holds on every archetype, Phase 3's detail page included: no badge,
+chip, bracketed note or caption suffix. A page that needs to state availability
+is a new decision with its own entry here.
 
 **The contact section.** The last thing the gallery says, sitting between the
 closing rule and the colophon: section label, rule, one line of prose at the
@@ -702,8 +699,7 @@ muted ink".
 **There is no scroll-linked specular.** On a light ground a travelling highlight
 reads as a reflex passing over the work rather than as light on glass. **The
 glazing is the borders and nothing else**: a contact line inset at the work's
-edge and the conic rim just inside it, both static. No moving highlight on a
-plate, outside it or across it.
+edge and the conic rim just inside it, both static.
 
 **The magnifier — the one script.** Invariant #1 admits exactly one client
 script (@SPEC.md, @CLAUDE.md). The effect splits in two, which is what makes it
@@ -802,10 +798,9 @@ work, with no orphans on either side.
 
 **The magnifier sets no precedent.** It is the only sanctioned script because it
 delivers something CSS cannot express at all — a lens tracking a pointer — and
-because the gallery is complete without it. A second script will be proposed by
-analogy; refuse the analogy. If an interaction seems to need one, the answer is
-almost always a real URL and a prerendered page, which is what the detail page
-already is. Test-enforced.
+because the gallery is complete without it. Where an interaction seems to need a
+script, the answer is almost always a real URL and a prerendered page, which is
+what the detail page already is. Test-enforced.
 
 **No second script, no framework, no animation or utility library.** Zero
 hydration, zero client runtime beyond the lens; a library that interpolates two
@@ -825,8 +820,8 @@ the motion system, and it is a runtime the site does not have.
 **No dark mode, and no fifth colour** — not for a scrim, a shadow, a disabled
 state or a lens rim. A printed object has one ground. The palette went from
 three to four once, to fix a measured contrast failure, and the new value came
-bounded to large text on dark grounds (§3); anything less rigorous than that is
-refused. Test-enforced.
+bounded to large text on dark grounds (§3). That bound is the price of a new
+value. Test-enforced.
 
 **Never crop or distort the work.** A slot bounds width; the plate takes the
 work's proportion. A work that does not fit becomes smaller, never tighter.
@@ -865,12 +860,11 @@ Load-bearing; everything else here is advisory prose.
 
 The colour guard allows derived forms — any colour function whose arguments
 reference a `--color-*` token — because the glass edge needs alpha variants of
-ink and pen. It refuses bare hex, bare colour functions and named colours. **Do
-not widen it:** the fourth colour always arrives as a plausible one-off, and
-this test is the only thing that has ever stopped one. Judgement is deliberately
-untested — whether the cadence feels composed, whether the glazing is too heavy,
-whether a heading is too loud. A guard that produces false failures gets deleted
-and takes its real coverage with it.
+ink and pen. It refuses bare hex, bare colour functions and named colours; a
+fourth colour arrives as a plausible one-off, and the guard is what catches it.
+Judgement is deliberately untested — whether the cadence feels composed, whether
+the glazing is too heavy, whether a heading is too loud. A guard that produces
+false failures gets deleted and takes its real coverage with it.
 
 ### Outstanding
 
