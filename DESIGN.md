@@ -923,6 +923,7 @@ Load-bearing; everything else here is advisory prose.
 | Every `animation` sits inside a reduced-motion guard | `tests/design.test.ts`  |
 | Both image tiers, own budgets, no orphans            | `tests/content.test.ts` |
 | No face ships `font-display:auto`                    | `ci.yml`, post-build    |
+| Every published URL gets its CSP header              | `ci.yml`, post-build    |
 
 The colour guard allows derived forms — any colour function whose arguments
 reference a `--color-*` token — because the glass edge needs alpha variants of

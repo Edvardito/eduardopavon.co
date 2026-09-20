@@ -388,6 +388,16 @@ categories short of 100 were one audit each — `color-contrast` (weight 7) and
   and watching the five real faces follow it while the fallbacks stayed `swap`;
   before the wrapper the config had no effect at all. A CI step fails if any
   built page ships `font-display:auto`.
+- **The CSP shipped to production without reaching a single page it was for.**
+  `@astrojs/vercel` writes the header route as `src: pathname` — `/en` — and
+  Vercel matches the raw path, so `/en/`, the canonical URL and the one anything
+  measuring the site requests, got no header at all. Caught by checking
+  production after the merge rather than by any test. `astro.config.ts` now adds
+  the slashed spelling of every CSP route, and CI fails if a URL in the sitemap
+  has no CSP route. **The local harness is what hid it:** it normalised the
+  trailing slash before matching, so it was more forgiving than Vercel and the
+  verification passed on a page that would fail in production. A verification
+  server now matches the way the platform does.
 - **`Polymath Text 700 italic` is configured and never requested, and stays.**
   It costs nothing on the wire — the browser never asks for it. Removing it is
   not expressible in the current config: `weights: [400, 700]` ×

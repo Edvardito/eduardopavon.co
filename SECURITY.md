@@ -115,8 +115,16 @@ Two accommodations, both deliberate:
 `frame-ancestors 'none'` covers clickjacking, which is why no separate
 `X-Frame-Options` is set.
 
-Verified against a local server that replays the generated headers: the plate
-inline styles still apply and nothing is cropped, the magnifier still
+**The adapter writes the route as `src: '/en'`, which never matches the `/en/`
+the site publishes.** It shipped that way once: the header was present on `/en`
+and absent on `/en/`, which is the canonical URL and the one anything measuring
+the site requests. `astro.config.ts` adds the slashed spelling of every CSP
+route, and a CI step fails if any URL in the sitemap has no CSP route.
+
+Verified against a local server that replays the generated headers with Vercel's
+matching — the raw request path, anchored, **no trailing-slash normalisation**,
+since a forgiving local harness is what hid this the first time. Under it: the
+plate inline styles still apply and nothing is cropped, the magnifier still
 initialises and loads the detail tier, the JSON-LD still parses, and no
 `securitypolicyviolation` fires on either edition. Re-verify those four if a
 directive changes.
