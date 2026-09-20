@@ -38,7 +38,24 @@ export default defineConfig({
 
   // Adapter configured so one route can opt out, without global SSR.
   output: 'static',
-  adapter: vercel(),
+  adapter: vercel({ staticHeaders: true }),
+
+  security: {
+    csp: {
+      directives: [
+        "default-src 'self'",
+        "base-uri 'none'",
+        "object-src 'none'",
+        "form-action 'none'",
+        "frame-ancestors 'none'",
+        'upgrade-insecure-requests',
+        // The lens loads the detail tier, and every plate inlines a data: placeholder.
+        "img-src 'self' data:",
+      ],
+      // The plate carries its aspect ratio in a style attribute; hashes cannot cover one.
+      styleDirective: { resources: [{ resource: "'unsafe-inline'", kind: 'attribute' }] },
+    },
+  },
 
   i18n: {
     defaultLocale: DEFAULT_LOCALE,

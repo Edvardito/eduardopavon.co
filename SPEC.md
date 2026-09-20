@@ -342,6 +342,21 @@ decides a visitor's language instead of serving one. That took
 Lighthouse 100 in all four categories, mobile and desktop, on every page that
 exists. In progress; the before/after table lives on the PR.
 
+### Measured baseline
+
+Lighthouse 13.4.1, `/en/`, against production before this pass:
+
+| Category       | Mobile | Desktop |
+| -------------- | ------ | ------- |
+| Performance    | 99     | 100     |
+| Accessibility  | 96     | 96      |
+| Best Practices | 96     | 96      |
+| SEO            | 100    | 100     |
+
+Mobile metrics: FCP 1.2 s · SI 1.2 s · LCP 1.7 s · TBT 80 ms · CLS 0. The two
+categories short of 100 were one audit each — `color-contrast` (weight 7) and
+`inspector-issues` (weight 1).
+
 ### Decisions
 
 - **`www` is the canonical host, and it is a code decision, not a dashboard
@@ -378,6 +393,29 @@ exists. In progress; the before/after table lives on the PR.
   not expressible in the current config: `weights: [400, 700]` ×
   `styles: ['normal', 'italic']` is a cross product, and splitting it would mean
   two family entries and two CSS variables for one face.
+- **The canonical mismatch was not costing an SEO point, and the fix stands
+  anyway.** Lighthouse's `canonical` audit scored 1 despite the page being
+  served from `www` while every published URL said apex, and SEO was
+  already 100. The prediction that it blocked the category was wrong. It is
+  still a duplicate identity, an extra hop for every crawler arriving at the
+  apex, and a `robots.txt` naming a host the site does not serve — fixed on
+  those grounds, not for a score.
+- **The scroll reveal cost the Accessibility category, and the fade was
+  removed.** `.reveal` faded `opacity: 0 → 1` across `entry 0% → entry 90%`, and
+  Lighthouse measured a caption at 2.76:1. Because `animation-timeline: view()`
+  makes opacity a function of scroll position, that is a resting state rather
+  than a transition, so it is a real 1.4.3 failure and not a measurement
+  artifact. See @DESIGN.md §7 for the thresholds and for why flooring the fade
+  was refused in favour of transform-only.
+- **Best Practices was one weight-1 audit, and the security headers that look
+  like the fix are not.** `csp-xss`, `has-hsts`, `clickjacking-mitigation`,
+  `origin-isolation` and `trusted-types-xss` are all **weight 0** in Lighthouse
+  13 — confirmed from the report's own `auditRefs`, not from memory — so none of
+  them can move a score. The whole 96 was `inspector-issues` reporting a
+  "Content security policy" issue. A CSP is now emitted as a real header
+  (@SECURITY.md has the directives and the two accommodations the design
+  requires); `frame-ancestors` came with it, so the weight-0 clickjacking
+  finding clears as a side effect rather than as a goal.
 - **Subsetting is not available through Astro for a provider font.**
   `unicodeRange` writes the descriptor; it does not re-subset the provider's
   file, so it cannot shrink these. Real subsetting is an Adobe Fonts kit

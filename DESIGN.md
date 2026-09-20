@@ -735,6 +735,18 @@ silently resequence it, and **total duration including the longest stagger must
 not exceed 600 ms** — an entrance must never be what pushes a passing page into
 a failing LCP. **Plates never animate on load**, only on scroll.
 
+**The scroll reveal moves, it does not fade.** It was built as `opacity: 0 → 1`
+plus a 3rem rise, and the opacity half was removed after Lighthouse measured a
+caption at **2.76:1** — `--color-ink` at 42% over the ground. The trap is
+specific to scroll-driven animation: with `animation-timeline: view()` opacity
+is a _function of scroll position_, not a transition that finishes, so a reader
+who stops mid-entry sits at that contrast for as long as they stay there. Ink
+needs **0.712** opacity to hold this project's 7:1 floor and **0.580** to clear
+AA at all, so no fade that starts at zero is survivable. Flooring the fade was
+considered and refused: it tunes to one palette value and says nothing about the
+next element put inside a `.reveal`. Transform-only is the rule because it
+cannot fail — and it is the same rule §9 already states as "no muted ink".
+
 **There is no scroll-linked specular.** A travelling highlight was built twice —
 once as a rail outside the plate, once sweeping across the drawing — and the
 designer removed it both times. On a light ground it reads as a reflex passing
