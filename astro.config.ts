@@ -18,7 +18,7 @@ const cacheDir = cacheRoot
   ? `${cacheRoot}/${process.argv.includes('dev') ? 'dev' : 'other'}`
   : undefined;
 
-// Typekit's own font-display would beat the `display` below. See SPEC.md.
+// Typekit's own font-display would beat the `display` below. See DESIGN.md.
 type AdobeProvider = ReturnType<typeof fontProviders.adobe>;
 
 function adobe(config: { id: string }): AdobeProvider {

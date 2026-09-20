@@ -112,27 +112,22 @@ Two accommodations, both deliberate:
   inlined `data:` URI.
 
 `base-uri`, `object-src` and `form-action` are `'none'`;
-`frame-ancestors 'none'` covers clickjacking, which is why no separate
-`X-Frame-Options` is set.
+`frame-ancestors 'none'` covers clickjacking, so no separate `X-Frame-Options`
+is set.
 
-**The adapter writes the route as `src: '/en'`, which never matches the `/en/`
-the site publishes.** It shipped that way once: the header was present on `/en`
-and absent on `/en/`, which is the canonical URL and the one anything measuring
-the site requests. `astro.config.ts` adds the slashed spelling of every CSP
-route, and a CI step fails if any URL in the sitemap has no CSP route.
+**Every CSP route needs both spellings of its path.** `@astrojs/vercel` writes
+the route as `src: '/en'`, and Vercel matches the raw request path, so `/en/` —
+the canonical URL — would get no header. `astro.config.ts` adds the slashed
+spelling, and CI fails if any URL in the sitemap has no CSP route.
 
-Verified against a local server that replays the generated headers with Vercel's
-matching — the raw request path, anchored, **no trailing-slash normalisation**,
-since a forgiving local harness is what hid this the first time. Under it: the
-plate inline styles still apply and nothing is cropped, the magnifier still
-initialises and loads the detail tier, the JSON-LD still parses, and no
-`securitypolicyviolation` fires on either edition. Re-verify those four if a
-directive changes.
+If a directive changes, re-check that the plate `style` attributes still apply,
+the magnifier still initialises, the JSON-LD still parses and no
+`securitypolicyviolation` fires. Test against the raw request path, without
+normalising the trailing slash, or the check is weaker than the platform.
 
-**HSTS is `max-age=63072000` with no `includeSubDomains` or `preload`**, and
-COOP is unset. Both are Vercel-level concerns rather than build output, and
-neither affects any scored Lighthouse audit; recorded here as known gaps rather
-than fixed silently.
+**Known gaps:** HSTS is `max-age=63072000` with no `includeSubDomains` or
+`preload`, and COOP is unset. Both are Vercel dashboard settings rather than
+build output.
 
 ## Registry
 
