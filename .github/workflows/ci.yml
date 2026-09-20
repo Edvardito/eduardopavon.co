@@ -52,6 +52,14 @@ jobs:
       - name: Build
         run: pnpm build
 
+      # Typekit's font-display can beat the config's; this proves what shipped.
+      - name: Assert no font blocks first paint
+        run: |
+          if grep -rl 'font-display:auto' .vercel/output/static --include='*.html'; then
+            echo "::error::A face shipped with font-display:auto. See astro.config.ts and DESIGN.md, Typography."
+            exit 1
+          fi
+
       # Dependency scripts are blocked by default; this fails if someone
       # allowlists one without review.
       - name: Assert no dependency build scripts are allowlisted

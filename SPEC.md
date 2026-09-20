@@ -337,6 +337,54 @@ decides a visitor's language instead of serving one. That took
   reaches English only by URL. Deliberate for now, and the reason Phase 5 stays
   open rather than closing here.
 
+## Phase 5.5 — Performance pass
+
+Lighthouse 100 in all four categories, mobile and desktop, on every page that
+exists. In progress; the before/after table lives on the PR.
+
+### Decisions
+
+- **`www` is the canonical host, and it is a code decision, not a dashboard
+  one.** Vercel serves `www`; every URL the site published said apex —
+  canonical, hreflang, `x-default`, sitemap `<loc>`, `robots.txt`, `og:url` and
+  the JSON-LD `@id`. Lighthouse's SEO canonical audit objects when the canonical
+  names a different host than the page, and every crawler arriving at the apex
+  paid an extra hop. Either half of the mismatch could have moved; the artist
+  chose `www`. `SITE_ORIGIN` in `src/site.ts` is now the single edit point and
+  `astro.config.ts` imports it, the way it already imports the locale list.
+- **`robots.txt` became a route.** A committed `public/robots.txt` is a second
+  place for the host to be wrong, and it cannot read `site`. Generated now, for
+  the same reason `llms.txt` is.
+- **Every face shipped `font-display: auto`, for the whole life of the
+  self-hosted build.** @DESIGN.md records self-hosting as having bought `swap`
+  back from the runtime Typekit stylesheet. It had not: Typekit publishes its
+  kit CSS with `font-display: auto`, unifont's Adobe provider extracts that
+  value into `data.display`, and Astro resolves `data.display ?? family.display`
+  — so the provider silently beat the `display: 'swap'` this repo had always
+  configured. Chrome treats `auto` as block, so ~252 KB of faces could hold text
+  invisible for up to three seconds, and the LCP element is text in the display
+  face. Only the five _generated fallback_ faces carried `swap`, which is why
+  the built HTML looked right at a glance — it showed five of each.
+- **The kit was fixed at the source, and the config was made authoritative
+  anyway.** The Adobe kit now publishes `swap`. That is dashboard state outside
+  the repo that can regress without a diff, which is the kind of invisible
+  guarantee @SECURITY.md exists to refuse, so `astro.config.ts` also wraps the
+  Adobe provider to drop `display`. Verified by setting the config to `optional`
+  and watching the five real faces follow it while the fallbacks stayed `swap`;
+  before the wrapper the config had no effect at all. A CI step fails if any
+  built page ships `font-display:auto`.
+- **`Polymath Text 700 italic` is configured and never requested, and stays.**
+  It costs nothing on the wire — the browser never asks for it. Removing it is
+  not expressible in the current config: `weights: [400, 700]` ×
+  `styles: ['normal', 'italic']` is a cross product, and splitting it would mean
+  two family entries and two CSS variables for one face.
+- **Subsetting is not available through Astro for a provider font.**
+  `unicodeRange` writes the descriptor; it does not re-subset the provider's
+  file, so it cannot shrink these. Real subsetting is an Adobe Fonts kit
+  decision with glyph-coverage consequences, and belongs to the designer.
+
+---
+
 ## Phase 6 — Contact form
 
 A single on-demand route (`src/pages/api/contact.ts`,

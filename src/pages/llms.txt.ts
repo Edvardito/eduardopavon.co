@@ -10,7 +10,13 @@ import {
   statusLabel,
   t,
 } from '~/i18n';
-import { ARTIST_LEGAL_NAME, ARTIST_NAME, ARTWORK_LICENSE, rightsStatement } from '~/site';
+import {
+  ARTIST_LEGAL_NAME,
+  ARTIST_NAME,
+  ARTWORK_LICENSE,
+  SITE_ORIGIN,
+  rightsStatement,
+} from '~/site';
 
 /* Generated from the collection rather than written by hand, so it cannot
  * drift from the gallery the way a committed copy would. */
@@ -18,7 +24,7 @@ export const GET: APIRoute = async ({ site }) => {
   /* This file is English prose, so it catalogues the English edition. */
   const locale = FALLBACK_LOCALE;
   const artworks = await getSortedArtworks();
-  const origin = site ?? new URL('https://eduardopavon.co');
+  const origin = site ?? new URL(SITE_ORIGIN);
 
   const work = artworks.map((artwork) => {
     const { title, medium, dimensions, year, status } = artwork.data;

@@ -229,7 +229,8 @@ time** through Astro's Adobe provider — `fontProviders.adobe({ id })` against
 the kit id, in `astro.config.ts`. They shipped briefly as a runtime
 `use.typekit.net` stylesheet, which cost two render-blocking requests on a
 third-party origin, a `font-display: auto` we could not override, no fallback
-metrics, and Adobe seeing every visitor's IP. Self-hosting removes all four.
+metrics, and Adobe seeing every visitor's IP. Self-hosting removes three of the
+four; the fourth followed the faces home and is treated below.
 
 Three properties of the pairing had to be verified against the self-hosted
 files, because each would have broken the design silently:
@@ -243,8 +244,20 @@ files, because each would have broken the design silently:
   unchanged.
 - **Fallback metrics are generated**, so the swap cannot shift layout.
 
-`font-display: swap`, and only the display face is preloaded: it sets the name,
-which is the largest thing on the page.
+**`font-display: swap` — and it took a second fix to actually be true.** This
+line was written when the faces were self-hosted, and it was wrong for the whole
+life of that build. Typekit publishes its kit CSS with `font-display: auto`, the
+provider reads that value out of it, and Astro resolves the provider's value
+ahead of the configured one, so every real face shipped `auto` — block in
+Chrome, and therefore up to three seconds of invisible text across ~252 KB of
+faces, with the LCP element being text in the display face. It read as correct
+because the _generated fallback_ faces did carry `swap`, so the built HTML
+showed five of each. The kit now publishes `swap` and `astro.config.ts` drops
+the provider's value besides, so the configured one governs. @SPEC.md's Phase
+5.5 log has the mechanism; a CI step keeps it honest.
+
+Only the display face is preloaded: it sets the name, which is the largest thing
+on the page.
 
 ### Space and grid
 
@@ -897,6 +910,7 @@ Load-bearing; everything else here is advisory prose.
 | Exactly one client script, within its byte budget    | `tests/design.test.ts`  |
 | Every `animation` sits inside a reduced-motion guard | `tests/design.test.ts`  |
 | Both image tiers, own budgets, no orphans            | `tests/content.test.ts` |
+| No face ships `font-display:auto`                    | `ci.yml`, post-build    |
 
 The colour guard allows derived forms — any colour function whose arguments
 reference a `--color-*` token — because the glass edge needs alpha variants of

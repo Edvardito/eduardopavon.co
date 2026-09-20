@@ -3,8 +3,9 @@ import vercel from '@astrojs/vercel';
 import tailwindcss from '@tailwindcss/vite';
 import { defineConfig, fontProviders } from 'astro/config';
 import { DEFAULT_LOCALE, LOCALES, LOCALE_METADATA, PREFIX_DEFAULT_LOCALE } from './src/i18n/config';
+import { SITE_ORIGIN } from './src/site';
 
-const SITE = process.env.SITE_URL ?? 'https://eduardopavon.co';
+const SITE = process.env.SITE_URL ?? SITE_ORIGIN;
 
 // Bind-mount file events are unreliable off Linux; compose sets this.
 const usePolling = process.env.CHOKIDAR_USEPOLLING === 'true';
@@ -14,6 +15,23 @@ const cacheRoot = process.env.VITE_CACHE_DIR;
 const cacheDir = cacheRoot
   ? `${cacheRoot}/${process.argv.includes('dev') ? 'dev' : 'other'}`
   : undefined;
+
+// Typekit's own font-display would beat the `display` below. See SPEC.md.
+type AdobeProvider = ReturnType<typeof fontProviders.adobe>;
+
+function adobe(config: { id: string }): AdobeProvider {
+  const provider = fontProviders.adobe(config);
+  return {
+    ...provider,
+    async resolveFont(options) {
+      const resolved = await provider.resolveFont(options);
+      if (!resolved) return resolved;
+      return {
+        fonts: resolved.fonts.map(({ display: _display, ...face }) => face),
+      };
+    },
+  };
+}
 
 export default defineConfig({
   site: SITE,
@@ -50,7 +68,7 @@ export default defineConfig({
   fonts: [
     {
       name: 'Irregardless Variable',
-      provider: fontProviders.adobe({ id: 'ulk1nsi' }),
+      provider: adobe({ id: 'ulk1nsi' }),
       cssVariable: '--font-irregardless',
       weights: ['300 800'],
       styles: ['normal'],
@@ -60,7 +78,7 @@ export default defineConfig({
     },
     {
       name: 'Polymath Text',
-      provider: fontProviders.adobe({ id: 'ulk1nsi' }),
+      provider: adobe({ id: 'ulk1nsi' }),
       cssVariable: '--font-polymath',
       weights: [400, 700],
       styles: ['normal', 'italic'],
@@ -69,8 +87,6 @@ export default defineConfig({
       fallbacks: ['system-ui', 'sans-serif'],
     },
   ],
-
-  /* No `fonts` block: Typekit, linked in BaseLayout. DESIGN.md, Typography. */
 
   vite: {
     ...(cacheDir ? { cacheDir } : {}),

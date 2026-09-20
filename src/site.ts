@@ -1,3 +1,6 @@
+/** The host we serve; `astro.config.ts` imports it so routing cannot drift. */
+export const SITE_ORIGIN = 'https://www.eduardopavon.co';
+
 /** Public/professional name, used for display and credit. */
 export const ARTIST_NAME = 'Eduardo Pavón';
 

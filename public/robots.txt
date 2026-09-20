@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://eduardopavon.co/sitemap-index.xml
