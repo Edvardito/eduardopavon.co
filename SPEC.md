@@ -23,6 +23,7 @@ Design intent: @DESIGN.md · Hard rules and seams: @CLAUDE.md · Supply chain:
 | 1.7 — Design system    | @DESIGN.md, the closed palette, the cadence, the glass material, the magnifier, the second image tier        |
 | 5 — English edition    | `/es/` and `/en/` from one locale-generated route; `/` negotiates `Accept-Language`                          |
 | 5.5 — Performance pass | `font-display: swap` enforced, `www` as the canonical host, a CSP, contrast fixed in the scroll reveal       |
+| 5.6 — Material pass    | Scrollbars in the site's blue, and `--color-pen-pale` as a bounded fifth palette value                       |
 
 Decisions that still bind future work live in **Architecture invariants** below,
 in @DESIGN.md as design rules, and in @SECURITY.md as supply-chain rules. How
