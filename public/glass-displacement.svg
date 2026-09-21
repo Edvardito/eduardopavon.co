@@ -1,18 +1,25 @@
 <!-- Not an image: R and G are COORDINATES (128 = no offset), which is why the
-  palette rule does not apply. The radial overlay keeps the bend at the rim. -->
+  palette rule does not apply. The rim sits at
+  (--loupe-size / 2) / (--loupe-size / 2 + --loupe-pad) = 0.7857 of the map;
+  change either token and redraw, or the bend lands outside the circle. -->
 <svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">
   <defs>
-    <linearGradient id="x" x1="0" y1="0" x2="1" y2="0">
+    <linearGradient id="x" x1="10.714%" y1="0%" x2="89.286%" y2="0%">
       <stop offset="0" stop-color="#000000" />
       <stop offset="1" stop-color="#ff0000" />
     </linearGradient>
-    <linearGradient id="y" x1="0" y1="0" x2="0" y2="1">
+    <linearGradient id="y" x1="0%" y1="10.714%" x2="0%" y2="89.286%">
       <stop offset="0" stop-color="#000000" />
       <stop offset="1" stop-color="#00ff00" />
     </linearGradient>
-    <radialGradient id="core">
+    <radialGradient id="core" r="39.286%">
       <stop offset="0" stop-color="#808000" stop-opacity="1" />
-      <stop offset="0.56" stop-color="#808000" stop-opacity="1" />
+      <stop offset="0.70" stop-color="#808000" stop-opacity="1" />
+      <stop offset="0.75" stop-color="#808000" stop-opacity="0.974" />
+      <stop offset="0.80" stop-color="#808000" stop-opacity="0.889" />
+      <stop offset="0.85" stop-color="#808000" stop-opacity="0.744" />
+      <stop offset="0.90" stop-color="#808000" stop-opacity="0.545" />
+      <stop offset="0.95" stop-color="#808000" stop-opacity="0.295" />
       <stop offset="1" stop-color="#808000" stop-opacity="0" />
     </radialGradient>
   </defs>
