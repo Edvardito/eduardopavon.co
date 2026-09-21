@@ -463,19 +463,39 @@ a plate, the **loupe** held over the work on hover, and the **title bar** the
 page passes beneath. They share tokens — pane thickness, dispersion spread, the
 alphas the edge is drawn with, and one light angle — so retuning one provably
 retunes the other. If a future session can change the loupe without the glazing
-following, this has failed.
+following, this has failed. **The check is mechanical:** move `--glass-light` by
+30deg and every edge, highlight and shadow on both objects turns with it. A
+value that does not turn is a value that has been written by hand.
+
+**Two objects, named, and every value answers to one of them.** The plate is a
+sheet of low-iron float glass **lying flat on the paper**. The loupe is a
+plano-convex lens **held a couple of centimetres above it**. If a value about to
+be written does not correspond to something one of those two objects does, it
+does not get written.
 
 Glass over a flat ground is invisible; all the information is at the edge.
 Therefore:
 
-- **On a plate, the glass is inside the work's bounds.** Contact line inset, rim
-  just inside the edge, light travelling across the surface. Painted entirely
-  outside the rectangle it reads as a drop shadow instead, which is what
-  everything outside a rectangle at low alpha does. The cost is accepted: a
-  highlight passes over the drawing and the outermost hairline is overlaid. It
-  is a light overlay, never a displacement — **the plate does not refract, so
-  the work is never distorted**, and that is the part of the promise that does
-  not bend.
+- **The plate is four cues and a field that carries nothing.** In order, from
+  the outside in: a **contact occlusion**, the light that cannot reach the gap
+  under the edge, which is the cue that says _lying on_ and the strongest one
+  the plate has; the **contact line**, a 1px hairline where the polished edge
+  meets paper and the darkest single mark in the material; the **bevel**, a
+  **hairline** falling off around the perimeter on a Fresnel curve; and the
+  **edge tint**, which belongs in the bevel band and nowhere else because glass
+  is coloured through its thickness. **The bevel's width is the rule that was
+  got wrong once.** Drawn as a soft band several pixels wide it reads as a drawn
+  border, and on a work with white paper around it that band stands on the
+  drawing. Seen from directly above, a polished float-glass edge is a thin line.
+  The weight belongs outside, in the occlusion. Everything but the occlusion is
+  inside the work's bounds. It is a light overlay, never a displacement — **the
+  plate does not refract, so the work is never distorted**, and that is the part
+  of the promise that does not bend.
+- **The field carries nothing at all.** Two surfaces reflect about 4% each, so a
+  veiling lift of a couple of percent would be physically honest — and the
+  falsification test below forbids anything the eye can find there, so the
+  answer is zero and the plate spends no layer on it. If you can see where the
+  glass is by looking at the middle of a plate, it is wrong.
 - **No `backdrop-filter` on a plate.** There is nothing behind a plate to
   refract. It earns its keep only where the page genuinely scrolls beneath
   something: the title card and the section head, both sticky. Those two, and
@@ -488,34 +508,63 @@ Therefore:
   exception**: it sits over the drawing, not over the ground, so it _does_ have
   headroom, and a bright arris opposite a dark one is most of what reads as
   glass there.
-- **The glazing is almost invisible, and that is correct.** Glass over a flat
-  white ground shows nothing but a delicate, uneven hairline and a soft cast
-  shadow. The alphas are deliberately low; raising them turns the glazing into a
-  mount.
+- **The glazing is quiet in the field and definite at the edge.** Over a flat
+  near-white ground there is nothing to see but the edge, so that is where the
+  weight goes: the contact line is the one mark allowed to be frank, and the
+  bevel stays faint enough that it is read rather than noticed. The floor is not
+  an alpha cap, which only ever proxied for the real rule — it is **principle
+  1**, and the falsification test below is how it is checked.
 - **Dispersion resolves toward the accent.** Real glass fringes cyan and green;
   here the fringe is `--color-pen`, so this glass disperses toward ballpoint
   blue. A deliberate substitution, not an approximation.
-- **Nothing is painted outside the plate.** An outer cast shadow reads as
-  furniture around a picture rather than as glass on one.
-- **The edge varies around the perimeter.** A ring of constant weight is a
-  border, not glass. The rim is a conic gradient masked to the ring: the arris
-  facing the light is almost clear, the far edges carry the internal
-  reflections, the dispersion gathers in the arcs between. **One light angle is
-  a shared token**, so two panes never disagree about where the light is.
+- **One thing is painted outside the plate, and only one.** A **contact
+  occlusion**: tight, dark, offset along the light, and never wider than the
+  pane. A **soft outer cast** is still refused, for the reason that rule always
+  had — a shadow that reads as thrown reads as furniture around a picture rather
+  than as glass on one. The difference is extent, so extent is the rule: past
+  the pane's own thickness it has stopped being contact and started being cast.
+- **The edge varies around the perimeter, and it varies steeply.** A ring of
+  constant weight is a border, not glass; a ring that fades evenly from one side
+  to the other is a gradient, which is only slightly better. Real reflectance
+  climbs at grazing angles, so the falloff is a **Fresnel curve**: near-clear
+  across a wide arc around the lit arris, then most of the change crowded into
+  the last part before the far edge, which carries the internal reflection. The
+  rim is a conic gradient masked to the ring, and the dispersion gathers in the
+  arcs between. **One light angle is a shared token**, so two panes never
+  disagree about where the light is.
 - **The loupe refracts; the plate does not.** Bending light is the part of the
   effect that actually registers, and it needs something behind the glass to
   bend. A plate has only the flat ground behind it, so refracting it would do
   nothing but smear the page. The loupe has the magnified drawing on its own
-  layer, so it gets a real `feDisplacementMap`: crossed linear ramps encode the
-  x and y offsets, a radial core pins the middle back to neutral, and the bend
-  concentrates at the rim the way it does in real glass. The map lives in
+  layer, so it gets a real `feDisplacementMap`, and **the map is a lens profile,
+  not a prism**: displacement is a function of _radius_, ~zero through the
+  middle and rising steeply over the last fifth, so the magnified image visibly
+  compresses as it approaches the rim. That compression is what makes a circle
+  read as a lens rather than as a cropped zoom, and it is worth more than any
+  amount of rim decoration. Crossed linear ramps give the radial direction, a
+  radial overlay gives the magnitude. The map lives in
   `public/glass-displacement.svg` — its R and G channels are **coordinates, not
-  colour**, which is why it is not a fourth palette value.
-- **Weight limit.** Total painted extent stays under the space between a plate
-  and its caption (§3), and every band is drawn below half alpha, so the glazing
-  can never read denser than the drawing (principle 1). The test for "too
-  heavy": screenshot the gallery and ask whether any edge is visible before the
-  work it surrounds.
+  colour**, which is why it is not a palette value.
+- **The map's geometry is tied to two tokens, and it is the one place a CSS
+  value is restated outside `global.css`.** The stretched map covers the padded
+  view, not the visible disc, so the profile has to be drawn to the ratio
+  `(--loupe-size / 2) / (--loupe-size / 2 + --loupe-pad)`. Get it wrong and the
+  whole bend lands outside the circle and the lens reads flat, which is a silent
+  failure with no error anywhere. Change either token and redraw the file; the
+  ratio and the reason are written at the top of it.
+- **`--loupe-pad` is a budget, not a margin.** It must exceed the largest
+  displacement, so the rim bends real image rather than the transparency outside
+  it — and no more than that, because the filter runs over that whole box on
+  every pointer frame.
+- **Weight limit, and how it is checked.** Total painted extent stays under the
+  space between a plate and its caption (§3). Beyond that the rule is principle
+  1 and the **falsification test**: screenshot a plate, mask the outer 3% of the
+  box, and compare what is left against the bare drawing — they must be
+  indistinguishable. Then look at the unmasked edge and say which side the light
+  is on without checking the token. Both must pass. The loupe's test is its own:
+  hold it over hatching and straight pen strokes must bend continuously as they
+  approach the rim, with no seam at the clip boundary. A seam means the view is
+  not drawn far enough beyond the circle before clipping.
 
 **Glazing is uniform** across every plate regardless of status. Glazing only
 `Enmarcada` works would make half the gallery inconsistent to encode a
@@ -711,8 +760,33 @@ whoever built the site, which is not the artist — it reads from `SITE_AUTHOR` 
 licence line. The last furniture on the page, and allowed to be the quietest
 thing on it.
 
-**The magnifier lens.** §7. Visually it is the glass material above, expressed
-as a circle held in the hand rather than fixed over the work.
+**The magnifier lens.** §7 owns its behaviour. Visually it is the glass material
+above, expressed as a plano-convex lens held above the paper rather than a sheet
+resting on it — which is the whole reason it is allowed to be brighter and
+heavier than the glazing. **It sits over the drawing, not over the ground, so it
+has the headroom the plate does not**, and it spends it on six things, in
+descending order of how much each is worth:
+
+1. **The lens profile** (§6, the map), and **the edge compression** that follows
+   from it. This is the effect; the rest is trim.
+2. **A bright arris and a dark one** — a narrow near-white crescent on the lit
+   side against a narrow dark crescent opposite. The plate may not do this.
+3. **A secondary reflection**, a fainter ring inboard of the primary at about a
+   third of its alpha, because a real pane doubles its edge.
+4. **A caustic**, a soft bright concentration inside the rim opposite the light,
+   where the refracted cone gathers.
+5. **A cast shadow on the work**, softer and further offset than the plate's
+   contact occlusion, because this object is held above the paper rather than
+   resting on it.
+
+Every one of those is placed from `--glass-light` rather than by hand, so the
+rotation check in §6 covers them.
+
+**It must read as an object, and that is a floor rather than a preference.**
+Drawn as faintly as the glazing it disappears over a work that is mostly white
+paper, and a lens you cannot see is a lens that is not there — which is how it
+was first reported. This is the one surface where the material is allowed to be
+frank, and the plate's restraint does not transfer to it.
 
 **Prev/next — Phase 3.** Bottom-right of the detail page, micro size in pen,
 each target ≥24×24px (2.5.8). The list of plates with the current work marked is
@@ -768,8 +842,12 @@ in `backdrop-filter` are Chromium-only (w3c/svgwg#1142), but the loupe carries
 the magnified drawing as its own layer, so it never needs to sample what is
 behind it.
 
-Two limits. `feImage` with an external reference is unreliable outside Chromium;
-where it does not resolve the lens degrades to unrefracted magnification —
+Two limits. `feImage` with an external reference is unreliable outside Chromium,
+and **the degradation is built rather than hoped for**: a map that fails to load
+is an empty result, and an empty result displaces by half the scale in both
+axes, which slides the magnified view instead of flattening it. So the filter
+synthesises a neutral map from coefficients and composites the loaded one over
+it. Where the file does not resolve, the lens is unrefracted magnification —
 complete, just flatter. And **no chromatic aberration**: splitting channels
 would fringe the drawing in hues the palette does not contain. Dispersion stays
 in the rim, in `--color-pen`.
