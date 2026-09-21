@@ -7,7 +7,7 @@
   --color-pen: #0000ff;
   /* Large text only: 4.0:1 on ink, and nothing smaller clears AA. */
   --color-pen-red: #f52742;
-  /* Scrollbars only: 4.22:1 on pen, 1.96:1 on ground. Never text. */
+  /* Scrollbars only, never text: 4.22:1 on pen, 1.96:1 on ground. */
   --color-pen-pale: #90b6ff;
 
   /* Self-hosted at build time; the stacks come from astro.config.ts. */
@@ -46,7 +46,7 @@
   :root {
     color-scheme: light;
 
-    /* The colour inherits; the width does not, so a container restates it. */
+    /* The colour inherits; the width does not. */
     scrollbar-width: thin;
     scrollbar-color: var(--color-pen) var(--color-pen-pale);
 
@@ -59,13 +59,17 @@
     --space-margin: clamp(1.25rem, 6vw, 7rem);
 
     --glass-thickness: 0.28rem;
-    /* Raising these turns the glazing into a drawn border. */
-    --glass-arris: 0.13;
-    --glass-band: 0.05;
-    --glass-dispersion: 0.09;
-    --glass-cast: 0.1;
-    --glass-sheen: 0.4;
-    --glass-light: 214deg;
+    --glass-light: 315deg;
+    /* The light's screen direction; every offset derives from it. */
+    --glass-ux: sin(var(--glass-light));
+    --glass-uy: calc(-1 * cos(var(--glass-light)));
+
+    --glass-contact: 0.5;
+    --glass-arris: 0.02;
+    --glass-band: 0.2;
+    --glass-dispersion: 0.11;
+    --glass-cast: 0.2;
+    --glass-sheen: 0.55;
 
     --titlecard-min: 50px;
 
@@ -76,7 +80,8 @@
 
     --loupe-size: 11rem;
     --loupe-zoom: 3.3;
-    --loupe-pad: 4rem;
+    /* Must exceed the largest displacement; the map is drawn to this ratio. */
+    --loupe-pad: 1.5rem;
 
     --container-plate: 56rem;
   }
@@ -228,8 +233,12 @@
     overflow: clip;
     background-color: oklch(from var(--color-ink) l c h / 0.04);
 
-    /* Inset: painted outside, this reads as a drop shadow. */
-    box-shadow: inset 0 0 0 1px oklch(from var(--color-ink) l c h / var(--glass-arris));
+    box-shadow:
+      inset 0 0 0 1px oklch(from var(--color-ink) l c h / var(--glass-contact)),
+      /* Past the pane's own thickness this stops being contact and reads as cast. */
+        calc(var(--glass-thickness) * -0.35 * var(--glass-ux))
+        calc(var(--glass-thickness) * -0.35 * var(--glass-uy)) calc(var(--glass-thickness) * 0.9)
+        calc(var(--glass-thickness) * -0.3) oklch(from var(--color-ink) l c h / var(--glass-cast));
   }
 
   @supports (mask-composite: exclude) {
@@ -238,17 +247,19 @@
       position: absolute;
       inset: 0;
       z-index: 2;
-      padding: calc(var(--glass-thickness) * 1.5);
+      padding: calc(var(--glass-thickness) * 0.45);
       pointer-events: none;
       background: conic-gradient(
         from var(--glass-light),
-        oklch(from var(--color-ground) l c h / calc(var(--glass-sheen) * 0.9)) 0deg,
-        oklch(from var(--color-pen) l c h / var(--glass-dispersion)) 44deg,
-        oklch(from var(--color-ink) l c h / var(--glass-band)) 96deg,
-        oklch(from var(--color-ink) l c h / var(--glass-arris)) 176deg,
-        oklch(from var(--color-pen) l c h / calc(var(--glass-dispersion) * 1.4)) 224deg,
-        oklch(from var(--color-ink) l c h / var(--glass-band)) 300deg,
-        oklch(from var(--color-ground) l c h / calc(var(--glass-sheen) * 0.9)) 360deg
+        oklch(from var(--color-ink) l c h / var(--glass-arris)) 0deg,
+        oklch(from var(--color-ink) l c h / calc(var(--glass-arris) * 1.6)) 52deg,
+        oklch(from var(--color-pen) l c h / calc(var(--glass-dispersion) * 0.8)) 98deg,
+        oklch(from var(--color-ink) l c h / calc(var(--glass-band) * 0.72)) 138deg,
+        oklch(from var(--color-ink) l c h / var(--glass-band)) 180deg,
+        oklch(from var(--color-ink) l c h / calc(var(--glass-band) * 0.72)) 222deg,
+        oklch(from var(--color-pen) l c h / calc(var(--glass-dispersion) * 0.8)) 262deg,
+        oklch(from var(--color-ink) l c h / calc(var(--glass-arris) * 1.6)) 308deg,
+        oklch(from var(--color-ink) l c h / var(--glass-arris)) 360deg
       );
       mask:
         linear-gradient(currentColor 0 0) content-box,
@@ -412,17 +423,10 @@
     transform: translate3d(var(--lens-x, 0), var(--lens-y, 0), 0);
 
     box-shadow:
-      inset 0 0 0 1px oklch(from var(--color-ink) l c h / calc(var(--glass-arris) * 1.2)),
-      inset 0 calc(var(--glass-thickness) * 1.5) calc(var(--glass-thickness) * 2.5)
-        calc(var(--glass-thickness) * -1.2)
-        oklch(from var(--color-ground) l c h / var(--glass-sheen)),
-      inset 0 calc(var(--glass-thickness) * -1.5) calc(var(--glass-thickness) * 3)
-        calc(var(--glass-thickness) * -1.2)
-        oklch(from var(--color-pen) l c h / calc(var(--glass-dispersion) * 2.5)),
-      0 0 0 1px oklch(from var(--color-ink) l c h / calc(var(--glass-arris) * 1.2)),
-      0 calc(var(--glass-thickness) * 2) calc(var(--glass-thickness) * 7)
-        calc(var(--glass-thickness) * -1.5)
-        oklch(from var(--color-ink) l c h / calc(var(--glass-cast) * 3));
+      inset 0 0 0 1px oklch(from var(--color-ink) l c h / calc(var(--glass-contact) * 0.5)),
+      calc(var(--glass-thickness) * -1.6 * var(--glass-ux))
+        calc(var(--glass-thickness) * -1.6 * var(--glass-uy)) calc(var(--glass-thickness) * 5)
+        calc(var(--glass-thickness) * -1) oklch(from var(--color-ink) l c h / var(--glass-cast));
   }
 
   .loupe__view {
@@ -448,11 +452,26 @@
     position: absolute;
     inset: 0;
     border-radius: 50%;
-    background: radial-gradient(
-      circle at 30% 24%,
-      oklch(from var(--color-ground) l c h / var(--glass-sheen)),
-      oklch(from var(--color-ground) l c h / 0) 46%
-    );
+    background:
+      /* specular */
+      radial-gradient(
+        circle at calc(50% + 30% * var(--glass-ux)) calc(50% + 30% * var(--glass-uy)),
+        oklch(from var(--color-ground) l c h / calc(var(--glass-sheen) * 0.5)),
+        oklch(from var(--color-ground) l c h / 0) 32%
+      ),
+      /* caustic */
+        radial-gradient(
+          circle at calc(50% - 34% * var(--glass-ux)) calc(50% - 34% * var(--glass-uy)),
+          oklch(from var(--color-ground) l c h / calc(var(--glass-sheen) * 0.3)),
+          oklch(from var(--color-ground) l c h / 0) 24%
+        ),
+      /* secondary reflection */
+        radial-gradient(
+          circle closest-side,
+          oklch(from var(--color-ground) l c h / 0) 84%,
+          oklch(from var(--color-ink) l c h / calc(var(--glass-band) * 0.7)) 87%,
+          oklch(from var(--color-ground) l c h / 0) 90%
+        );
   }
 
   @supports (mask-composite: exclude) {
@@ -461,17 +480,20 @@
       position: absolute;
       inset: 0;
       border-radius: 50%;
-      padding: calc(var(--glass-thickness) * 2.2);
+      padding: calc(var(--glass-thickness) * 1.5);
       pointer-events: none;
+      /* May go bright: this sits over the drawing, not over the ground. */
       background: conic-gradient(
         from var(--glass-light),
-        oklch(from var(--color-ground) l c h / calc(var(--glass-sheen) * 1.6)) 0deg,
-        oklch(from var(--color-pen) l c h / calc(var(--glass-dispersion) * 2)) 52deg,
-        oklch(from var(--color-ink) l c h / calc(var(--glass-band) * 1.6)) 104deg,
-        oklch(from var(--color-ink) l c h / calc(var(--glass-arris) * 1.5)) 180deg,
-        oklch(from var(--color-pen) l c h / calc(var(--glass-dispersion) * 2.6)) 236deg,
-        oklch(from var(--color-ink) l c h / calc(var(--glass-band) * 1.6)) 302deg,
-        oklch(from var(--color-ground) l c h / calc(var(--glass-sheen) * 1.6)) 360deg
+        oklch(from var(--color-ground) l c h / calc(var(--glass-sheen) * 1.75)) 0deg,
+        oklch(from var(--color-ground) l c h / calc(var(--glass-sheen) * 0.5)) 44deg,
+        oklch(from var(--color-pen) l c h / calc(var(--glass-dispersion) * 1.6)) 94deg,
+        oklch(from var(--color-ink) l c h / calc(var(--glass-band) * 2.2)) 144deg,
+        oklch(from var(--color-ink) l c h / calc(var(--glass-band) * 3.1)) 180deg,
+        oklch(from var(--color-ink) l c h / calc(var(--glass-band) * 2.2)) 216deg,
+        oklch(from var(--color-pen) l c h / calc(var(--glass-dispersion) * 1.6)) 266deg,
+        oklch(from var(--color-ground) l c h / calc(var(--glass-sheen) * 0.5)) 316deg,
+        oklch(from var(--color-ground) l c h / calc(var(--glass-sheen) * 1.75)) 360deg
       );
       mask:
         linear-gradient(currentColor 0 0) content-box,

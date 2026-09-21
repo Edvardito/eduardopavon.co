@@ -15,15 +15,15 @@ Design intent: @DESIGN.md · Hard rules and seams: @CLAUDE.md · Supply chain:
 
 ## Shipped
 
-| Phase                  | Delivered                                                                                                    |
-| ---------------------- | ------------------------------------------------------------------------------------------------------------ |
-| 1 — Foundations        | Astro + TypeScript, the `artworks` collection, the i18n and SEO layers, scripted image import, Vercel deploy |
-| 1.5 — CI and tests     | CI as the gate in front of Vercel; Vitest guards for i18n, slugs and content integrity                       |
-| 1.6 — Design pass      | Self-hosted fonts, fluid type scale, CSS-only view transitions and scroll reveals                            |
-| 1.7 — Design system    | @DESIGN.md, the closed palette, the cadence, the glass material, the magnifier, the second image tier        |
-| 5 — English edition    | `/es/` and `/en/` from one locale-generated route; `/` negotiates `Accept-Language`                          |
-| 5.5 — Performance pass | `font-display: swap` enforced, `www` as the canonical host, a CSP, contrast fixed in the scroll reveal       |
-| 5.6 — Material pass    | Scrollbars in the site's blue, and `--color-pen-pale` as a bounded fifth palette value                       |
+| Phase                  | Delivered                                                                                                                       |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| 1 — Foundations        | Astro + TypeScript, the `artworks` collection, the i18n and SEO layers, scripted image import, Vercel deploy                    |
+| 1.5 — CI and tests     | CI as the gate in front of Vercel; Vitest guards for i18n, slugs and content integrity                                          |
+| 1.6 — Design pass      | Self-hosted fonts, fluid type scale, CSS-only view transitions and scroll reveals                                               |
+| 1.7 — Design system    | @DESIGN.md, the closed palette, the cadence, the glass material, the magnifier, the second image tier                           |
+| 5 — English edition    | `/es/` and `/en/` from one locale-generated route; `/` negotiates `Accept-Language`                                             |
+| 5.5 — Performance pass | `font-display: swap` enforced, `www` as the canonical host, a CSP, contrast fixed in the scroll reveal                          |
+| 5.6 — Material pass    | Scrollbars in the site's blue and `--color-pen-pale` as a bounded fifth palette value; the glass redrawn from two named objects |
 
 Decisions that still bind future work live in **Architecture invariants** below,
 in @DESIGN.md as design rules, and in @SECURITY.md as supply-chain rules. How
