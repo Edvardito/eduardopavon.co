@@ -442,6 +442,16 @@ work rewards a broken link, and the reader is one click from all of it.
 aspect ratio from the asset's intrinsic dimensions, the image absolutely
 positioned inside with `object-fit: contain`, the glazing painted inside it.
 
+**Its corners carry a small radius**, and the glazing's rim follows it, because
+a polished sheet does not end in four points. It is the one place the plate
+touches the work: the plate clips, so the radius removes `r²(1 − π/4)` of each
+corner — at the value that ships, about **8px² per corner, 0.007% of a gallery
+plate**, all of it blank margin. That is a rounded edge on the sheet, not a crop
+of the composition, and the rule it reads against (§9) exists to stop a work
+being tightened to fit a frame. **The bound is that the radius may never grow
+past the point where it is doing anything but softening the sheet's own edge**;
+it is not a place to express a house style.
+
 Three layers, all positioned, so **every one states its z-index**: the
 placeholder (0), the image (1), the rim (2), and the lens (3) above them all.
 Leaving any of them on `auto` puts it in DOM order, which is how the rim ended
@@ -612,13 +622,31 @@ exactly half its own width, so the seam never shows; the duplicate is
 twice. The duration is fixed rather than derived from the content, so adding
 works makes the strip longer and its pace slower.
 
-Moving content that starts on its own is governed by **2.2.2**, and it is also
-simply hard to click. So: it **pauses on hover, on press-and-hold, and on
-focus-within**; it stays a scroll container at all times, so it can be swiped or
-wheeled by hand while it runs; and under `prefers-reduced-motion` it does not
-move at all, the duplicate is not rendered, and it is an ordinary horizontal
-scroll strip. Every entry is reachable in all three cases. The page itself never
-gains a horizontal scrollbar, which keeps reflow (1.4.10) intact.
+**It is a marquee or a scroll strip, and never both at once.** The two cannot
+share one element: the track's translate and the container's scroll offset
+compound, and once the sum passes one list width the loop runs off the end of
+its own duplicate and shows empty field. No number of duplicates fixes that —
+the overshoot is always exactly the distance the track travels — so the pointer
+decides which of the two the reader gets.
+
+- **Where hover exists**, it is a marquee. It **pauses on hover, on
+  press-and-hold, and on focus-within**, and it is not draggable: hover is what
+  makes an undraggable marquee acceptable. It stays programmatically scrollable,
+  so a focused row is still scrolled into view, and because the tab order
+  contains only the real list and not the duplicate, focus can never carry it
+  past the safe offset.
+- **Where hover does not exist**, and under `prefers-reduced-motion`, it does
+  not move at all, the duplicate is not rendered, and it is an ordinary
+  horizontal scroll strip. On touch that is the better object anyway: swiping a
+  line that is moving under your thumb is the problem 2.2.2 is about.
+
+Every entry is reachable in both. The page itself never gains a horizontal
+scrollbar, which keeps reflow (1.4.10) intact.
+
+**Its block axis is explicitly `hidden`.** `overflow-x: auto` alone makes the
+block axis a scroll container as well, which puts a second scroll target under
+the pointer at the top of every page in exchange for nothing: the strip has
+nothing to scroll vertically.
 
 No buttons, no autoplay control, no script — the whole thing is CSS. Every row
 links to that work's plate below, scrolling smoothly (§7); rows clear 24px
@@ -957,7 +985,9 @@ text (§3). That bound is the price of a new value, and wanting one is not payin
 it. Test-enforced.
 
 **Never crop or distort the work.** A slot bounds width; the plate takes the
-work's proportion. A work that does not fit becomes smaller, never tighter.
+work's proportion. A work that does not fit becomes smaller, never tighter. The
+plate's corner radius is the one bounded exception and it is measured in §6: it
+softens the sheet's edge, it does not tighten the work.
 
 **No muted ink.** Fading ink to build hierarchy fails AA. Use weight, size,
 space or a rule.

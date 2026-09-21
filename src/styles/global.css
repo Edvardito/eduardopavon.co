@@ -84,6 +84,7 @@
     --loupe-pad: 1.5rem;
 
     --container-plate: 56rem;
+    --plate-radius: 0.375rem;
   }
 
   html {
@@ -231,6 +232,7 @@
     aspect-ratio: var(--plate-w) / var(--plate-h);
     /* Clips the placeholder blur; the box still matches the asset. */
     overflow: clip;
+    border-radius: var(--plate-radius);
     background-color: oklch(from var(--color-ink) l c h / 0.04);
 
     box-shadow:
@@ -247,6 +249,7 @@
       position: absolute;
       inset: 0;
       z-index: 2;
+      border-radius: var(--plate-radius);
       padding: calc(var(--glass-thickness) * 0.45);
       pointer-events: none;
       background: conic-gradient(
@@ -315,6 +318,8 @@
     padding-block: var(--space-caption);
     /* Scrollable even when static: the only path without the marquee. */
     overflow-x: auto;
+    /* Or the block axis becomes a scroll target too, for nothing to scroll. */
+    overflow-y: hidden;
     overscroll-behavior-inline: contain;
     scroll-padding-inline-start: var(--space-margin);
     /* The one container that hides its bar: the line already moves. */
@@ -585,18 +590,27 @@
       }
     }
 
-    .plate-index--clone {
-      display: flex;
-    }
+    /* Hover is what makes an undraggable marquee acceptable, so the marquee
+       only exists where hover does. */
+    @media (hover: hover) and (pointer: fine) {
+      .plate-index--clone {
+        display: flex;
+      }
 
-    .plate-strip__track {
-      animation: plate-strip 48s linear infinite;
-    }
+      /* Still scrolls to a focused row; just cannot be dragged off the loop. */
+      .plate-strip {
+        overflow-x: hidden;
+      }
 
-    .plate-strip:hover .plate-strip__track,
-    .plate-strip:active .plate-strip__track,
-    .plate-strip:focus-within .plate-strip__track {
-      animation-play-state: paused;
+      .plate-strip__track {
+        animation: plate-strip 48s linear infinite;
+      }
+
+      .plate-strip:hover .plate-strip__track,
+      .plate-strip:active .plate-strip__track,
+      .plate-strip:focus-within .plate-strip__track {
+        animation-play-state: paused;
+      }
     }
 
     /* No transform gives "one line, full width, getting smaller". */
