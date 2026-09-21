@@ -71,18 +71,17 @@ Accessibility is a constraint inside each foundation, not a later section. WCAG
 
 ### Colour
 
-Closed at **four** values, stated literally here and only here, because the
-exact values _are_ the argument. It was three; the fourth was added when the
-masthead moved to an ink field and the accent turned out to be unreadable on it
-(1.86:1). See the bound on it below — a fourth colour is only survivable if it
-comes with one.
+Closed at **five** values, stated literally here and only here, because the
+exact values _are_ the argument. Two of the five are bounded rather than
+general, and each bound is the reason its value was admitted at all.
 
-| Token             | Value     | Role                                        |
-| ----------------- | --------- | ------------------------------------------- |
-| `--color-ink`     | `#030A77` | the work's voice: body, captions, metadata  |
-| `--color-ground`  | `#F1FFEB` | the page, everywhere, the only ground       |
-| `--color-pen`     | `#0000FF` | the site's voice: a literal Bic barrel blue |
-| `--color-pen-red` | `#F52742` | the secondary accent, for dark grounds only |
+| Token              | Value     | Role                                        |
+| ------------------ | --------- | ------------------------------------------- |
+| `--color-ink`      | `#030A77` | the work's voice: body, captions, metadata  |
+| `--color-ground`   | `#F1FFEB` | the page, everywhere, the only ground       |
+| `--color-pen`      | `#0000FF` | the site's voice: a literal Bic barrel blue |
+| `--color-pen-red`  | `#F52742` | the secondary accent, for dark grounds only |
+| `--color-pen-pale` | `#90B6FF` | scrollbars only, and never text             |
 
 `global.css` is authoritative from here on. Verified against the ground: ink
 **15.4:1**, pen **8.3:1** — both AAA at any size, so blue is safe at caption
@@ -103,6 +102,28 @@ which is the masthead strip's folio and today its only use. It may **not** be
 used for body or caption text on any ground, it may not be used on pen, and on
 the light ground it is large-text-only as well. Reach for it below 24px and the
 page fails AA.
+
+**`--color-pen-pale` is the scrollbar, and it is a non-text colour.** It is
+`--color-pen` lightened along its own hue — `oklch(0.78 0.12 264.05)` against
+the pen's 264.05 — so the bar reads as the site's blue and not as a second
+accent. Measured: **4.22:1 on pen**, **1.96:1 on ground**, **7.86:1 on ink**.
+
+_The failure it solves._ The thumb is `--color-pen`, which clears the ground at
+8.3:1. The **track** is the problem. A scrollbar is a UI component and owes
+**3:1** (1.4.11), so the track must hold that against the thumb — and it must
+differ from the page as well, or there is no channel for the thumb to run in.
+Ink measures 1.86:1 against pen and pen-red 2.15:1, so neither can be the track;
+ground clears pen at 8.3:1 but _is_ the page, so it fails the second test
+outright. No existing value passes both, and the two together are what set this
+value's lightness.
+
+_Its bound._ It may paint a scrollbar's thumb and track and nothing else. It may
+**not** be text at any size — 1.96:1 on the ground and 4.22:1 on pen fail every
+text threshold. It may **not** be a ground for text: ink on it measures 7.86:1
+and would pass, which is exactly the temptation, and a fifth value that can host
+type becomes a second ground on a site that has one. It may not paint a rule, a
+border, a field or a glass band; each of those already has a value. Put it
+anywhere a reader has to read, and the page fails.
 
 **There is no muted token and none may be added.** Fading ink with opacity to
 build hierarchy collapses contrast (~3.5:1 at 50%, failing AA). Hierarchy comes
@@ -133,15 +154,17 @@ exception in §6.
 
 **Focus** (2.4.11 / 2.4.13) is two-ply: an inner ring in `--color-ground` inside
 an outer ring in `--color-ink`, so one ply always contrasts — against the
-ground, against a drawing, against a blue field. No fourth colour, and the only
+ground, against a drawing, against a blue field. No new colour, and the only
 element allowed to be louder than the work.
 
-**To add a fifth: you cannot.** A new value for a scrim, a shadow, a disabled
-state or a lens rim is refused by test (§10) — the guard admits only literals
-inside `@theme`, so adding one is a deliberate act with a diff, not a one-off.
-The fourth was earned by a measured failure and arrived with a size bound. That
-is the price of admission: a new colour needs a contrast problem no existing
-value solves, and a written rule for where it may not go.
+**To add a sixth: the door is narrow and it is not the one you want.** A new
+value for a scrim, a shadow, a disabled state or a lens rim is refused by test
+(§10) — the guard admits only literals inside `@theme`, so adding one is a
+deliberate act with a diff, not a one-off. Both values past the original three
+were earned the same way: a measured contrast failure no existing value solved,
+and a written rule naming where the new value may not go. That is the whole
+price of admission, and the bound is the expensive half. A value proposed
+without one is refused whatever it measures.
 
 ### Typography
 
@@ -610,6 +633,37 @@ is line and type. If Instagram's brand terms ever require the exact mark, that
 is a fourth colour and a fourth glyph at once, and it goes through the same door
 as any other palette addition (§3).
 
+**The scrollbar.** Site-wide furniture: a `--color-pen` thumb running in a
+`--color-pen-pale` track (§3). The colour is declared on `:root` and inherits,
+so a scroll container added later is already the right pair; **`scrollbar-width`
+does not inherit**, so every container restates it, and one that forgets takes
+the platform's full-width bar.
+
+**`thin`, not `auto`.** A site whose only rules are hairlines should not carry a
+17px bar down its edge.
+
+**No `::-webkit-scrollbar` rule may draw a bar.** Declaring one opts Blink and
+WebKit out of overlay scrollbars and into classic ones that take real layout
+width — on a phone, a gutter appearing inside a 320px viewport, against a design
+that guarantees one column and no horizontal scroll (§3). The standard
+properties do not do that. The single permitted use is `display: none`, which
+removes a bar rather than sizing one, and it has exactly one caller. The cost of
+the rule is that a browser too old for `scrollbar-color` gets the platform's own
+bar: complete, just not blue, which is how everything else here degrades.
+
+**No `scrollbar-gutter`.** Nothing on any page toggles its own overflow, so
+there is no width to reserve against — a stable gutter would only add a
+permanent empty channel to the one page short enough not to scroll.
+
+**The marquee hides its bar, and that is the rule for it rather than an
+omission.** The strip is already a line in motion; a bar beneath it is a second
+thing moving, at a different rate, in the only place on the site where anything
+moves on its own. It stays a scroll container — swipeable and wheelable while it
+runs, still pausing on hover, press-and-hold and focus-within — it simply does
+not draw one. Its height is load-bearing too: a visible bar makes the strip
+taller than the sum `--masthead-collapsed` is built from, and the sticky section
+head below pins to that sum.
+
 **The title card.** The home page's masthead, and the site's one piece of
 theatre. The name is **always one line**, sized to fill the width of the page —
 never wrapped, never two lines. What changes on scroll is its **font-size**,
@@ -817,11 +871,12 @@ free.
 **No client-side router.** It breaks cross-document view transitions, which are
 the motion system, and it is a runtime the site does not have.
 
-**No dark mode, and no fifth colour** — not for a scrim, a shadow, a disabled
-state or a lens rim. A printed object has one ground. The palette went from
-three to four once, to fix a measured contrast failure, and the new value came
-bounded to large text on dark grounds (§3). That bound is the price of a new
-value. Test-enforced.
+**No dark mode, and no sixth colour** — not for a scrim, a shadow, a disabled
+state or a lens rim. A printed object has one ground. The palette has grown
+twice, each time to fix a measured contrast failure, and each new value arrived
+bounded: pen-red to large text on dark grounds, pen-pale to scrollbars and never
+text (§3). That bound is the price of a new value, and wanting one is not paying
+it. Test-enforced.
 
 **Never crop or distort the work.** A slot bounds width; the plate takes the
 work's proportion. A work that does not fit becomes smaller, never tighter.
@@ -860,8 +915,8 @@ Load-bearing; everything else here is advisory prose.
 
 The colour guard allows derived forms — any colour function whose arguments
 reference a `--color-*` token — because the glass edge needs alpha variants of
-ink and pen. It refuses bare hex, bare colour functions and named colours; a
-fourth colour arrives as a plausible one-off, and the guard is what catches it.
+ink and pen. It refuses bare hex, bare colour functions and named colours; a new
+colour arrives as a plausible one-off, and the guard is what catches it.
 Judgement is deliberately untested — whether the cadence feels composed, whether
 the glazing is too heavy, whether a heading is too loud. A guard that produces
 false failures gets deleted and takes its real coverage with it.

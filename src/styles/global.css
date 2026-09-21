@@ -7,6 +7,8 @@
   --color-pen: #0000ff;
   /* Large text only: 4.0:1 on ink, and nothing smaller clears AA. */
   --color-pen-red: #f52742;
+  /* Scrollbars only: 4.22:1 on pen, 1.96:1 on ground. Never text. */
+  --color-pen-pale: #90b6ff;
 
   /* Self-hosted at build time; the stacks come from astro.config.ts. */
   --font-display: var(--font-irregardless);
@@ -43,6 +45,10 @@
 @layer base {
   :root {
     color-scheme: light;
+
+    /* The colour inherits; the width does not, so a container restates it. */
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-pen) var(--color-pen-pale);
 
     --space-unit: calc(var(--text-body) * var(--leading-text));
     --space-caption: calc(var(--space-unit) * 0.35);
@@ -300,6 +306,7 @@
     overflow-x: auto;
     overscroll-behavior-inline: contain;
     scroll-padding-inline-start: var(--space-margin);
+    /* The one container that hides its bar: the line already moves. */
     scrollbar-width: none;
   }
 
