@@ -1,7 +1,8 @@
 <!-- Not an image: R and G are COORDINATES (128 = no offset), which is why the
   palette rule does not apply. The rim sits at
-  (--loupe-size / 2) / (--loupe-size / 2 + --loupe-pad) = 0.7857 of the map;
-  change either token and redraw, or the bend lands outside the circle. -->
+  (--loupe-size / 2) / (--loupe-size / 2 + --loupe-pad) = 0.7857 of the map.
+  --loupe-pad is derived from the size to hold that ratio at every lens size;
+  change the derivation and redraw, or the bend lands outside the circle. -->
 <svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256">
   <defs>
     <linearGradient id="x" x1="10.714%" y1="0%" x2="89.286%" y2="0%">

@@ -396,8 +396,8 @@ it strands content below the fold.
 
 ### Artwork detail — Phase 3, specified not built
 
-**Job:** deliver the pen. Where hatching is legible, and where keyboard and
-touch users get what the magnifier gives mouse users.
+**Job:** deliver the pen. Where hatching is legible, and where keyboard users
+get what the magnifier gives mouse and touch users.
 
 **Structure.** The work fills the viewport, contained, at the detail tier (§8).
 Chrome retreats to the corners: folio and title top-left, catalogue line
@@ -465,8 +465,8 @@ placeholder the moment it paints: no load hook, no script, nothing to clean up.
 A plate with no placeholder falls back to a wash of ink. The plate **clips**,
 because the placeholder's blur would otherwise spill past it. That does not
 reopen the Phase 1 crop: the box takes its ratio from the asset, so the image
-can never exceed it. States: rest; hover (the magnifier engages, the cursor
-hides); reduced motion (no pulse, no lag).
+can never exceed it. States: rest; hover or a still hold (the magnifier engages;
+under a mouse the cursor hides); reduced motion (no pulse, no lag).
 
 **The glass material.** One material, three objects: the **glazing** fixed over
 a plate, the **loupe** held over the work on hover, and the **title bar** the
@@ -555,17 +555,22 @@ Therefore:
   radial overlay gives the magnitude. The map lives in
   `public/glass-displacement.svg` — its R and G channels are **coordinates, not
   colour**, which is why it is not a palette value.
-- **The map's geometry is tied to two tokens, and it is the one place a CSS
-  value is restated outside `global.css`.** The stretched map covers the padded
-  view, not the visible disc, so the profile has to be drawn to the ratio
+- **The map's geometry is tied to one ratio, and it is the one place a CSS value
+  is restated outside `global.css`.** The stretched map covers the padded view,
+  not the visible disc, so the profile has to be drawn to the ratio
   `(--loupe-size / 2) / (--loupe-size / 2 + --loupe-pad)`. Get it wrong and the
   whole bend lands outside the circle and the lens reads flat, which is a silent
-  failure with no error anywhere. Change either token and redraw the file; the
-  ratio and the reason are written at the top of it.
+  failure with no error anywhere. **`--loupe-pad` is therefore derived from the
+  size, never set on its own**, so every lens size lands on the ratio the map is
+  drawn to and a second size needs no second map. A custom property computes
+  where it is declared, so a lens size is only ever set on `:root`, by input,
+  where the one derivation can follow it. Change the derivation and redraw the
+  file; the ratio and the reason are written at the top of it.
 - **`--loupe-pad` is a budget, not a margin.** It must exceed the largest
   displacement, so the rim bends real image rather than the transparency outside
   it — and no more than that, because the filter runs over that whole box on
-  every pointer frame.
+  every pointer frame. Derived from the size, that is a floor under the lens: a
+  lens too small for its pad to clear the displacement has no room to bend.
 - **Weight limit, and how it is checked.** Total painted extent stays under the
   space between a plate and its caption (§3). Beyond that the rule is principle
   1 and the **falsification test**: screenshot a plate, mask the outer 3% of the
@@ -835,6 +840,16 @@ paper, and a lens you cannot see is a lens that is not there — which is how it
 was first reported. This is the one surface where the material is allowed to be
 frank, and the plate's restraint does not transfer to it.
 
+**Under a finger it is smaller, and it stands clear of the finger.** A lens
+centred on a fingertip shows the fingertip. So the touch lens magnifies the
+point under the finger and is drawn one diameter above it, gliding round to its
+side as the finger nears the top of the screen, and clamped inside the viewport.
+It takes `--loupe-size-touch` because the mouse size cannot stand clear of a
+finger at 320px. It is drawn fixed, outside the plate: the plate clips, and a
+fixed lens inside it would be captured by the scroll reveal's transform. It sits
+above the masthead because it is an instrument in the hand and exists only while
+held.
+
 **Prev/next — Phase 3.** Bottom-right of the detail page, micro size in pen,
 each target ≥24×24px (2.5.8). The list of plates with the current work marked is
 the primary navigation; prev/next is the shortcut, not the main path.
@@ -850,7 +865,7 @@ the primary navigation; prev/next is the shortcut, not the main path.
 | Scroll reveal         | scroll         | `@supports (animation-timeline)` + r-m     | CSS        | works already visible   |
 | Smooth scroll         | list of plates | reduced-motion                             | CSS        | the jump is instant     |
 | View-transition morph | navigation     | `@view-transition` opt-in                  | CSS        | a plain navigation      |
-| Magnifier             | pointer        | `(hover: hover) and (pointer: fine)`       | **script** | the gallery is complete |
+| Magnifier             | hover, or hold | fine pointer: hover; else a still hold     | **script** | the gallery is complete |
 | Title card shrink     | scroll         | `@supports (animation-timeline)` + r-m     | CSS        | a small sticky bar      |
 | Plate strip marquee   | none, endless  | reduced-motion; pauses on hover/hold/focus | CSS        | a static scroll strip   |
 
@@ -903,45 +918,85 @@ The refracted view is drawn larger than the lens and clipped back to it, so
 bending the rim pulls in real image rather than the transparency outside the
 circle, which smears.
 
-**The lens does not appear until its image has.** The detail tier is fetched on
-`pointerenter`, so there is a moment when the loupe exists with nothing to show.
-It stays hidden through that moment rather than showing an empty or blurred
-disc: a lens that arrives before its image reads as broken, not as loading, and
-a defocus-while-loading reads the same way. The lens reads heavier than the
-glazing, being held in the hand rather than fixed over the work, but from the
-same constants multiplied, so retuning the material moves both objects together.
+**The lens does not appear until its image has.** The detail tier is fetched
+when the lens engages, so there is a moment when the loupe exists with nothing
+to show. It stays hidden through that moment rather than showing an empty or
+blurred disc: a lens that arrives before its image reads as broken, not as
+loading, and a defocus-while-loading reads the same way. The lens reads heavier
+than the glazing, being held in the hand rather than fixed over the work, but
+from the same constants multiplied, so retuning the material moves both objects
+together.
 
-**Shape.** A passive `pointermove` listener on the plate; latest coordinates
-applied once per frame in `requestAnimationFrame`, written out as custom
-properties so CSS positions via `translate3d` on the compositor. A short lerp
-gives the follow lag. No layout reads in the handler.
+**Shape.** A passive `pointermove` listener on the plate, or a `touchmove` one
+under a finger; latest coordinates applied once per frame in
+`requestAnimationFrame`, written out as custom properties so CSS positions via
+`translate3d` on the compositor. A short lerp gives the follow lag under a
+mouse. No layout reads in a handler.
 
-**It shows that it is waiting.** The glass appears the instant the pointer is
-over a plate and pulses while the detail tier is in flight; the magnified view
-fades in when it lands. An empty lens reads as broken, but an empty lens that is
-visibly waiting reads as loading — which is the difference between the version
-that was rejected and this one.
+**It shows that it is waiting.** The glass appears the instant the lens engages
+and pulses while the detail tier is in flight; the magnified view fades in when
+it lands. An empty lens reads as broken, but an empty lens that is visibly
+waiting reads as loading — which is the difference between the version that was
+rejected and this one.
 
-**The lens is the cursor.** While it is up the pointer is hidden, keyed to the
-attribute the script sets — so a plate whose lens never initialises keeps an
-ordinary pointer rather than none at all. When plates become links in Phase 3,
-check this again: a link with no visible cursor is a different question.
+**Under a mouse, the lens is the cursor.** While it is up the pointer is hidden,
+keyed to the attribute the script sets — so a plate whose lens never initialises
+keeps an ordinary pointer rather than none at all. When plates become links in
+Phase 3, check this again: a link with no visible cursor is a different
+question. A finger has no cursor to hide.
 
-**Constraints.** Gated to `(hover: hover) and (pointer: fine)`, so touch devices
-never instantiate it. Under reduced motion the lag is removed and the lens snaps
-to the pointer — the lag is decoration, the lens is a tool. Dismissible with
-Escape (1.4.13). Progressive: the gallery is complete with the script absent,
-blocked or failed, and the lens reveals nothing that exists nowhere else — it
-shows the same pixels larger, which is what keeps it compliant. It needs the
-detail tier (§8), fetched on `pointerenter`, not upfront; magnifying the gallery
-derivative shows upscaling artifacts, not hatching, so the lens and the second
-tier are one decision. Budgeted at **3 KB minified** — enforced on the source at
-4 KB, since tests do not build; it currently ships at about 1.2 KB (§10). No
-dependency: GSAP is ~70 KB gzipped to interpolate two numbers and every
-dependency is supply-chain surface under @SECURITY.md; this is ~3 KB of vanilla
-JavaScript.
+**Constraints.** `(hover: hover) and (pointer: fine)` picks the path: where it
+matches, the lens follows hover; everywhere else it follows a held finger. It
+takes the list of plates' precedent (§6) — one object per input, never both at
+once. Under reduced motion the lag is removed and the lens snaps to the pointer
+— the lag is decoration, the lens is a tool; a finger never gets the lag, since
+the lens is already offset from it and a lag would only make the magnified point
+disagree with the finger. Dismissible with Escape (1.4.13). Progressive: the
+gallery is complete with the script absent, blocked or failed, and the lens
+reveals nothing that exists nowhere else — it shows the same pixels larger,
+which is what keeps it compliant. It needs the detail tier (§8), fetched when
+the lens engages, never upfront and never on a passing scroll; magnifying the
+gallery derivative shows upscaling artifacts, not hatching, so the lens and the
+second tier are one decision. Budgeted at **3 KB minified** — enforced on the
+source at 4 KB, since tests do not build; it currently ships at about 1.7 KB
+(§10). No dependency: GSAP is ~70 KB gzipped to interpolate two numbers and
+every dependency is supply-chain surface under @SECURITY.md; this is a few KB of
+vanilla JavaScript.
 
-**Its accessible equivalent is the detail page, which does not exist yet.** It
+**Under a finger, a scroll always wins.** On a phone the plates are most of the
+page, so a finger on a plate is almost always a reader scrolling. The lens
+engages only after the finger has held still for a moment; any travel before
+that is a scroll and the lens never appears. The browser decides whether a touch
+pans when the touch starts, so `touch-action` cannot hand the gesture over
+halfway, and pointer events can only watch a pan, never refuse one. The one
+mechanism both engines honour is a non-passive `touchmove` listener, in place
+before the touch starts, calling `preventDefault()` on a move that is still
+cancelable: after a still hold no pan has begun, so the lens takes the rest of
+that gesture. If a move arrives uncancelable, a pan already won, and the lens
+closes rather than fight it. The cost is that plates are scroll-blocking touch
+regions, so their handler stays trivial.
+
+**Never `touch-action: none` on a plate, and never the viewport meta.** Either
+one takes scrolling and pinch-zoom from every reader for a convenience to some.
+Pinch-zoom is the only magnification touch readers had before the lens (1.4.4):
+two fingers never start a hold, and a second finger closes an engaged lens and
+hands the gesture back.
+
+**A hold is a look; a tap is a tap.** While the lens is up, the plate refuses
+the system's long-press — the save-image callout, the context menu, selection,
+the image drag — and lifting the finger does not click. Those refusals are keyed
+to an attribute the script sets, so without the script a held plate keeps the
+system menu. A tap stays a native click, which in Phase 3 navigates; the lens
+appearing is the signal that the touch has become a look. The lens closes on
+lift, on cancel and on Escape.
+
+**Why a held, moved finger passes.** Nothing happens on touch-down, and lifting
+undoes the lens (2.5.2). The function needs no path: holding still anywhere
+magnifies that point, and lifting and holding again is the single-pointer
+alternative to dragging (2.5.1, 2.5.7). And the lens shows only pixels that
+pinch-zoom also shows, so no information depends on the gesture at all.
+
+**Its keyboard equivalent is the detail page, which does not exist yet.** It
 ships now because it reveals nothing new, and because holding it would leave the
 detail tier unexercised and therefore unverified. The gap is recorded in §10.
 
@@ -1056,8 +1111,8 @@ Specified here, exercised by no page yet; the structure phase inherits these.
   `about.statementLabel`, `about.biographyLabel`, and a portrait asset.
 - **The detail archetype** (§5) and **prev/next** (§6). Needs
   `detail.plateLabel`, `detail.prev`, `detail.next`, `detail.record`.
-- **The magnifier's accessible equivalent.** Until the detail page exists,
-  keyboard and touch users have only browser zoom. Closed by Phase 3.
+- **The magnifier's keyboard equivalent.** Until the detail page exists,
+  keyboard users have only browser zoom. Closed by Phase 3.
 - **The list of plates becomes route navigation**, with the current work marked.
 - **Glazing on a second page type.** Only the gallery exercises it today.
 

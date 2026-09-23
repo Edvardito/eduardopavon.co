@@ -4,9 +4,9 @@ Portfolio of the artist **Eduardo Pavón**, who draws with Bic ballpoint pens.
 
 A framework-free [Astro](https://astro.build) site: static prerendered HTML,
 Tailwind CSS for styling, deployed to Vercel. It ships **one** client script — a
-hover magnifier over each drawing, which needs pointer tracking that CSS cannot
-express — gated to fine pointers and budgeted at 3 KB. There is no framework, no
-hydration and no other runtime.
+magnifier over each drawing, which needs pointer tracking that CSS cannot
+express — on hover for a mouse, on a held finger for touch, budgeted at 3 KB.
+There is no framework, no hydration and no other runtime.
 
 Four documents, and each owns one thing: [DESIGN.md](DESIGN.md) owns design
 intent (`src/styles/global.css` owns the values), [SPEC.md](SPEC.md) owns the

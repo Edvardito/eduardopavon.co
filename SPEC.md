@@ -40,7 +40,7 @@ order they ship. Sequences Phases 2, 3 and 6 rather than replacing them.
 
 Inherited from @DESIGN.md's Outstanding list: the about and detail archetypes,
 prev/next, the list of plates becoming route navigation, and the magnifier's
-accessible equivalent — the lens shipped before the detail page it points at.
+keyboard equivalent — the lens shipped before the detail page it points at.
 
 ### Phase 2 — About page
 
@@ -87,8 +87,9 @@ These hold across every phase. Breaking one is a foundation change, not a
 feature.
 
 1. **No UI framework, and one sanctioned client script.** Zero client JS by
-   default; `src/scripts/magnifier.ts` is the single exception, gated to fine
-   pointers and budgeted. A second script is a foundation change. Test-enforced.
+   default; `src/scripts/magnifier.ts` is the single exception, split by input
+   (hover for a mouse, a still hold for a finger) and budgeted. A second script
+   is a foundation change. Test-enforced.
 2. **pnpm only**, frozen lockfile, exact pins, no unsanctioned lifecycle
    scripts, release cooldown on.
 3. **Static output.** On-demand rendering is per-route and exceptional; never
