@@ -1,0 +1,31 @@
+---
+import { getLanguageLinks, useTranslations, type Locale } from '~/i18n';
+
+interface Props {
+  locale: Locale;
+  /** Logical path, unprefixed; each edition's version of it is linked. */
+  path: string;
+}
+
+const { locale, path } = Astro.props;
+const tr = useTranslations(locale);
+const links = getLanguageLinks(path);
+---
+
+<nav aria-label={tr('footer.languages')}>
+  <ul role="list" class="languages">
+    {links.map((link) => (
+      <li lang={link.hreflang}>
+        {link.locale === locale ? (
+          <span class="languages__current" aria-current="true">
+            {link.label}
+          </span>
+        ) : (
+          <a class="link languages__link" href={link.href} hreflang={link.hreflang}>
+            {link.label}
+          </a>
+        )}
+      </li>
+    ))}
+  </ul>
+</nav>

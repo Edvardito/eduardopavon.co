@@ -4,6 +4,7 @@ import {
   FALLBACK_LOCALE,
   LOCALES,
   formatDimensions,
+  getLanguageLinks,
   getLocaleAlternates,
   getLocaleFromUrl,
   localizePath,
@@ -46,13 +47,32 @@ describe('localizePath', () => {
   /* Every edition is prefixed; `/` belongs to the negotiating route. */
   it('prefixes every locale, the authoring one included', () => {
     expect(localizePath('/', DEFAULT_LOCALE)).toBe('/es/');
-    expect(localizePath('/obra', DEFAULT_LOCALE)).toBe('/es/obra');
+    expect(localizePath('/obra', DEFAULT_LOCALE)).toBe('/es/obra/');
     expect(localizePath('/', 'en')).toBe('/en/');
-    expect(localizePath('/obra', 'en')).toBe('/en/obra');
+    expect(localizePath('/obra', 'en')).toBe('/en/obra/');
   });
 
-  it('normalizes surrounding slashes', () => {
-    expect(localizePath('obra/', DEFAULT_LOCALE)).toBe('/es/obra');
+  /* `trailingSlash: 'always'` 308s the unslashed spelling, so no page may link to it. */
+  it('normalizes surrounding slashes, and always ends on one', () => {
+    expect(localizePath('obra', DEFAULT_LOCALE)).toBe('/es/obra/');
+    expect(localizePath('//obra//', 'en')).toBe('/en/obra/');
+    expect(localizePath('/obra/monolito', 'en')).toBe('/en/obra/monolito/');
+  });
+});
+
+describe('getLanguageLinks', () => {
+  it('links every edition of the same page, labelled in its own language', () => {
+    const links = getLanguageLinks('/obra');
+    expect(links.map((l) => l.locale)).toEqual([...LOCALES]);
+    expect(links.map((l) => l.href)).toEqual(LOCALES.map((l) => localizePath('/obra', l)));
+    expect(links.find((l) => l.locale === 'es')).toMatchObject({
+      hreflang: 'es',
+      label: 'Español',
+    });
+    expect(links.find((l) => l.locale === 'en')).toMatchObject({
+      hreflang: 'en',
+      label: 'English',
+    });
   });
 });
 

@@ -21,7 +21,7 @@ Design intent: @DESIGN.md · Hard rules and seams: @CLAUDE.md · Supply chain:
 | 1.5 — CI and tests     | CI as the gate in front of Vercel; Vitest guards for i18n, slugs and content integrity                                          |
 | 1.6 — Design pass      | Self-hosted fonts, fluid type scale, CSS-only view transitions and scroll reveals                                               |
 | 1.7 — Design system    | @DESIGN.md, the closed palette, the cadence, the glass material, the magnifier, the second image tier                           |
-| 5 — English edition    | `/es/` and `/en/` from one locale-generated route; `/` negotiates `Accept-Language`                                             |
+| 5 — English edition    | `/es/` and `/en/` from one locale-generated route; `/` negotiates `Accept-Language`; a language switcher in the colophon        |
 | 5.5 — Performance pass | `font-display: swap` enforced, `www` as the canonical host, a CSP, contrast fixed in the scroll reveal                          |
 | 5.6 — Material pass    | Scrollbars in the site's blue and `--color-pen-pale` as a bounded fifth palette value; the glass redrawn from two named objects |
 
@@ -57,11 +57,6 @@ Full-size image, complete metadata, prev/next. Gallery cards become links. Adds
 
 Let the artist add work without touching the repo. Must preserve the image
 optimization step and the locale-keyed field model.
-
-### Phase 5 — remainder: the language switcher
-
-Both editions ship, but a reader whose system language is Spanish reaches
-English only by URL. The switcher UI is what closes this phase.
 
 ### Phase 6 — Contact form
 

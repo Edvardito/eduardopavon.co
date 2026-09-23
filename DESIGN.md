@@ -788,6 +788,25 @@ whoever built the site, which is not the artist — it reads from `SITE_AUTHOR` 
 licence line. The last furniture on the page, and allowed to be the quietest
 thing on it.
 
+**The language switcher.** The colophon's last line: one entry per locale, each
+named in its own language and carrying its own `lang`, so a reader finds their
+language whichever edition they are in. Built from the locale list by
+`getLanguageLinks()`, so adding a language adds an entry and nothing else. It is
+furniture, so pen, at caption size in the text face. The other editions are
+plain `<a href hreflang>` links, underlined; the current one is not a link, and
+is marked by weight (700) and the missing underline, never by colour alone
+(1.4.1). Rows clear 24px (2.5.8). No flags — a flag names a country, not a
+language — no menu, no script.
+
+It links **the same page** in every edition, not every edition's home: that is
+what makes it a crawlable path between language versions rather than a second
+masthead. The one exception is a missing page, which has no other edition, so
+the 404 offers each home instead.
+
+It sits in the colophon, not the masthead, because the home page's masthead is
+the title card, whose one line is sized to fill the page and has no room for a
+second element (§6).
+
 **The magnifier lens.** §7 owns its behaviour. Visually it is the glass material
 above, expressed as a plano-convex lens held above the paper rather than a sheet
 resting on it — which is the whole reason it is allowed to be brighter and

@@ -17,9 +17,20 @@ interface Props {
   ogImageAlt: string;
   /** False where the page sets the artist's name at display size itself. */
   masthead?: boolean;
+  /** Where the language switcher points, when it cannot be this page's own path. */
+  languagePath?: string;
 }
 
-const { locale, title, description, path, ogImage, ogImageAlt, masthead = true } = Astro.props;
+const {
+  locale,
+  title,
+  description,
+  path,
+  ogImage,
+  ogImageAlt,
+  masthead = true,
+  languagePath = path,
+} = Astro.props;
 ---
 
 <!doctype html>
@@ -46,6 +57,6 @@ const { locale, title, description, path, ogImage, ogImageAlt, masthead = true }
     <main id="main" class="flex-1">
       <slot />
     </main>
-    <Footer locale={locale} />
+    <Footer locale={locale} path={languagePath} />
   </body>
 </html>

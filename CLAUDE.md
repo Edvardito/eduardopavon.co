@@ -80,6 +80,9 @@ component.
   `src/pages/[locale]/` route from the locale list. Pages pass a _logical_ path
   (`/`, `/404`) to `Seo`/`JsonLd`; `localizePath()` applies the prefix once,
   there. Never hand a page a pre-prefixed path.
+- **Every URL ends in a slash.** `trailingSlash: 'always'` 308s the unslashed
+  spelling, so `localizePath()` always emits the slash; a link, canonical or
+  hreflang without one points at a redirect.
 - Adding a language must not require route, component or schema changes. Use the
   `add-locale` skill.
 
