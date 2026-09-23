@@ -132,7 +132,7 @@ describe('type floors', () => {
     const rem = (value: string) =>
       value.endsWith('rem') ? parseFloat(value) * 16 : parseFloat(value);
 
-    const tokens = ['--text-label', '--titlecard-min'];
+    const tokens = ['--text-label', '--text-strip', '--titlecard-min'];
     for (const token of tokens) {
       const match = new RegExp(`${token}:\\s*([^;]+);`).exec(css);
       expect(match, `${token} is missing`).not.toBeNull();

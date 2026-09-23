@@ -6,6 +6,7 @@ import { DEFAULT_LOCALE, LOCALES, LOCALE_METADATA, PREFIX_DEFAULT_LOCALE } from 
 import { SITE_ORIGIN } from './src/site';
 
 const SITE = process.env.SITE_URL ?? SITE_ORIGIN;
+const TYPEKIT_KIT = 'ulk1nsi';
 
 // Bind-mount file events are unreliable off Linux; compose sets this.
 const usePolling = process.env.CHOKIDAR_USEPOLLING === 'true';
@@ -87,7 +88,7 @@ export default defineConfig({
   fonts: [
     {
       name: 'Irregardless Variable',
-      provider: adobe({ id: 'ulk1nsi' }),
+      provider: adobe({ id: TYPEKIT_KIT }),
       cssVariable: '--font-irregardless',
       weights: ['300 800'],
       styles: ['normal'],
@@ -97,7 +98,7 @@ export default defineConfig({
     },
     {
       name: 'Polymath Text',
-      provider: adobe({ id: 'ulk1nsi' }),
+      provider: adobe({ id: TYPEKIT_KIT }),
       cssVariable: '--font-polymath',
       weights: [400, 700],
       styles: ['normal', 'italic'],

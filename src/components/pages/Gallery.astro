@@ -16,7 +16,7 @@ const { locale } = Astro.props;
 const tr = useTranslations(locale);
 
 const artworks = await getSortedArtworks();
-const frontispiece = artworks[0]!;
+const featured = artworks[0]!;
 
 /* The title card paints first; a plate below the fold only competes. */
 const EAGER_PLATES = 1;
@@ -27,8 +27,8 @@ const EAGER_PLATES = 1;
   title={tr('home.title')}
   description={tr('site.description')}
   path="/"
-  ogImage={frontispiece.data.image}
-  ogImageAlt={artworkAltText(frontispiece, locale)}
+  ogImage={featured.data.image}
+  ogImageAlt={artworkAltText(featured, locale)}
   masthead={false}
 >
   <JsonLd slot="head" locale={locale} path="/" artworks={artworks} />
