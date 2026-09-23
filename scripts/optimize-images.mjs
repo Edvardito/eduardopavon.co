@@ -18,22 +18,19 @@ const QUALITY = 82;
 const PLACEHOLDER_EDGE = 20;
 export const PLACEHOLDER_FILE = 'placeholders.json';
 
-export const MAX_COMMITTED_BYTES = 1024 * 1024;
-export const MAX_DETAIL_BYTES = 2.5 * 1024 * 1024;
-
 /* 2000: at 2400 the scanned work exceeds 1 MB. 3000: the loupe needs 3.3x. */
 export const TIERS = [
   {
     label: 'gallery',
     dir: ['src', 'assets', 'artworks'],
     maxEdge: 2000,
-    budget: MAX_COMMITTED_BYTES,
+    budget: 1024 * 1024,
   },
   {
     label: 'detail',
     dir: ['src', 'assets', 'artworks', 'detail'],
     maxEdge: 3000,
-    budget: MAX_DETAIL_BYTES,
+    budget: 2.5 * 1024 * 1024,
   },
 ];
 
@@ -59,20 +56,12 @@ const XMP_RIGHTS = `<?xpacket begin="" id="W5M0MpCehiHzreSzNTczkc9d"?>
 const SOURCE_EXTENSIONS = new Set(['.jpg', '.jpeg', '.png', '.tif', '.tiff', '.webp']);
 
 const PROJECT_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const outputDir = (tier) => path.join(PROJECT_ROOT, ...tier.dir);
-
-function parseArgs(argv) {
-  const args = { src: process.env.ARTWORK_SOURCE_DIR ?? '' };
-  for (let i = 0; i < argv.length; i += 1) {
-    if (argv[i] === '--src') args.src = argv[i + 1] ?? '';
-  }
-  return args;
-}
+export const outputDir = (tier) => path.join(PROJECT_ROOT, ...tier.dir);
 
 export function slugify(input) {
   return input
     .normalize('NFD')
-    .replace(/[̀-ͯ]/g, '')
+    .replace(/[\u0300-\u036f]/g, '')
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '');
@@ -80,8 +69,7 @@ export function slugify(input) {
 
 /** Originals are named "<Title>-<Medium>-<Dimensions>-<Year>-<Status>.<ext>". */
 export function slugFromOriginalName(filename) {
-  const withoutExtension = filename.slice(0, filename.length - path.extname(filename).length);
-  const [title] = withoutExtension.split('-');
+  const [title] = path.parse(filename).name.split('-');
   return slugify(title.trim());
 }
 
@@ -89,10 +77,10 @@ const SOURCE_HELP =
   'Set ARTWORK_ORIGINALS in .env to the folder holding the originals (see .env.example),\n' +
   'then run: docker compose --profile tools run --rm images';
 
-const formatBytes = (bytes) => `${(bytes / 1024 / 1024).toFixed(2)} MB`;
+export const formatBytes = (bytes) => `${(bytes / 1024 / 1024).toFixed(2)} MB`;
 
 async function main() {
-  const { src } = parseArgs(process.argv.slice(2));
+  const src = process.env.ARTWORK_SOURCE_DIR;
 
   if (!src) {
     console.error(SOURCE_HELP);
@@ -159,9 +147,8 @@ async function main() {
   }
 
   await writeFile(
-    path.join(PROJECT_ROOT, 'src', 'assets', 'artworks', PLACEHOLDER_FILE),
-    `${JSON.stringify(placeholders, null, 2)}
-`,
+    path.join(outputDir(TIERS[0]), PLACEHOLDER_FILE),
+    `${JSON.stringify(placeholders, null, 2)}\n`,
   );
 
   for (const tier of TIERS) {

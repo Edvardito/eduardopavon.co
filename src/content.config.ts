@@ -1,7 +1,7 @@
 import { glob } from 'astro/loaders';
 import { defineCollection } from 'astro:content';
 import { z } from 'zod';
-import { DEFAULT_LOCALE, LOCALES } from '~/i18n/config';
+import { DEFAULT_LOCALE, LOCALES, isLocale } from '~/i18n/config';
 import { ARTWORK_STATUSES } from '~/site';
 
 // Open map, so adding a locale never edits this schema.
@@ -11,10 +11,9 @@ const localizedString = () =>
     .refine((value) => typeof value[DEFAULT_LOCALE] === 'string', {
       message: `must include the default locale "${DEFAULT_LOCALE}"`,
     })
-    .refine(
-      (value) => Object.keys(value).every((key) => (LOCALES as readonly string[]).includes(key)),
-      { message: `locale keys must be one of: ${LOCALES.join(', ')}` },
-    );
+    .refine((value) => Object.keys(value).every(isLocale), {
+      message: `locale keys must be one of: ${LOCALES.join(', ')}`,
+    });
 
 const artworks = defineCollection({
   loader: glob({ pattern: '**/*.yaml', base: './src/content/artworks' }),

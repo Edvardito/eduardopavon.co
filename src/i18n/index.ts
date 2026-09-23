@@ -7,19 +7,10 @@ import {
   LOCALES,
   LOCALE_METADATA,
   PREFIX_DEFAULT_LOCALE,
-  isLocale,
   type Locale,
 } from './config';
 
-export {
-  DEFAULT_LOCALE,
-  FALLBACK_LOCALE,
-  LOCALES,
-  LOCALE_METADATA,
-  PREFIX_DEFAULT_LOCALE,
-  isLocale,
-  type Locale,
-};
+export * from './config';
 export { negotiateLocale } from './negotiate';
 
 /* Values widen to string: one locale's wording cannot satisfy another's literals. */
@@ -51,7 +42,7 @@ export function t(
 }
 
 export function statusLabel(status: ArtworkStatus, locale: Locale): string {
-  return t(locale, status === 'sold' ? 'status.sold' : 'status.framed');
+  return t(locale, `status.${status}`);
 }
 
 /** Marks where an inline element belongs inside a translated sentence. */
@@ -84,12 +75,6 @@ export function formatDimensions(dimensions: Dimensions, locale: Locale): string
   return `${format.format(dimensions.width)} × ${format.format(dimensions.height)} ${dimensions.unit}`;
 }
 
-/** The locale in the path, or the fallback: an unprefixed page is the host's. */
-export function getLocaleFromUrl(url: URL): Locale {
-  const [, first] = url.pathname.split('/');
-  return first && isLocale(first) ? first : FALLBACK_LOCALE;
-}
-
 /* Always slashed, matching `trailingSlash: 'always'`; an unslashed URL is a redirect. */
 export function localizePath(path: string, locale: string): string {
   const trimmed = path.replace(/^\/+|\/+$/g, '');
@@ -114,9 +99,9 @@ export function getLocaleAlternates(
   path: string,
   site: URL,
 ): Array<{ hreflang: string; href: string }> {
-  const alternates = LOCALES.map((locale) => ({
-    hreflang: LOCALE_METADATA[locale].htmlLang,
-    href: new URL(localizePath(path, locale), site).href,
+  const alternates = getLanguageLinks(path).map(({ hreflang, href }) => ({
+    hreflang,
+    href: new URL(href, site).href,
   }));
   alternates.push({
     hreflang: 'x-default',

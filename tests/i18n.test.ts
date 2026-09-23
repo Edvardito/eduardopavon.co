@@ -6,7 +6,6 @@ import {
   formatDimensions,
   getLanguageLinks,
   getLocaleAlternates,
-  getLocaleFromUrl,
   localizePath,
   negotiateLocale,
   resolveLocalized,
@@ -73,22 +72,6 @@ describe('getLanguageLinks', () => {
       hreflang: 'en',
       label: 'English',
     });
-  });
-});
-
-describe('getLocaleFromUrl', () => {
-  it('reads the locale out of the path', () => {
-    expect(getLocaleFromUrl(new URL('/es/', SITE))).toBe('es');
-    expect(getLocaleFromUrl(new URL('/en/obra/monolito', SITE))).toBe('en');
-  });
-
-  it('falls back for an unprefixed path rather than assuming the author', () => {
-    expect(getLocaleFromUrl(new URL('/', SITE))).toBe(FALLBACK_LOCALE);
-    expect(getLocaleFromUrl(new URL('/404', SITE))).toBe(FALLBACK_LOCALE);
-  });
-
-  it('does not mistake a normal path segment for a locale', () => {
-    expect(getLocaleFromUrl(new URL('/sobre', SITE))).toBe(FALLBACK_LOCALE);
   });
 });
 
@@ -159,12 +142,6 @@ describe('the English edition', () => {
     expect(t('en', 'status.sold')).toBe('Sold');
     expect(t('en', 'contact.heading')).toBe('Contact');
   });
-
-  it('localizes dimension numbers per edition', () => {
-    const dimensions = { width: 28.34, height: 31.3, unit: 'in' } as const;
-    expect(formatDimensions(dimensions, 'es')).toBe('28,34 × 31,3 in');
-    expect(formatDimensions(dimensions, 'en')).toBe('28.34 × 31.3 in');
-  });
 });
 
 describe('formatDimensions', () => {
@@ -172,9 +149,9 @@ describe('formatDimensions', () => {
     expect(formatDimensions({ width: 37, height: 25.5, unit: 'cm' }, 'es')).toBe('37 × 25,5 cm');
   });
 
-  it('localizes the decimal separator', () => {
-    expect(formatDimensions({ width: 28.34, height: 31.3, unit: 'in' }, 'es')).toBe(
-      '28,34 × 31,3 in',
-    );
+  it('localizes the decimal separator per edition', () => {
+    const dimensions = { width: 28.34, height: 31.3, unit: 'in' } as const;
+    expect(formatDimensions(dimensions, 'es')).toBe('28,34 × 31,3 in');
+    expect(formatDimensions(dimensions, 'en')).toBe('28.34 × 31.3 in');
   });
 });

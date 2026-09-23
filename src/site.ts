@@ -38,6 +38,6 @@ export function copyrightNotice(year?: number): string {
   return `© ${year ? `${year} ` : ''}${ARTIST_LEGAL_NAME}`;
 }
 
-export function rightsStatement(year?: number): string {
-  return `${copyrightNotice(year)} — ${ARTWORK_LICENSE.id}`;
+export function rightsStatement(): string {
+  return `${copyrightNotice()} — ${ARTWORK_LICENSE.id}`;
 }

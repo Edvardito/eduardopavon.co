@@ -3,33 +3,28 @@ import path from 'node:path';
 import sharp from 'sharp';
 import { parse } from 'yaml';
 import { beforeAll, describe, expect, it } from 'vitest';
-import { DEFAULT_LOCALE, LOCALES } from '~/i18n/config';
-import { ARTWORK_STATUSES } from '~/site';
+import { DEFAULT_LOCALE, LOCALES, type Dimensions } from '~/i18n';
+import { ARTWORK_STATUSES, type ArtworkStatus } from '~/site';
 import {
-  MAX_COMMITTED_BYTES,
-  MAX_DETAIL_BYTES,
   PLACEHOLDER_FILE,
+  TIERS as IMPORT_TIERS,
+  formatBytes,
+  outputDir,
 } from '../scripts/optimize-images.mjs';
 
 const CONTENT_DIR = path.resolve('src/content/artworks');
-const ASSET_DIR = path.resolve('src/assets/artworks');
-const DETAIL_DIR = path.resolve('src/assets/artworks/detail');
 
-const TIERS = [
-  { name: 'gallery', dir: ASSET_DIR, budget: MAX_COMMITTED_BYTES },
-  { name: 'detail', dir: DETAIL_DIR, budget: MAX_DETAIL_BYTES },
-];
-
-const mb = (bytes: number) => `${(bytes / 1024 / 1024).toFixed(2)} MB`;
+const TIERS = IMPORT_TIERS.map((tier) => ({ ...tier, dir: outputDir(tier) }));
+const ASSET_DIR = TIERS[0]!.dir;
 
 interface Artwork {
   slug: string;
   title: Record<string, string>;
   medium: Record<string, string>;
   alt?: Record<string, string>;
-  dimensions: { width: number; height: number; unit: 'cm' | 'in' };
+  dimensions: Dimensions;
   year: number;
-  status: 'framed' | 'sold' | null;
+  status: ArtworkStatus | null;
   order: number;
   image: string;
 }
@@ -83,13 +78,13 @@ describe('artwork collection', () => {
 });
 
 describe('artwork images', () => {
-  it.each(TIERS)('has a committed $name asset for every entry, under budget', async (tier) => {
+  it.each(TIERS)('has a committed $label asset for every entry, under budget', async (tier) => {
     for (const artwork of artworks) {
       const file = path.join(tier.dir, `${artwork.slug}.webp`);
       const { size } = await stat(file);
       expect(
         size,
-        `${artwork.slug} exceeds the ${tier.name} budget of ${mb(tier.budget)}`,
+        `${artwork.slug} exceeds the ${tier.label} budget of ${formatBytes(tier.budget)}`,
       ).toBeLessThan(tier.budget);
     }
   });
@@ -106,7 +101,7 @@ describe('artwork images', () => {
     }
   });
 
-  it.each(TIERS)('has no orphaned $name assets', async (tier) => {
+  it.each(TIERS)('has no orphaned $label assets', async (tier) => {
     const assets = (await readdir(tier.dir))
       .filter((f) => f.endsWith('.webp'))
       .map((f) => path.basename(f, '.webp'));

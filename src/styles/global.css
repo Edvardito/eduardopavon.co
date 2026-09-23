@@ -21,7 +21,6 @@
 
   --text-label: 2.5rem;
   --text-strip: 2.5rem;
-  --text-micro: 0.68rem;
   --text-caption: 0.85rem;
   --text-body: 1.0625rem;
   --text-lede: 1.328rem;
@@ -31,7 +30,6 @@
   --leading-tight: 1.15;
   --leading-text: 1.55;
 
-  --tracking-micro: 0.14em;
   --tracking-label: 0.015em;
 
   --container-page: 88rem;
@@ -89,10 +87,6 @@
     --plate-radius: 0.375rem;
   }
 
-  html {
-    -webkit-text-size-adjust: 100%;
-  }
-
   body {
     background-color: var(--color-ground);
     color: var(--color-ink);
@@ -101,6 +95,16 @@
     line-height: var(--leading-text);
     text-wrap: pretty;
     -webkit-font-smoothing: antialiased;
+  }
+
+  .vt-masthead {
+    view-transition-name: masthead;
+  }
+
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: var(--duration-long);
+    animation-timing-function: var(--ease-page);
   }
 
   /* Two-ply, so one ply always contrasts. */
@@ -128,6 +132,7 @@
   .furniture {
     font-family: var(--font-display);
     text-transform: uppercase;
+    color: var(--color-pen);
   }
 
   .display {
@@ -137,7 +142,6 @@
     line-height: var(--leading-display);
     /* These alternates collide under negative tracking. */
     letter-spacing: 0;
-    color: var(--color-pen);
     text-wrap: balance;
   }
 
@@ -147,12 +151,16 @@
     z-index: 20;
   }
 
+  .titlecard,
+  .section-head {
+    background-color: oklch(from var(--color-ground) l c h / 0.62);
+    backdrop-filter: blur(calc(var(--glass-thickness) * 3)) saturate(1.2);
+  }
+
   /* No `isolation`, or the backdrop root becomes this element. */
   .titlecard {
     padding-inline: var(--space-margin);
     padding-block: var(--space-caption);
-    background-color: oklch(from var(--color-ground) l c h / 0.62);
-    backdrop-filter: blur(calc(var(--glass-thickness) * 3)) saturate(1.2);
   }
 
   /* 4.912 is this name's advance per 1px. Re-measure if the name changes. */
@@ -172,7 +180,6 @@
     font-weight: var(--font-weight-heavy);
     line-height: var(--leading-text);
     letter-spacing: var(--tracking-label);
-    color: var(--color-pen);
   }
 
   /* Under the masthead's z-index, so it tucks rather than overlaps. */
@@ -180,8 +187,6 @@
     position: sticky;
     inset-block-start: var(--masthead-collapsed);
     z-index: 10;
-    background-color: oklch(from var(--color-ground) l c h / 0.62);
-    backdrop-filter: blur(calc(var(--glass-thickness) * 3)) saturate(1.2);
   }
 
   .rule {
@@ -204,21 +209,7 @@
     text-underline-offset: 0.2em;
   }
 
-  .contact {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-caption) var(--space-row);
-  }
-
-  .contact__link {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4em;
-    color: var(--color-pen);
-    /* 2.5.8: the row clears 24px whatever the leading resolves to. */
-    min-block-size: 24px;
-  }
-
+  .contact,
   .languages {
     display: flex;
     flex-wrap: wrap;
@@ -226,6 +217,7 @@
     color: var(--color-pen);
   }
 
+  .contact__link,
   .languages__link,
   .languages__current {
     display: inline-flex;
@@ -234,9 +226,13 @@
     min-block-size: 24px;
   }
 
+  .contact__link {
+    gap: 0.4em;
+  }
+
   /* Marked by weight and the missing underline, never by colour alone. */
   .languages__current {
-    font-weight: 700;
+    font-weight: var(--font-weight-bold);
   }
 
   /* The label carries the underline, so it never runs under the glyph. */
@@ -249,7 +245,6 @@
   /* Percentage heights do not resolve against this ratio — the Phase 1 crop. */
   .plate {
     position: relative;
-    display: block;
     inline-size: 100%;
     aspect-ratio: var(--plate-w) / var(--plate-h);
     /* Clips the placeholder blur; the box still matches the asset. */
@@ -469,6 +464,8 @@
     position: absolute;
     /* Larger than the lens, clipped back: the rim bends real image. */
     inset: calc(-1 * var(--loupe-pad));
+    opacity: 0;
+    transition: opacity var(--duration-long) var(--ease-page);
     filter: url('#glass-refraction');
     background-image: var(--lens-image);
     background-repeat: no-repeat;
@@ -583,11 +580,6 @@
     cursor: none;
   }
 
-  .loupe__view {
-    opacity: 0;
-    transition: opacity var(--duration-long) var(--ease-page);
-  }
-
   .loupe[data-ready] .loupe__view {
     opacity: 1;
   }
@@ -606,18 +598,6 @@
 
 @view-transition {
   navigation: auto;
-}
-
-@layer base {
-  .vt-masthead {
-    view-transition-name: masthead;
-  }
-
-  ::view-transition-old(root),
-  ::view-transition-new(root) {
-    animation-duration: var(--duration-long);
-    animation-timing-function: var(--ease-page);
-  }
 }
 
 /* Every displaced start state lives in here, or content strands invisible. */
