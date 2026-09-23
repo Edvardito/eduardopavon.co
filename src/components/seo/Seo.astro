@@ -12,9 +12,20 @@ interface Props {
   ogImage: ImageMetadata;
   ogImageAlt: string;
   ogType?: 'website' | 'article';
+  /** A page with no content of its own, which must not be indexed. */
+  noindex?: boolean;
 }
 
-const { locale, title, description, path, ogImage, ogImageAlt, ogType = 'website' } = Astro.props;
+const {
+  locale,
+  title,
+  description,
+  path,
+  ogImage,
+  ogImageAlt,
+  ogType = 'website',
+  noindex = false,
+} = Astro.props;
 
 const site = Astro.site;
 if (!site) {
@@ -41,12 +52,19 @@ const ogImageUrl = new URL(ogImageRendered.src, site).href;
 
 <title>{title}</title>
 <meta name="description" content={description} />
-<link rel="canonical" href={canonical} />
 <meta name="google-site-verification" content={GOOGLE_SITE_VERIFICATION} />
 
-{alternates.map((alt) => (
-  <link rel="alternate" hreflang={alt.hreflang} href={alt.href} />
-))}
+{/* A canonical or hreflang would name this URL as one to index. */}
+{noindex ? (
+  <meta name="robots" content="noindex" />
+) : (
+  <>
+    <link rel="canonical" href={canonical} />
+    {alternates.map((alt) => (
+      <link rel="alternate" hreflang={alt.hreflang} href={alt.href} />
+    ))}
+  </>
+)}
 
 <meta property="og:type" content={ogType} />
 <meta property="og:site_name" content={ARTIST_NAME} />

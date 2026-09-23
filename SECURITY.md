@@ -115,10 +115,12 @@ Two accommodations, both deliberate:
 `frame-ancestors 'none'` covers clickjacking, so no separate `X-Frame-Options`
 is set.
 
-**Every CSP route needs both spellings of its path.** `@astrojs/vercel` writes
-the route as `src: '/en'`, and Vercel matches the raw request path, so `/en/` —
-the canonical URL — would get no header. `astro.config.ts` adds the slashed
-spelling, and CI fails if any URL in the sitemap has no CSP route.
+**Every CSP route must match the spelling the site publishes.** Vercel matches
+the raw request path, and `@astrojs/vercel` writes each route in the spelling
+`trailingSlash` dictates. Under `'always'` that is `/en/`, the canonical URL,
+and `/en` 308s to it before any header route is reached. Without that setting
+the adapter writes `/en`, and the canonical URL gets no header. CI fails if any
+URL in the sitemap has no CSP route.
 
 If a directive changes, re-check that the plate `style` attributes still apply,
 the magnifier still initialises, the JSON-LD still parses and no
