@@ -7,7 +7,6 @@ export default {
   'home.title': 'Eduardo Pavón — Bic ballpoint pen drawing',
   'home.heading': 'Eduardo Pavón',
   'home.intro': 'Bic ballpoint pen on paper and plastic canvas.',
-  'gallery.label': 'Work',
   'gallery.heading': 'Work',
   'gallery.plates': 'Plates',
   'gallery.plateLabel': 'Plate {number}',

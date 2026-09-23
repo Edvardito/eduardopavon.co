@@ -7,7 +7,6 @@ export default {
   'home.title': 'Eduardo Pavón — Dibujo a pluma bic',
   'home.heading': 'Eduardo Pavón',
   'home.intro': 'Dibujo a pluma bic sobre papel y lona plástica.',
-  'gallery.label': 'Obra',
   'gallery.heading': 'Obra',
   'gallery.plates': 'Láminas',
   'gallery.plateLabel': 'Lámina {number}',

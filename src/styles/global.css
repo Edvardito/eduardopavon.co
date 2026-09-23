@@ -177,7 +177,7 @@
 
   .furniture {
     font-size: var(--text-label);
-    font-weight: var(--font-weight-heavy);
+    font-weight: var(--font-weight-bold);
     line-height: var(--leading-text);
     letter-spacing: var(--tracking-label);
   }
@@ -312,7 +312,7 @@
   }
 
   .caption {
-    margin-block-start: var(--space-row);
+    margin-block-start: var(--space-caption);
     max-inline-size: var(--container-measure);
   }
 
