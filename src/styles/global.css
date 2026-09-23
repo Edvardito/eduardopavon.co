@@ -449,7 +449,14 @@
     transition: opacity var(--duration-short) var(--ease-page);
     --lens-x: 0px;
     --lens-y: 0px;
-    transform: translate3d(var(--lens-x), var(--lens-y), 0);
+    /* Where the lens is drawn relative to the point it was placed at; 0 under a mouse. */
+    --lens-dx: 0px;
+    --lens-dy: 0px;
+    transform: translate3d(
+      calc(var(--lens-x) + var(--lens-dx)),
+      calc(var(--lens-y) + var(--lens-dy)),
+      0
+    );
 
     box-shadow:
       inset 0 0 0 1px oklch(from var(--color-ink) l c h / calc(var(--glass-contact) * 0.5)),
@@ -467,13 +474,14 @@
     background-repeat: no-repeat;
     background-size: calc(var(--lens-w, 0px) * var(--loupe-zoom))
       calc(var(--lens-h, 0px) * var(--loupe-zoom));
+    /* Magnifies what is under the lens, wherever it is drawn. */
     background-position: calc(
-        var(--loupe-size) / 2 + var(--loupe-pad) - var(--lens-px, 0) * var(--lens-w, 0px) *
-          var(--loupe-zoom)
+        var(--loupe-size) / 2 + var(--loupe-pad) -
+          (var(--lens-px, 0) * var(--lens-w, 0px) + var(--lens-dx)) * var(--loupe-zoom)
       )
       calc(
-        var(--loupe-size) / 2 + var(--loupe-pad) - var(--lens-py, 0) * var(--lens-h, 0px) *
-          var(--loupe-zoom)
+        var(--loupe-size) / 2 + var(--loupe-pad) -
+          (var(--lens-py, 0) * var(--lens-h, 0px) + var(--lens-dy)) * var(--loupe-zoom)
       );
   }
 
@@ -538,23 +546,31 @@
       --loupe-size: var(--loupe-size-touch);
     }
 
-    /* Fixed, outside the plate's clip: one diameter above the finger, gliding beside it near the top. */
+    /* Fixed, outside the plate's clip, held just above the finger; beside it near the top. */
     .loupe {
-      /* 0 far from the top, one diameter at it. */
-      --lens-lift: clamp(0px, var(--loupe-size) * 1.6 - var(--lens-y), var(--loupe-size));
+      /* Its radius plus a fingertip. */
+      --lens-reach: calc(var(--loupe-size) * 0.75);
+      /* 0 while there is room above, the full reach once the top edge takes it. */
+      --lens-slide: clamp(
+        0px,
+        (var(--lens-reach) + var(--loupe-size) * 0.6 - var(--lens-y)) * 4,
+        var(--lens-reach)
+      );
+      --lens-dx: calc(
+        clamp(
+            var(--loupe-size) * 0.6,
+            var(--lens-x) +
+              clamp(-1 * var(--lens-slide), (50vw - var(--lens-x)) * 1000, var(--lens-slide)),
+            100vw - var(--loupe-size) * 0.6
+          ) -
+          var(--lens-x)
+      );
+      --lens-dy: calc(
+        max(var(--lens-y) - var(--lens-reach), var(--loupe-size) * 0.6) - var(--lens-y)
+      );
       position: fixed;
       /* Above the masthead's 20: an instrument in the hand, and only while held. */
       z-index: 30;
-      transform: translate3d(
-        clamp(
-          var(--loupe-size) * 0.6,
-          var(--lens-x) +
-            clamp(-1 * var(--lens-lift), (50vw - var(--lens-x)) * 1000, var(--lens-lift)),
-          100vw - var(--loupe-size) * 0.6
-        ),
-        max(var(--lens-y) - var(--loupe-size) + var(--lens-lift), var(--loupe-size) * 0.6),
-        0
-      );
     }
   }
 

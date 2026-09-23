@@ -552,9 +552,16 @@ Therefore:
   compresses as it approaches the rim. That compression is what makes a circle
   read as a lens rather than as a cropped zoom, and it is worth more than any
   amount of rim decoration. Crossed linear ramps give the radial direction, a
-  radial overlay gives the magnitude. The map lives in
-  `public/glass-displacement.svg` — its R and G channels are **coordinates, not
-  colour**, which is why it is not a palette value.
+  radial overlay gives the magnitude.
+- **The bend is a cue, and it has a ceiling.** The lens exists to show how the
+  pen was handled, so a stroke near the rim must still read as that stroke. The
+  compression only has to be enough that straight strokes visibly curve toward
+  the edge; past a few pixels it stops saying "glass" and starts hiding the
+  hatching the lens was raised to show. The ceiling is the filter's `scale`, and
+  it binds hardest on the touch lens, where the same pixels are a larger share
+  of a smaller radius. The map lives in `public/glass-displacement.svg` — its R
+  and G channels are **coordinates, not colour**, which is why it is not a
+  palette value.
 - **The map's geometry is tied to one ratio, and it is the one place a CSS value
   is restated outside `global.css`.** The stretched map covers the padded view,
   not the visible disc, so the profile has to be drawn to the ratio
@@ -840,15 +847,17 @@ paper, and a lens you cannot see is a lens that is not there — which is how it
 was first reported. This is the one surface where the material is allowed to be
 frank, and the plate's restraint does not transfer to it.
 
-**Under a finger it is smaller, and it stands clear of the finger.** A lens
-centred on a fingertip shows the fingertip. So the touch lens magnifies the
-point under the finger and is drawn one diameter above it, gliding round to its
-side as the finger nears the top of the screen, and clamped inside the viewport.
-It takes `--loupe-size-touch` because the mouse size cannot stand clear of a
-finger at 320px. It is drawn fixed, outside the plate: the plate clips, and a
-fixed lens inside it would be captured by the scroll reveal's transform. It sits
-above the masthead because it is an instrument in the hand and exists only while
-held.
+**Under a finger it is smaller, and the finger holds it rather than hides it.**
+A lens centred on a fingertip shows the fingertip. So the touch lens is held
+just above the finger — its radius plus a fingertip — sliding round to its side
+as the finger nears the top of the screen, and clamped inside the viewport. It
+magnifies **what is under the lens**, never the point under the finger: a lens
+that shows something other than what it sits over reads as a picture of a lens,
+not a lens, and the finger becomes the handle it is moved by. It takes
+`--loupe-size-touch` because the mouse size cannot stand clear of a finger at
+320px. It is drawn fixed, outside the plate: the plate clips, and a fixed lens
+inside it would be captured by the scroll reveal's transform. It sits above the
+masthead because it is an instrument in the hand and exists only while held.
 
 **Prev/next — Phase 3.** Bottom-right of the detail page, micro size in pen,
 each target ≥24×24px (2.5.8). The list of plates with the current work marked is
