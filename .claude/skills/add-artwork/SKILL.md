@@ -44,11 +44,10 @@ copy of each work inlined as a data URI, which is what a plate shows until its
 image paints. **Commit it too**: it is regenerated wholesale, so it is one file
 for the whole set rather than one per work, and a missing entry fails the suite.
 
-The budgets are the exported `MAX_COMMITTED_BYTES` and `MAX_DETAIL_BYTES`, which
-the test imports; they are never written twice. Do not change any of these
-values for one image. If a new work exceeds its budget, lower `QUALITY` or that
-tier's `maxEdge` for the whole set and re-import, then record the change in
-SPEC.md.
+The budgets are each tier's `budget` in `TIERS`, which the test imports; they
+are never written twice. Do not change any of these values for one image. If a
+new work exceeds its budget, lower `QUALITY` or that tier's `maxEdge` for the
+whole set and re-import, then record the change in DESIGN.md §8.
 
 There is **no field to add** for the detail tier: `src/artworks.ts` pairs it to
 the entry by slug.
@@ -101,9 +100,10 @@ Field notes:
   first**, whatever order the artist wrote it in. Sanity-check against the
   image: a landscape image must have `width > height`. Rendering and JSON-LD
   both derive from these numbers, so a swap is visible and wrong.
-- `status` — `framed`, `sold`, or `null`. It is an enum, not a label: the
-  visible text comes from `status.framed` / `status.sold` in
-  `src/i18n/ui/<locale>.ts`. Never put Spanish here.
+- `status` — `framed`, `sold`, or `null`. It is an enum, not a label: the text
+  comes from `status.framed` / `status.sold` in `src/i18n/ui/<locale>.ts`, and
+  it reaches only JSON-LD and `llms.txt`, never the page. Never put Spanish
+  here.
 - `order` — ascending gallery position. Renumber neighbours if inserting.
 - `image` — use the `~/` alias, not a relative path.
 - Untitled works keep the artist's own title (`Sin título`). Do not invent one.
@@ -131,9 +131,8 @@ docker compose run --rm web pnpm build
 
 Then confirm:
 
-- The card appears in the gallery in the right `order`, with title, medium,
-  dimensions, year, and the correct status annotation (or none when
-  `status: null`).
+- The card appears in the gallery in the right `order`, with its title and the
+  catalogue line (medium, dimensions, year), and no status.
 - The work appears in the page's JSON-LD `hasPart` array with `name`,
   `artMedium`, `dateCreated`, `size`, `width`, `height`, `image` and the rights
   fields.
@@ -152,6 +151,6 @@ from the collection.
 Delete all three of `src/content/artworks/<slug>.yaml`,
 `src/assets/artworks/<slug>.webp` and `src/assets/artworks/detail/<slug>.webp`,
 remove the original from the `ARTWORK_ORIGINALS` folder and re-run the import so
-`placeholders.json` loses its entry, then renumber `order` on the remaining
-entries so there are no gaps. The orphan test covers both tiers and the
-placeholder map, so a forgotten asset or a stale entry fails CI.
+`placeholders.json` loses its entry. Gaps in `order` are harmless: the cadence
+follows position, not the number (DESIGN.md §4). The orphan test covers both
+tiers and the placeholder map, so a forgotten asset or a stale entry fails CI.

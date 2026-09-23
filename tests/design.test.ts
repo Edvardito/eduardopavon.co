@@ -89,7 +89,7 @@ describe('palette containment', () => {
       }
     }
 
-    expect(offences, 'a fourth colour is not a one-off; see DESIGN.md §3').toEqual([]);
+    expect(offences, 'a sixth colour is not a one-off; see DESIGN.md §3').toEqual([]);
   });
 });
 

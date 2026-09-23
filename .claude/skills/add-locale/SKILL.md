@@ -34,16 +34,14 @@ export const LOCALE_METADATA: Record<
 };
 ```
 
-Leave the rest of that file alone. `DEFAULT_LOCALE` (`es`) is the authoring
-language a missing translation falls back to; `FALLBACK_LOCALE` (`en`) is what a
-visitor gets when we do not publish their language, and what `x-default` points
-at. Changing either is a separate decision with its own entry in @SPEC.md —
-adding a language is not a reason to.
+Leave the rest of that file alone. `DEFAULT_LOCALE` and `FALLBACK_LOCALE` do
+different jobs (SPEC.md invariant 6), and adding a language is not a reason to
+change either.
 
 `PREFIX_DEFAULT_LOCALE` is `true`: every edition is prefixed, and the new one is
 served from `/fr/` the moment it is in the list.
 
-`label` is the endonym, for the language switcher Phase 5 still owes.
+`label` is the endonym the language switcher shows.
 
 ## 2. Create the UI message file
 
@@ -133,8 +131,8 @@ curl -sI -H 'Accept-Language: fr-FR,fr;q=0.9' http://localhost:4321/ | grep -i l
 ## What you should not have touched
 
 `ArtworkCard.astro`, `Seo.astro`, `JsonLd.astro`, `BaseLayout.astro`,
-`Header.astro`, `Footer.astro`, `Contact.astro`, anything in
-`src/components/pages/`, `src/pages/`, `src/content.config.ts`, or
+`Header.astro`, `Footer.astro`, `Contact.astro`, `LanguageSwitcher.astro`,
+anything in `src/components/pages/`, `src/pages/`, `src/content.config.ts`, or
 `scripts/optimize-images.mjs`. If a language needed a change in any of these, a
 user-facing string was hardcoded somewhere — move it into the message files
 instead of special-casing the locale.

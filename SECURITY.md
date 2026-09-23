@@ -57,25 +57,25 @@ Requires pnpm ≥ 10.16. The current pin, 10.25.0, supports it.
 
 ## Minimal dependency surface
 
-Runtime dependencies are deliberately few — the tooling below is all
-`devDependencies` and never reaches the browser or the deployed site:
+Every direct dependency, and why. `devDependencies` never reach the browser or
+the deployed site.
 
-| Package             | Why                                               |
-| ------------------- | ------------------------------------------------- |
-| `astro`             | the framework                                     |
-| `@astrojs/vercel`   | deploy adapter                                    |
-| `@astrojs/sitemap`  | sitemap generation                                |
-| `tailwindcss`       | styling                                           |
-| `@tailwindcss/vite` | official Tailwind v4 integration                  |
-| `zod`               | content schema (Astro deprecates re-exporting it) |
-| `@astrojs/check`    | type checking (dev)                               |
-| `typescript`        | type checking (dev)                               |
-| `sharp`             | the artwork import script (dev)                   |
+| Package                                                                                            | Why                                               |
+| -------------------------------------------------------------------------------------------------- | ------------------------------------------------- |
+| `astro`                                                                                            | the framework                                     |
+| `@astrojs/vercel`                                                                                  | deploy adapter                                    |
+| `@astrojs/sitemap`                                                                                 | sitemap generation                                |
+| `tailwindcss`, `@tailwindcss/vite`                                                                 | styling, and its official Vite integration        |
+| `zod`                                                                                              | content schema (Astro deprecates re-exporting it) |
+| `@astrojs/check`, `typescript` (dev)                                                               | type checking                                     |
+| `sharp` (dev)                                                                                      | the artwork import script                         |
+| `vitest`, `yaml` (dev)                                                                             | tests, which parse the artwork YAML               |
+| `eslint`, `@eslint/js`, `typescript-eslint`, `eslint-plugin-astro`, `eslint-config-prettier` (dev) | lint                                              |
+| `prettier`, `prettier-plugin-astro` (dev)                                                          | formatting                                        |
 
-There is **no UI framework**. No React, Vue or Svelte means no client runtime,
-no hydration, and a materially smaller dependency tree to trust.
-
-New dependencies should be justified against this list.
+There is **no UI framework**, so no client runtime, no hydration, and a
+materially smaller tree to trust. Justify a new dependency against this table
+and add its row.
 
 ## CI
 

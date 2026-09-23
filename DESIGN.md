@@ -4,11 +4,9 @@ The single source of design **intent**. `src/styles/global.css` is the single
 source of design **values**; this file never restates one, with the palette as
 the stated exception. Roadmap: @SPEC.md · Hard rules and seams: @CLAUDE.md
 
-**Why there is no token table here.** The common `DESIGN.md` convention embeds
-the whole token set, because those files are portable context for an agent with
-no codebase to read — nothing else holds the values. Ours has a live `@theme`
-one file away, and a copied scale drifts on the first tune. We take the
-convention's prose-and-rationale half and decline its token-table half.
+**There is no token table here.** The usual `DESIGN.md` embeds the token set
+because nothing else holds the values; here a live `@theme` sits one file away,
+and a copied scale drifts on the first tune.
 
 ---
 
@@ -27,7 +25,7 @@ in question.
 **1. The drawing is the darkest mass in the gallery.** No element that is not a
 work may present a contiguous field of ink anywhere the work is shown. _Why:_
 ballpoint hatching is built from density, so anything denser beats the work
-optically. _Loses to:_ the masthead, which is a solid ink band — hence "in the
+optically. _Loses to:_ the masthead, which is a solid pen band — hence "in the
 gallery" rather than "on the page". It is fixed at the top, outside the field
 the plates occupy, and nothing below it may copy the move. Also loses to focus
 indication, which may be as loud as it needs to be.
@@ -57,9 +55,8 @@ for eight specific works and be wrong for the ninth.
 **5. Motion and script are borrowed, not owned.** Every animation is opt-out and
 every page is complete when nothing runs; the site ships exactly one script and
 it adds no information. _Why:_ performance is this project's SEO, and its one
-interaction is a convenience, not a route to content. _Loses to:_ the follow lag
-and the scroll specular, pure decoration and the first things removed under
-`prefers-reduced-motion`.
+interaction is a convenience, not a route to content. _Loses to:_ the follow
+lag, pure decoration and the first thing removed under `prefers-reduced-motion`.
 
 ---
 
@@ -87,21 +84,18 @@ general, and each bound is the reason its value was admitted at all.
 **15.4:1**, pen **8.3:1** — both AAA at any size, so blue is safe at caption
 size, not only for headings. Re-verify if a value changes.
 
-**`--color-pen-red` is declared and currently unused.** It was added for the
-strip's folio while that field was ink, where it measured 4.0:1; the field then
-became pen, where it is 2.15:1, and the folio fell back to the ground colour. It
-is kept because the decision to add it was deliberate and the ink field may
-return — but a palette value nothing references is a standing invitation to
-misuse, so the bound below is what governs it if it comes back.
+**`--color-pen-red` is declared and unused.** It exists for an ink field, where
+it measures 4.0:1; the list of plates is a pen field, where it is 2.15:1. It is
+kept so an ink field can return, and a value nothing references invites misuse,
+so the bound below governs it.
 
 **It is a large-text-only colour, and that is not a style note but its whole
 licence to exist.** Measured: **4.0:1 on ink**, **3.85:1 on ground**, **2.15:1
 on pen**. Four-to-one clears AA for large text — 24px and up, or 18.7px bold —
 and clears nothing else. So: it may carry display-sized type on an ink field,
-which is the masthead strip's folio and today its only use. It may **not** be
-used for body or caption text on any ground, it may not be used on pen, and on
-the light ground it is large-text-only as well. Reach for it below 24px and the
-page fails AA.
+and nothing else. It may **not** be used for body or caption text on any ground,
+it may not be used on pen, and on the light ground it is large-text-only as
+well. Reach for it below 24px and the page fails AA.
 
 **`--color-pen-pale` is the scrollbar, and it is a non-text colour.** It is
 `--color-pen` lightened along its own hue — `oklch(0.78 0.12 264.05)` against
@@ -125,16 +119,15 @@ type becomes a second ground on a site that has one. It may not paint a rule, a
 border, a field or a glass band; each of those already has a value. Put it
 anywhere a reader has to read, and the page fails.
 
-**There is no muted token and none may be added.** Fading ink with opacity to
-build hierarchy collapses contrast (~3.5:1 at 50%, failing AA). Hierarchy comes
-from weight, size, space and rule — how printed books have always built it.
-**The ladder**, six levels, no grey:
+**Hierarchy comes from weight, size, space and rule** — how printed books have
+always built it — never from fading ink, which collapses contrast (~3.5:1 at
+50%, failing AA). **The ladder**, six levels, no grey:
 
 | #   | Role             | Size    | Weight  | Case     | Colour |
 | --- | ---------------- | ------- | ------- | -------- | ------ |
 | 1   | display          | display | heavy   | upper    | pen    |
 | 2   | section label    | label   | bold    | upper    | pen    |
-| 3   | work title       | lede    | medium  | sentence | ink    |
+| 3   | work title       | lede    | bold    | sentence | ink    |
 | 4   | prose / lede     | body    | regular | sentence | ink    |
 | 5   | catalogue line   | caption | regular | sentence | ink    |
 | 6   | folio / colophon | label   | bold    | upper    | pen    |
@@ -160,11 +153,11 @@ element allowed to be louder than the work.
 **To add a sixth: the door is narrow and it is not the one you want.** A new
 value for a scrim, a shadow, a disabled state or a lens rim is refused by test
 (§10) — the guard admits only literals inside `@theme`, so adding one is a
-deliberate act with a diff, not a one-off. Both values past the original three
-were earned the same way: a measured contrast failure no existing value solved,
-and a written rule naming where the new value may not go. That is the whole
-price of admission, and the bound is the expensive half. A value proposed
-without one is refused whatever it measures.
+deliberate act with a diff, not a one-off. Pen-red and pen-pale were each
+admitted the same way: a measured contrast failure no existing value solved, and
+a written rule naming where the new value may not go. That is the whole price of
+admission, and the bound is the expensive half. A value proposed without one is
+refused whatever it measures.
 
 ### Typography
 
@@ -199,15 +192,13 @@ step the display face uses may fall under the floor; test-enforced (§10). The
 consequence is a real constraint, not a note: **this face cannot do small
 furniture.** Anything that has to be small belongs to the text face.
 
-**Four text steps** — micro, caption, body, lede — generated by a major third
-(1.25). The display face does not use them: it has **two optical steps of its
-own**, `--text-label` and `--text-strip`, set by what each has to do rather than
-by a ratio, plus `--text-display`, which is fluid because its size is the
-measure it must fill. A fifth text step or a third display step needs a role no
-current one serves — not something that looks slightly too big. A step that
-stops being used gets deleted: `--text-heading` was carried for the unbuilt
-about page and removed, because a token nothing references is one more thing to
-keep true.
+**Three text steps** — caption, body, lede — a major third (1.25) apart. The
+display face does not use them: it has **two optical steps of its own**,
+`--text-label` and `--text-strip`, set by what each has to do rather than by a
+ratio, plus `--text-display`, which is fluid because its size is the measure it
+must fill. A fourth text step or a third display step needs a role no current
+one serves — not something that looks slightly too big. A step that stops being
+used gets deleted: a token nothing references is one more thing to keep true.
 
 Relationships that live nowhere in CSS:
 
@@ -216,8 +207,6 @@ Relationships that live nowhere in CSS:
 - The catalogue line sits one step below body and shares body's leading, so a
   caption block is a whole number of body lines. Every vertical space derives
   from that unit.
-- Micro is the only tracked step; tracking substitutes for the size it gives up,
-  since uppercase micro without tracking is a smear.
 - The prose measure caps near 66 characters. It binds the about archetype and
   the statement, and it is why captions are never centred.
 
@@ -226,11 +215,10 @@ px, and no box holding text has a fixed height.
 
 **Delivery.** Both faces are Adobe Typekit families, **self-hosted at build
 time** through Astro's Adobe provider — `fontProviders.adobe({ id })` against
-the kit id, in `astro.config.ts`. They shipped briefly as a runtime
-`use.typekit.net` stylesheet, which cost two render-blocking requests on a
-third-party origin, a `font-display: auto` we could not override, no fallback
-metrics, and Adobe seeing every visitor's IP. Self-hosting removes three of the
-four; the fourth followed the faces home and is treated below.
+the kit id, in `astro.config.ts`. A runtime `use.typekit.net` stylesheet would
+cost render-blocking requests on a third-party origin, no fallback metrics, and
+every visitor's IP sent to Adobe; self-hosting removes all three. `font-display`
+needs its own fix, below.
 
 Three properties the self-hosted files must keep, each of which would break the
 design silently if it went:
@@ -267,9 +255,6 @@ or simple fraction of it. Binding relationships:
   caption.
 - **The glazing's painted extent is less than the space between a plate and its
   caption**, so the glass never appears to touch anything but its own work.
-- **The outer page margin is at least the column gutter** wherever the grid has
-  more than one column, so the page's edge is never tighter than the gaps
-  inside.
 
 Reflow (1.4.10): one column at every width, so there is nothing to collapse and
 no horizontal scroll at 320px.
@@ -287,8 +272,8 @@ the work (principle 1).
 CSS only, with the one scripted exception in §7. Every animation is
 **double-guarded**: the hidden or displaced start state lives inside
 `prefers-reduced-motion: no-preference` and, where the mechanism is not
-universal, inside `@supports` too, so content is never stranded invisible. This
-project shipped that bug once; it is now test-enforced (§10).
+universal, inside `@supports` too, so content is never stranded invisible.
+Test-enforced (§10).
 
 **Two durations only** — short for state changes, long for entrances and reveals
 — with one shared easing curve. A third duration asks the reader to distinguish
@@ -345,9 +330,8 @@ or a cap of its own.
 
 **Incomplete cycles.** A cycle that runs out of works simply ends — no filler,
 no reflow. The **last work, whatever its slot, carries the closing rule**
-(`:nth-last-child(1)`), turning "it stopped" into "it ended". Today's eight
-works end mid-gathering; in a book that is a chapter ending, and the rule says
-so.
+(`:nth-last-child(1)`), turning "it stopped" into "it ended": in a book, a
+chapter ending.
 
 **Narrow widths.** Nothing changes but the measure, which is already fluid.
 There is no collapse to get wrong and no reflow (1.4.10) to defend — phone and
@@ -374,12 +358,12 @@ detail page is unglazed.
 clicking.
 
 **Structure.** A **masthead** that stays: the artist's name as one line filling
-the page, with the **list of plates** as an ink band directly beneath it. The
-two stick together and the name shrinks inside them. Then the **statement** —
-the one element at the top of the page that scrolls away, which is what tells
-the reader the page has started moving: display-sized, centred, in caps. Then
-the gallery: section label, rule, and a single column of plates at the common
-measure. Then contact, then the colophon.
+the page, with the **list of plates** as a pen band directly beneath it. The two
+stick together and the name shrinks inside them. Then the **statement** — the
+one element at the top of the page that scrolls away, which is what tells the
+reader the page has started moving: large, centred, in caps. Then the gallery:
+section label, rule, and a single column of plates at the common measure. Then
+contact, then the colophon.
 
 **There is no hero.** A frontispiece spread puts one work in a privileged
 position ahead of the others, which is a claim the single column gives up
@@ -431,7 +415,7 @@ this page is text.
 **Job:** say the page is not in the book and return the reader to it.
 
 **Structure.** Type only, on the measure: the numeral at display size in pen,
-the message at body size in ink, the return link. No artwork — a 404 that shows
+the heading and message in ink, the return link. No artwork — a 404 that shows
 work rewards a broken link, and the reader is one click from all of it.
 
 ---
@@ -452,21 +436,20 @@ being tightened to fit a frame. **The bound is that the radius may never grow
 past the point where it is doing anything but softening the sheet's own edge**;
 it is not a place to express a house style.
 
-Three layers, all positioned, so **every one states its z-index**: the
+Four layers, all positioned, so **every one states its z-index**: the
 placeholder (0), the image (1), the rim (2), and the lens (3) above them all.
-Leaving any of them on `auto` puts it in DOM order, which is how the rim ended
-up under the image and later the lens under both.
+Leaving any of them on `auto` puts it in DOM order.
 
-**Every plate carries a blurred placeholder** — a 20px-wide copy of the work,
-generated by the import script, inlined as a data URI and blurred on its own
-layer so the blur never touches the drawing. It breathes slowly while it waits.
-The real image is opaque and exactly the same proportion, so it covers the
-placeholder the moment it paints: no load hook, no script, nothing to clean up.
-A plate with no placeholder falls back to a wash of ink. The plate **clips**,
-because the placeholder's blur would otherwise spill past it. That does not
-reopen the Phase 1 crop: the box takes its ratio from the asset, so the image
-can never exceed it. States: rest; hover or a still hold (the magnifier engages;
-under a mouse the cursor hides); reduced motion (no pulse, no lag).
+**Every plate carries a blurred placeholder** — a copy of the work 20px on its
+longest edge, generated by the import script, inlined as a data URI and blurred
+on its own layer so the blur never touches the drawing. It breathes slowly while
+it waits. The real image is opaque and exactly the same proportion, so it covers
+the placeholder the moment it paints: no load hook, no script, nothing to clean
+up. A plate with no placeholder falls back to a wash of ink. The plate
+**clips**, because the placeholder's blur would otherwise spill past it. That is
+not a crop: the box takes its ratio from the asset, so the image can never
+exceed it. States: rest; hover or a still hold (the magnifier engages; under a
+mouse the cursor hides); reduced motion (no pulse, no lag).
 
 **The glass material.** One material, three objects: the **glazing** fixed over
 a plate, the **loupe** held over the work on hover, and the **title bar** the
@@ -493,14 +476,14 @@ Therefore:
   meets paper and the darkest single mark in the material; the **bevel**, a
   **hairline** falling off around the perimeter on a Fresnel curve; and the
   **edge tint**, which belongs in the bevel band and nowhere else because glass
-  is coloured through its thickness. **The bevel's width is the rule that was
-  got wrong once.** Drawn as a soft band several pixels wide it reads as a drawn
-  border, and on a work with white paper around it that band stands on the
-  drawing. Seen from directly above, a polished float-glass edge is a thin line.
-  The weight belongs outside, in the occlusion. Everything but the occlusion is
-  inside the work's bounds. It is a light overlay, never a displacement — **the
-  plate does not refract, so the work is never distorted**, and that is the part
-  of the promise that does not bend.
+  is coloured through its thickness. **The bevel is a hairline.** Drawn as a
+  soft band several pixels wide it reads as a drawn border, and on a work with
+  white paper around it that band stands on the drawing. Seen from directly
+  above, a polished float-glass edge is a thin line. The weight belongs outside,
+  in the occlusion. Everything but the occlusion is inside the work's bounds. It
+  is a light overlay, never a displacement — **the plate does not refract, so
+  the work is never distorted**, and that is the part of the promise that does
+  not bend.
 - **The field carries nothing at all.** Two surfaces reflect about 4% each, so a
   veiling lift of a couple of percent would be physically honest — and the
   falsification test below forbids anything the eye can find there, so the
@@ -513,26 +496,24 @@ Therefore:
 - **Over a near-white ground glass reads as dark line-work, not a glow.** The
   ground sits near 0.96 relative luminance — no headroom, and a highlight cannot
   be brighter than the page. The plate edge is therefore drawn with _darker_
-  marks. "Glass needs a white specular" is the obvious wrong assumption here,
-  and it is why the glazing needs no fourth colour. **The loupe is the
-  exception**: it sits over the drawing, not over the ground, so it _does_ have
-  headroom, and a bright arris opposite a dark one is most of what reads as
-  glass there.
+  marks, which is why the glazing needs no white specular and no new colour.
+  **The loupe is the exception**: it sits over the drawing, not over the ground,
+  so it _does_ have headroom, and a bright arris opposite a dark one is most of
+  what reads as glass there.
 - **The glazing is quiet in the field and definite at the edge.** Over a flat
   near-white ground there is nothing to see but the edge, so that is where the
   weight goes: the contact line is the one mark allowed to be frank, and the
-  bevel stays faint enough that it is read rather than noticed. The floor is not
-  an alpha cap, which only ever proxied for the real rule — it is **principle
-  1**, and the falsification test below is how it is checked.
+  bevel stays faint enough that it is read rather than noticed. The limit is not
+  an alpha cap but **principle 1**, checked by the falsification test below.
 - **Dispersion resolves toward the accent.** Real glass fringes cyan and green;
   here the fringe is `--color-pen`, so this glass disperses toward ballpoint
   blue. A deliberate substitution, not an approximation.
 - **One thing is painted outside the plate, and only one.** A **contact
   occlusion**: tight, dark, offset along the light, and never wider than the
-  pane. A **soft outer cast** is still refused, for the reason that rule always
-  had — a shadow that reads as thrown reads as furniture around a picture rather
-  than as glass on one. The difference is extent, so extent is the rule: past
-  the pane's own thickness it has stopped being contact and started being cast.
+  pane. A **soft outer cast** is refused: a shadow that reads as thrown reads as
+  furniture around a picture rather than as glass on one. The difference is
+  extent, so extent is the rule: past the pane's own thickness it has stopped
+  being contact and started being cast.
 - **The edge varies around the perimeter, and it varies steeply.** A ring of
   constant weight is a border, not glass; a ring that fades evenly from one side
   to the other is a gradient, which is only slightly better. Real reflectance
@@ -604,29 +585,26 @@ stacked block of labelled fields, and nothing after it. Dimensions come from
 component never concatenates.
 
 **The list of plates.** The strongest idea taken from the reference: contents,
-metadata and navigation in one element. One entry per work — folio in pen, title
-and year in ink, at caption size — with folio and title **lined up rather than
-stacked**, because a contents page that does not align is just a list.
+metadata and navigation in one element. One entry per work — folio, then title
+and year — with folio and title **lined up rather than stacked**, because a
+contents page that does not align is just a list.
 
 The entries run in **one full-width line**, not a column, on a **field of
 `--color-pen` with the type reversed out in `--color-ground`** — the page's only
-solid field, and the amendment principle 1 had to make for it. Light on pen is
-8.3:1, the verified pair inverted, so nothing in it may be faded.
+solid field, and the exception principle 1 makes for it. Light on pen is 8.3:1,
+the verified pair inverted, so nothing in it may be faded.
 
-**On this field the folio has no colour of its own.** It was set in
-`--color-pen-red` while the field was ink, where it measured 4.0:1. On pen the
-red is **2.15:1** and the ink **1.86:1** — there is no second readable value in
-the palette here, so the folio takes the title's colour and is separated from it
-by weight and by its tabular figures instead. That is the cost of the blue
-field; the red works only on the dark one.
+**On this field the folio has no colour of its own.** On pen the red is
+**2.15:1** and the ink **1.86:1** — there is no second readable value in the
+palette here, so the folio takes the title's colour and is separated from it by
+weight and by its tabular figures instead. The red works only on an ink field.
 
 They are set in the **display face**, like the name above them — without its
 wide round alternates, which belong to the name alone — and set **tight**: folio
 and title almost touching, entries barely apart, so the band reads as one
 running line rather than a row of labels. **The folio is one weight lighter than
 the title** — 400 against the strip's 700 — so the number recedes and the title
-leads. An earlier build set the folio light against a _heavy_ title and read
-badly; the difference is the size of the gap, not the direction of it.
+leads. A wider gap reads as two labels, not one line.
 
 **The line moves, endlessly.** The track holds the list twice and travels
 exactly half its own width, so the seam never shows; the duplicate is
@@ -664,10 +642,9 @@ No buttons, no autoplay control, no script — the whole thing is CSS. Every row
 links to that work's plate below, scrolling smoothly (§7); rows clear 24px
 (2.5.8). **This is the one place links are not underlined at rest:** when every
 row is a link the underline is a texture rather than a signal, the list's
-semantics carry the affordance, and hover and focus restore the rule. Titles
-stay ink — they name specific drawings (principle 2). In Phase 3 the rows
-retarget to the detail route and gain a current-item marker; nothing else
-changes.
+semantics carry the affordance, and hover and focus restore the rule. In Phase 3
+the rows retarget to the detail route and gain a current-item marker; nothing
+else changes.
 
 **The plate carries no status mark.** A caption that ends on the catalogue line
 reads as a catalogue line; a chip after it reads as commerce, and whether a work
@@ -677,10 +654,10 @@ is framed or sold is the record's business, not the plate's.
 in the schema, `ARTWORK_STATUSES` remains the one enum, `statusLabel()` remains
 the one label source, and both still flow into the JSON-LD `additionalProperty`
 and `llms.txt` — machine-readable for a curator's tooling, absent from the page.
-The Spanish labels stay in `src/i18n/ui/es.ts` because those two consumers use
-them. This holds on every archetype, Phase 3's detail page included: no badge,
-chip, bracketed note or caption suffix. A page that needs to state availability
-is a new decision with its own entry here.
+The labels stay in the message files because those two consumers use them. This
+holds on every archetype, Phase 3's detail page included: no badge, chip,
+bracketed note or caption suffix. A page that needs to state availability is a
+new decision with its own entry here.
 
 **The contact section.** The last thing the gallery says, sitting between the
 closing rule and the colophon: section label, rule, one line of prose at the
@@ -700,7 +677,7 @@ into. Adding a contact point is one entry there and one key in
 **Icons are inline line-work SVG, drawn here, and that is the whole policy.**
 Each glyph is written into the component as a `<svg>` on a 24 unit box,
 `fill: none`, stroked in `currentColor` so it inherits the link's pen and can
-never introduce a fifth colour, sized in `em` so it tracks the type it sits
+never introduce a sixth colour, sized in `em` so it tracks the type it sits
 beside. The reasons this beats every alternative, in order: an icon set
 (`astro-icon`, Lucide, Simple Icons) is a dependency, and @SECURITY.md prices
 those; an icon font ships a face for two glyphs and fails when it does not load;
@@ -719,7 +696,7 @@ The official asset is a filled, gradient-capable logo that would have to arrive
 as its own colour and its own file; this is the same shape in the site's
 line-work, which is what the material rule asks for — a record _about_ the work
 is line and type. If Instagram's brand terms ever require the exact mark, that
-is a fourth colour and a fourth glyph at once, and it goes through the same door
+is a sixth colour and a third glyph at once, and it goes through the same door
 as any other palette addition (§3).
 
 **The scrollbar.** Site-wide furniture: a `--color-pen` thumb running in a
@@ -756,8 +733,8 @@ head below pins to that sum.
 **The title card.** The home page's masthead, and the site's one piece of
 theatre. The name is **always one line**, sized to fill the width of the page —
 never wrapped, never two lines. What changes on scroll is its **font-size**,
-falling to `--titlecard-min` over the first screen and then holding while the
-page runs on beneath it.
+falling to `--titlecard-min` over the first third of a screen and then holding
+while the page runs on beneath it.
 
 - **It is a sticky bar only as tall as its own text plus padding**, so it costs
   no viewport of its own, and it — with the strip beneath it — must be a child
@@ -769,7 +746,7 @@ page runs on beneath it.
 - **Its resting size is the small one.** The large size lives in the keyframe,
   so a browser without scroll timelines — or a reader who has asked for no
   motion — gets a modest bar rather than one permanently covering a quarter of
-  the page. Building it the other way round is the obvious mistake.
+  the page.
 - **It is the one place the site animates a layout property.** No transform
   reproduces "one line, always filling the page, getting smaller"; a scale would
   change the width too. It is a single text node, and the cost is bounded to it.
@@ -786,14 +763,13 @@ page runs on beneath it.
   stacking context, or the backdrop root becomes the masthead itself and there
   is nothing behind it to sample.
 
-**The masthead.** On every page but the home page: the artist's name at micro
-size, semibold, tracked, in pen, linking home — a running head, not a banner.
-**The home page does not carry it**, because there the name _is_ the display
-step: the cover sets the name large, interior pages carry the running head. The
-two share a `view-transition-name`, so navigating between them morphs one into
-the other. The tagline, displaced from the display slot, becomes the statement.
+**The masthead.** On every page but the home page: the artist's name set as
+furniture, in pen, linking home — a running head, not a banner. **The home page
+does not carry it**, because there the name _is_ the display step: the cover
+sets the name large, interior pages carry the running head. The two share a
+`view-transition-name`, so navigating between them morphs one into the other.
 
-**The colophon (footer).** A section label in pen, the rule, then rights,
+**The colophon (footer).** The rule, a section label in pen, then rights,
 licence and the site's own credit at caption size in ink. The credit names
 whoever built the site, which is not the artist — it reads from `SITE_AUTHOR` in
 `src/site.ts` and its sentence is a translated string with a slot, like the
@@ -823,7 +799,7 @@ second element (§6).
 above, expressed as a plano-convex lens held above the paper rather than a sheet
 resting on it — which is the whole reason it is allowed to be brighter and
 heavier than the glazing. **It sits over the drawing, not over the ground, so it
-has the headroom the plate does not**, and it spends it on six things, in
+has the headroom the plate does not**, and it spends it on five things, in
 descending order of how much each is worth:
 
 1. **The lens profile** (§6, the map), and **the edge compression** that follows
@@ -843,9 +819,9 @@ rotation check in §6 covers them.
 
 **It must read as an object, and that is a floor rather than a preference.**
 Drawn as faintly as the glazing it disappears over a work that is mostly white
-paper, and a lens you cannot see is a lens that is not there — which is how it
-was first reported. This is the one surface where the material is allowed to be
-frank, and the plate's restraint does not transfer to it.
+paper, and a lens you cannot see is a lens that is not there. This is the one
+surface where the material is allowed to be frank, and the plate's restraint
+does not transfer to it.
 
 **Under a finger it is smaller, and the finger holds it rather than hides it.**
 A lens centred on a fingertip shows the fingertip. So the touch lens is held
@@ -859,9 +835,10 @@ not a lens, and the finger becomes the handle it is moved by. It takes
 inside it would be captured by the scroll reveal's transform. It sits above the
 masthead because it is an instrument in the hand and exists only while held.
 
-**Prev/next — Phase 3.** Bottom-right of the detail page, micro size in pen,
-each target ≥24×24px (2.5.8). The list of plates with the current work marked is
-the primary navigation; prev/next is the shortcut, not the main path.
+**Prev/next — Phase 3.** Bottom-right of the detail page, small, in the text
+face and in pen, each target ≥24×24px (2.5.8). The list of plates with the
+current work marked is the primary navigation; prev/next is the shortcut, not
+the main path.
 
 ---
 
@@ -878,13 +855,13 @@ the primary navigation; prev/next is the shortcut, not the main path.
 | Title card shrink     | scroll         | `@supports (animation-timeline)` + r-m     | CSS        | a small sticky bar      |
 | Plate strip marquee   | none, endless  | reduced-motion; pauses on hover/hold/focus | CSS        | a static scroll strip   |
 
-**The staggered entrance survives only on the 404**, which is the one page that
-still opens with a block of type. The home page lost it with the hero: its
-opening is the title card's shrink instead. Each element carries its own step
-index rather than relying on sibling position, so restructuring a page cannot
-silently resequence it, and **total duration including the longest stagger must
-not exceed 600 ms** — an entrance must never be what pushes a passing page into
-a failing LCP. **Plates never animate on load**, only on scroll.
+**The staggered entrance runs only on the 404**, the one page that opens with a
+block of type; the home page opens with the title card's shrink. Each element
+carries its own step index rather than relying on sibling position, so
+restructuring a page cannot silently resequence it, and **total duration
+including the longest stagger must not exceed 600 ms** — an entrance must never
+be what pushes a passing page into a failing LCP. **Plates never animate on
+load**, only on scroll.
 
 **The scroll reveal moves, it does not fade.** With `animation-timeline: view()`
 opacity is a _function of scroll position_, not a transition that finishes, so a
@@ -927,26 +904,16 @@ The refracted view is drawn larger than the lens and clipped back to it, so
 bending the rim pulls in real image rather than the transparency outside the
 circle, which smears.
 
-**The lens does not appear until its image has.** The detail tier is fetched
-when the lens engages, so there is a moment when the loupe exists with nothing
-to show. It stays hidden through that moment rather than showing an empty or
-blurred disc: a lens that arrives before its image reads as broken, not as
-loading, and a defocus-while-loading reads the same way. The lens reads heavier
-than the glazing, being held in the hand rather than fixed over the work, but
-from the same constants multiplied, so retuning the material moves both objects
-together.
-
 **Shape.** A passive `pointermove` listener on the plate, or a `touchmove` one
 under a finger; latest coordinates applied once per frame in
 `requestAnimationFrame`, written out as custom properties so CSS positions via
 `translate3d` on the compositor. A short lerp gives the follow lag under a
-mouse. No layout reads in a handler.
+mouse. No layout reads in a move handler.
 
 **It shows that it is waiting.** The glass appears the instant the lens engages
 and pulses while the detail tier is in flight; the magnified view fades in when
-it lands. An empty lens reads as broken, but an empty lens that is visibly
-waiting reads as loading — which is the difference between the version that was
-rejected and this one.
+it lands. An empty lens reads as broken; an empty lens that is visibly waiting
+reads as loading.
 
 **Under a mouse, the lens is the cursor.** While it is up the pointer is hidden,
 keyed to the attribute the script sets — so a plate whose lens never initialises
@@ -967,10 +934,9 @@ which is what keeps it compliant. It needs the detail tier (§8), fetched when
 the lens engages, never upfront and never on a passing scroll; magnifying the
 gallery derivative shows upscaling artifacts, not hatching, so the lens and the
 second tier are one decision. Budgeted at **3 KB minified** — enforced on the
-source at 4 KB, since tests do not build; it currently ships at about 1.7 KB
-(§10). No dependency: GSAP is ~70 KB gzipped to interpolate two numbers and
-every dependency is supply-chain surface under @SECURITY.md; this is a few KB of
-vanilla JavaScript.
+source at 4 KB, since tests do not build (§10). No dependency: GSAP is ~70 KB
+gzipped to interpolate two numbers and every dependency is supply-chain surface
+under @SECURITY.md; this is a few KB of vanilla JavaScript.
 
 **Under a finger, a scroll always wins.** On a phone the plates are most of the
 page, so a finger on a plate is almost always a reader scrolling. The lens
@@ -987,9 +953,9 @@ regions, so their handler stays trivial.
 
 **Never `touch-action: none` on a plate, and never the viewport meta.** Either
 one takes scrolling and pinch-zoom from every reader for a convenience to some.
-Pinch-zoom is the only magnification touch readers had before the lens (1.4.4):
-two fingers never start a hold, and a second finger closes an engaged lens and
-hands the gesture back.
+Pinch-zoom is the touch reader's own magnification (1.4.4): two fingers never
+start a hold, and a second finger closes an engaged lens and hands the gesture
+back.
 
 **A hold is a look; a tap is a tap.** While the lens is up, the plate refuses
 the system's long-press — the save-image callout, the context menu, selection,
@@ -1015,25 +981,24 @@ Two committed derivative tiers. Originals never enter the repo — a hard rule i
 @CLAUDE.md — and the source folder arrives only through `ARTWORK_ORIGINALS` in a
 local `.env`; never hardcode a path into a committed file.
 
-- **Gallery tier**, unchanged: 2000px max edge, WebP, `src/assets/artworks/`.
-  2400px was tried and blew the budget on the scanned bond-paper work.
-- **Detail tier**, new: **3000px max edge**, WebP,
-  `src/assets/artworks/detail/`. Chosen from the lens, not from a round number:
-  a plate renders near 900 CSS px, so a 3000px source gives the loupe about 3.3×
-  — enough to resolve individual pen strokes at true source pixels. Its budget
-  is **2.5 MB** per file, its own threshold, not a loosening of the gallery
-  tier's.
+- **Gallery tier**: 2000px max edge, WebP, `src/assets/artworks/`, where the
+  collection entries reference it. At 2400px the scanned bond-paper work exceeds
+  the budget.
+- **Detail tier**: **3000px max edge**, WebP, `src/assets/artworks/detail/`.
+  Chosen from the lens, not from a round number: a plate renders near 900 CSS
+  px, so a 3000px source gives the loupe about 3.3× — enough to resolve
+  individual pen strokes at true source pixels. Its budget is **2.5 MB** per
+  file, its own threshold, not a loosening of the gallery tier's.
 
-Both budgets are exported constants in `scripts/optimize-images.mjs`, imported
-by the tests, never numbers written twice. Existing gallery assets do not move —
-collection entries reference their paths.
+Both budgets live in the `TIERS` array in `scripts/optimize-images.mjs`, which
+the tests import, so they are never written twice.
 
 **The pairing is derived, not authored.** `src/artworks.ts` globs the detail
 directory and matches by slug, so no YAML field, no schema change and no chance
 of a work shipping half-configured. A test asserts both tiers exist for every
 work, with no orphans on either side.
 
-**Repo-size consequence:** two tiers put artwork assets at roughly 10 MB.
+**Repo-size consequence:** two tiers commit roughly 1.4 MB of artwork per work.
 
 ---
 
@@ -1043,7 +1008,7 @@ work, with no orphans on either side.
 delivers something CSS cannot express at all — a lens tracking a pointer — and
 because the gallery is complete without it. Where an interaction seems to need a
 script, the answer is almost always a real URL and a prerendered page, which is
-what the detail page already is. Test-enforced.
+what the detail page will be. Test-enforced.
 
 **No second script, no framework, no animation or utility library.** Zero
 hydration, zero client runtime beyond the lens; a library that interpolates two
@@ -1061,11 +1026,8 @@ free.
 the motion system, and it is a runtime the site does not have.
 
 **No dark mode, and no sixth colour** — not for a scrim, a shadow, a disabled
-state or a lens rim. A printed object has one ground. The palette has grown
-twice, each time to fix a measured contrast failure, and each new value arrived
-bounded: pen-red to large text on dark grounds, pen-pale to scrollbars and never
-text (§3). That bound is the price of a new value, and wanting one is not paying
-it. Test-enforced.
+state or a lens rim. A printed object has one ground, and the price of a new
+value is in §3. Test-enforced.
 
 **Never crop or distort the work.** A slot bounds width; the plate takes the
 work's proportion. A work that does not fit becomes smaller, never tighter. The
@@ -1085,8 +1047,6 @@ string; it is interpolated into a translated sentence as one unit.
 **No token values restated outside `global.css`**, and no token table in this
 file. Two copies of a value is two values the moment one is tuned.
 
-**No committed originals, no host install.** Docker is the only local surface.
-
 ---
 
 ## 10. Guards and outstanding
@@ -1100,6 +1060,7 @@ Load-bearing; everything else here is advisory prose.
 | No colour literal under `src/` outside `@theme`      | `tests/design.test.ts`  |
 | Exactly one client script, within its byte budget    | `tests/design.test.ts`  |
 | Every `animation` sits inside a reduced-motion guard | `tests/design.test.ts`  |
+| The display face never sets below 30px               | `tests/design.test.ts`  |
 | Both image tiers, own budgets, no orphans            | `tests/content.test.ts` |
 | No face ships `font-display:auto`                    | `ci.yml`, post-build    |
 | Every published URL gets its CSP header              | `ci.yml`, post-build    |
