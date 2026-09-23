@@ -20,6 +20,7 @@ const featured = await getFeaturedArtwork();
   description={tr('notFound.body')}
   path="/404"
   languagePath="/"
+  noindex
   ogImage={featured.data.image}
   ogImageAlt={artworkAltText(featured, locale)}
 >

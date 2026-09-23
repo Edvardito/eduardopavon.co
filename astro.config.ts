@@ -1,5 +1,3 @@
-import { readFile, writeFile } from 'node:fs/promises';
-import type { AstroIntegration } from 'astro';
 import sitemap from '@astrojs/sitemap';
 import vercel from '@astrojs/vercel';
 import tailwindcss from '@tailwindcss/vite';
@@ -35,33 +33,9 @@ function adobe(config: { id: string }): AdobeProvider {
   };
 }
 
-/* The adapter writes the CSP route as `src: '/en'`, which never matches the
- * `/en/` the site actually publishes. Serve the header on both spellings. */
-function cspTrailingSlash(): AstroIntegration {
-  return {
-    name: 'csp-trailing-slash',
-    hooks: {
-      'astro:build:done': async () => {
-        const file = new URL('./.vercel/output/config.json', import.meta.url);
-        const config = JSON.parse(await readFile(file, 'utf8'));
-
-        const slashed = config.routes.flatMap(
-          (route: { src?: string; headers?: Record<string, string> }) =>
-            route.headers?.['content-security-policy'] && route.src?.startsWith('/')
-              ? [{ ...route, src: `${route.src}/` }]
-              : [],
-        );
-
-        config.routes.unshift(...slashed);
-        await writeFile(file, JSON.stringify(config, null, 2));
-      },
-    },
-  };
-}
-
 export default defineConfig({
   site: SITE,
-  // `/es` 308s to `/es/` instead of serving a duplicate.
+  // `/es` 308s to `/es/`, and the adapter writes each CSP route in that spelling.
   trailingSlash: 'always',
 
   // Adapter configured so one route can opt out, without global SSR.
@@ -96,7 +70,6 @@ export default defineConfig({
   },
 
   integrations: [
-    cspTrailingSlash(),
     sitemap({
       i18n: {
         defaultLocale: DEFAULT_LOCALE,

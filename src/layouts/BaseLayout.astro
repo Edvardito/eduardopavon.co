@@ -19,6 +19,7 @@ interface Props {
   masthead?: boolean;
   /** Where the language switcher points, when it cannot be this page's own path. */
   languagePath?: string;
+  noindex?: boolean;
 }
 
 const {
@@ -30,6 +31,7 @@ const {
   ogImageAlt,
   masthead = true,
   languagePath = path,
+  noindex = false,
 } = Astro.props;
 ---
 
@@ -43,6 +45,7 @@ const {
       path={path}
       ogImage={ogImage}
       ogImageAlt={ogImageAlt}
+      noindex={noindex}
     />
     <!-- Only the display face is preloaded: it sets the largest text on the page. -->
     <Font cssVariable="--font-irregardless" preload />

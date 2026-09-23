@@ -60,7 +60,7 @@ jobs:
             exit 1
           fi
 
-      # The adapter writes the CSP route as `/en`, which never matches `/en/`.
+      # The adapter spells CSP routes as `trailingSlash` does; this proves they match.
       - name: Assert the CSP reaches every URL the sitemap publishes
         run: |
           node -e "
