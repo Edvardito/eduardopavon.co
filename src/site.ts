@@ -1,6 +1,9 @@
 /** The host we serve; `astro.config.ts` imports it so routing cannot drift. */
 export const SITE_ORIGIN = 'https://www.eduardopavon.co';
 
+/** Search Console re-checks this; deleting it silently unverifies the property. */
+export const GOOGLE_SITE_VERIFICATION = 'p6unf69cOeP6HmZcsqB6TAZ5Sn2sEw-0IAoqZA8xEUw';
+
 /** The name the work is shown under. */
 export const ARTIST_NAME = 'Eduardo Pavón';
 
