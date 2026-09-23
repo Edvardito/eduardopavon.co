@@ -140,8 +140,9 @@ Then confirm:
 - The rendered dimensions match the image's orientation.
 - Both committed `.webp` files exist and are under their budgets — run
   `docker compose run --rm web pnpm test`, which checks this for you.
-- Hovering the new work on a fine pointer shows the magnifier, sharp rather than
-  blurred, which is what proves the detail tier landed.
+- Hovering the new work with a mouse, or holding a finger still on it, shows the
+  magnifier sharp rather than blurred, which is what proves the detail tier
+  landed.
 
 Nothing else needs editing — the gallery, structured data and sitemap all read
 from the collection.
