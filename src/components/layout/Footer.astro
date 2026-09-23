@@ -17,9 +17,9 @@ const [creditBefore, creditAfter] = splitAroundSlot(tr('footer.credit', { name: 
 ---
 
 <footer class="page mt-(--space-section) pb-(--space-section)">
-  <hr class="rule" />
-  <h2 class="furniture mt-(--space-row)">{tr('footer.colophon')}</h2>
-  <p class="measure mt-(--space-caption) text-(length:--text-caption)">{tr('footer.rights')}</p>
+  <h2 class="furniture">{tr('footer.colophon')}</h2>
+  <hr class="rule mt-(--space-caption)" />
+  <p class="measure mt-(--space-row) text-(length:--text-caption)">{tr('footer.rights')}</p>
   <p class="measure text-(length:--text-caption)">
     {before}
     <a

@@ -769,7 +769,7 @@ does not carry it**, because there the name _is_ the display step: the cover
 sets the name large, interior pages carry the running head. The two share a
 `view-transition-name`, so navigating between them morphs one into the other.
 
-**The colophon (footer).** The rule, a section label in pen, then rights,
+**The colophon (footer).** A section label in pen, the rule, then rights,
 licence and the site's own credit at caption size in ink. The credit names
 whoever built the site, which is not the artist — it reads from `SITE_AUTHOR` in
 `src/site.ts` and its sentence is a translated string with a slot, like the
@@ -1080,7 +1080,9 @@ Specified here, exercised by no page yet; the structure phase inherits these.
 - **The about archetype** (§5). Needs `about.title`, `about.heading`,
   `about.statementLabel`, `about.biographyLabel`, and a portrait asset.
 - **The detail archetype** (§5) and **prev/next** (§6). Needs
-  `detail.plateLabel`, `detail.prev`, `detail.next`, `detail.record`.
+  `detail.plateLabel`, `detail.prev`, `detail.next`, `detail.record`. Its record
+  labels its fields with the existing `artwork.year`, `artwork.medium` and
+  `artwork.dimensions`, which nothing else uses yet.
 - **The magnifier's keyboard equivalent.** Until the detail page exists,
   keyboard users have only browser zoom. Closed by Phase 3.
 - **The list of plates becomes route navigation**, with the current work marked.
