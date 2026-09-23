@@ -7,8 +7,7 @@ services:
       - '4321:4321'
     volumes:
       - .:/app
-      # Shadows the host's node_modules, which is built for the host OS/arch
-      # and would break inside the container.
+      # Shadows any host node_modules, which is built for another OS.
       - node_modules:/app/node_modules
       - pnpm_store:/pnpm-store
       - vite_cache:/vite-cache

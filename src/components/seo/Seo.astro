@@ -19,7 +19,6 @@ const { locale, title, description, path, ogImage, ogImageAlt, noindex = false }
 
 const site = Astro.site!;
 
-/* Pages pass the logical path; the locale prefix is applied here, once. */
 const canonical = new URL(localizePath(path, locale), site).href;
 const alternates = getLocaleAlternates(path, site);
 

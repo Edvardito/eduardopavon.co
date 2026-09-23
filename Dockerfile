@@ -3,9 +3,7 @@ FROM node:24.21.0-alpine
 
 RUN corepack enable
 
-# Pin the pnpm store to a fixed path backed by its own volume. Without this
-# pnpm picks a different store at image-build time than inside `compose run`
-# (node_modules is a volume, /root is not) and refuses to install.
+# One store path for build and `compose run`, or pnpm refuses to install.
 ENV npm_config_store_dir=/pnpm-store
 
 WORKDIR /app

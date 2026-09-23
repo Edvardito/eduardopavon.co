@@ -9,7 +9,6 @@ export default tseslint.config(
   js.configs.recommended,
   tseslint.configs.recommended,
   astro.configs.recommended,
-  // Includes the jsx-a11y-equivalent rules for Astro templates.
   astro.configs['jsx-a11y-recommended'],
 
   {

@@ -1,7 +1,6 @@
 version: 2
 updates:
-  # SHA-pinned actions cannot be updated by hand realistically; Dependabot
-  # rewrites the pin and the trailing version comment together.
+  # Rewrites each SHA pin and its version comment together.
   - package-ecosystem: github-actions
     directory: /
     schedule:
@@ -9,8 +8,7 @@ updates:
     commit-message:
       prefix: 'ci'
 
-  # npm updates are opt-in review, not auto-merge. The release cooldown in
-  # .npmrc still applies when the lockfile is regenerated.
+  # Reviewed, never auto-merged; the .npmrc release cooldown still applies.
   - package-ecosystem: npm
     directory: /
     schedule:

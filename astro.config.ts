@@ -8,7 +8,6 @@ import { SITE_ORIGIN } from './src/site';
 const SITE = process.env.SITE_URL ?? SITE_ORIGIN;
 const TYPEKIT_KIT = 'ulk1nsi';
 
-// Bind-mount file events are unreliable off Linux; compose sets this.
 const usePolling = process.env.CHOKIDAR_USEPOLLING === 'true';
 
 /* Split, so a build in a second container cannot cost the dev server a re-scan. */
