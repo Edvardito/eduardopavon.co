@@ -61,6 +61,8 @@ function cspTrailingSlash(): AstroIntegration {
 
 export default defineConfig({
   site: SITE,
+  // `/es` 308s to `/es/` instead of serving a duplicate.
+  trailingSlash: 'always',
 
   // Adapter configured so one route can opt out, without global SSR.
   output: 'static',

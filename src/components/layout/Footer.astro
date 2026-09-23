@@ -1,12 +1,15 @@
 ---
+import LanguageSwitcher from '~/components/ui/LanguageSwitcher.astro';
 import { SLOT, splitAroundSlot, useTranslations, type Locale } from '~/i18n';
 import { ARTWORK_LICENSE, SITE_AUTHOR } from '~/site';
 
 interface Props {
   locale: Locale;
+  /** Logical path whose other editions the switcher links. */
+  path: string;
 }
 
-const { locale } = Astro.props;
+const { locale, path } = Astro.props;
 const tr = useTranslations(locale);
 
 const [before, after] = splitAroundSlot(tr('footer.license', { license: SLOT }));
@@ -37,4 +40,7 @@ const [creditBefore, creditAfter] = splitAroundSlot(tr('footer.credit', { name: 
     </a>
     {creditAfter}
   </p>
+  <div class="mt-(--space-row) text-(length:--text-caption)">
+    <LanguageSwitcher locale={locale} path={path} />
+  </div>
 </footer>

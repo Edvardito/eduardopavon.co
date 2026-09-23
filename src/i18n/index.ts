@@ -90,10 +90,24 @@ export function getLocaleFromUrl(url: URL): Locale {
   return first && isLocale(first) ? first : FALLBACK_LOCALE;
 }
 
+/* Always slashed, matching `trailingSlash: 'always'`; an unslashed URL is a redirect. */
 export function localizePath(path: string, locale: string): string {
-  const normalized = `/${path.replace(/^\/+|\/+$/g, '')}`;
-  if (locale === DEFAULT_LOCALE && !PREFIX_DEFAULT_LOCALE) return normalized;
-  return normalized === '/' ? `/${locale}/` : `/${locale}${normalized}`;
+  const trimmed = path.replace(/^\/+|\/+$/g, '');
+  const prefixed = locale === DEFAULT_LOCALE && !PREFIX_DEFAULT_LOCALE ? [] : [locale];
+  const segments = [...prefixed, ...(trimmed ? [trimmed] : [])];
+  return segments.length ? `/${segments.join('/')}/` : '/';
+}
+
+/** One crawlable link per edition, each labelled in its own language. */
+export function getLanguageLinks(
+  path: string,
+): Array<{ locale: Locale; href: string; hreflang: string; label: string }> {
+  return LOCALES.map((locale) => ({
+    locale,
+    href: localizePath(path, locale),
+    hreflang: LOCALE_METADATA[locale].htmlLang,
+    label: LOCALE_METADATA[locale].label,
+  }));
 }
 
 export function getLocaleAlternates(

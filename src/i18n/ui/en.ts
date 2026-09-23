@@ -32,6 +32,7 @@ export default {
   'footer.license': 'The images are published under the {license} licence.',
   'footer.credit': 'Site designed and developed by {name}.',
   'footer.licenseLinkLabel': 'View the terms of the {license} licence',
+  'footer.languages': 'Language',
 
   'a11y.skipToContent': 'Skip to content',
 

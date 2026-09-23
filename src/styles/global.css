@@ -217,6 +217,26 @@
     min-block-size: 24px;
   }
 
+  .languages {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-caption) var(--space-row);
+    color: var(--color-pen);
+  }
+
+  .languages__link,
+  .languages__current {
+    display: inline-flex;
+    align-items: center;
+    /* 2.5.8: the row clears 24px whatever the leading resolves to. */
+    min-block-size: 24px;
+  }
+
+  /* Marked by weight and the missing underline, never by colour alone. */
+  .languages__current {
+    font-weight: 700;
+  }
+
   /* The label carries the underline, so it never runs under the glyph. */
   .contact__icon {
     flex: none;

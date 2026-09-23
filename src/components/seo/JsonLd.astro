@@ -10,7 +10,13 @@ import {
   type Dimensions,
   type Locale,
 } from '~/i18n';
-import { ARTIST_LEGAL_NAME, ARTIST_NAME, ARTWORK_LICENSE, copyrightNotice } from '~/site';
+import {
+  ARTIST_CONTACT,
+  ARTIST_LEGAL_NAME,
+  ARTIST_NAME,
+  ARTWORK_LICENSE,
+  copyrightNotice,
+} from '~/site';
 
 interface Props {
   locale: Locale;
@@ -84,6 +90,7 @@ const graph = {
       jobTitle: t(locale, 'site.tagline'),
       description: t(locale, 'site.description'),
       url: homeUrl,
+      sameAs: [ARTIST_CONTACT.instagram.url],
       knowsAbout: t(locale, 'seo.knowsAbout').split(', '),
     },
     {
