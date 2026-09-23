@@ -43,7 +43,6 @@ describe('t', () => {
 });
 
 describe('localizePath', () => {
-  /* Every edition is prefixed; `/` belongs to the negotiating route. */
   it('prefixes every locale, the authoring one included', () => {
     expect(localizePath('/', DEFAULT_LOCALE)).toBe('/es/');
     expect(localizePath('/obra', DEFAULT_LOCALE)).toBe('/es/obra/');
@@ -51,7 +50,6 @@ describe('localizePath', () => {
     expect(localizePath('/obra', 'en')).toBe('/en/obra/');
   });
 
-  /* `trailingSlash: 'always'` 308s the unslashed spelling, so no page may link to it. */
   it('normalizes surrounding slashes, and always ends on one', () => {
     expect(localizePath('obra', DEFAULT_LOCALE)).toBe('/es/obra/');
     expect(localizePath('//obra//', 'en')).toBe('/en/obra/');

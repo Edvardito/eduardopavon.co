@@ -126,7 +126,6 @@ describe('the script exception', () => {
 });
 
 describe('type floors', () => {
-  /* It shipped once at 13px, which is what this floor prevents. */
   it('never sets the display face below its floor', async () => {
     const css = await readFile(STYLESHEET, 'utf8');
     const rem = (value: string) =>
@@ -142,7 +141,6 @@ describe('type floors', () => {
 });
 
 describe('motion guards', () => {
-  /* A hidden start state once applied in browsers that never animated it. */
   it('declares every animation inside prefers-reduced-motion: no-preference', async () => {
     const css = stripComments(await readFile(STYLESHEET, 'utf8'));
     const offences: string[] = [];

@@ -108,7 +108,7 @@ describe('artwork images', () => {
     expect(assets.sort()).toEqual(artworks.map((a) => a.slug).sort());
   });
 
-  // The Phase 1 regression: a swapped pair flips the ratio, which this catches.
+  // A swapped width and height flips the ratio.
   it('records dimensions in the same orientation as the image', async () => {
     for (const artwork of artworks) {
       const { width = 0, height = 0 } = await sharp(

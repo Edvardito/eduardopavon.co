@@ -3,10 +3,8 @@
 const TOUCH = !matchMedia('(hover: hover) and (pointer: fine)').matches;
 const REDUCED_MOTION = matchMedia('(prefers-reduced-motion: reduce)');
 
-/** Lerp factor for the follow lag; 1 removes it. */
-const FOLLOW = 0.2;
-/** A finger held still this long means "look". */
-const HOLD = 300;
+const FOLLOW_LERP = 0.2;
+const HOLD_MS = 300;
 
 type Point = Pick<Touch, 'clientX' | 'clientY'>;
 
@@ -28,13 +26,12 @@ function attach(plate: HTMLElement): () => void {
   const set = (name: string, value: number | string, unit = 'px'): void =>
     lens?.style.setProperty(`--lens-${name}`, value + unit);
 
-  // The only layout read, and never in an input handler.
   const step = (): void => {
     frame = 0;
     if (!lens) return;
     rect = plate.getBoundingClientRect();
 
-    const follow = TOUCH || REDUCED_MOTION.matches ? 1 : FOLLOW;
+    const follow = TOUCH || REDUCED_MOTION.matches ? 1 : FOLLOW_LERP;
     lensX += (targetX - lensX) * follow;
     lensY += (targetY - lensY) * follow;
 
@@ -104,7 +101,7 @@ function attach(plate: HTMLElement): () => void {
     ({ touches }) => {
       hide();
       start = touches[0]!;
-      if (!touches[1]) hold = window.setTimeout(show, HOLD, start);
+      if (!touches[1]) hold = window.setTimeout(show, HOLD_MS, start);
     },
     { passive: true },
   );

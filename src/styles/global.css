@@ -242,7 +242,7 @@
     block-size: 1em;
   }
 
-  /* Percentage heights do not resolve against this ratio — the Phase 1 crop. */
+  /* A percentage height does not resolve against this ratio, so it would crop. */
   .plate {
     position: relative;
     inline-size: 100%;
@@ -648,8 +648,7 @@
       }
     }
 
-    /* Hover is what makes an undraggable marquee acceptable, so the marquee
-       only exists where hover does. */
+    /* Hover is what makes an undraggable marquee acceptable. */
     @media (hover: hover) and (pointer: fine) {
       .plate-index--clone {
         display: flex;

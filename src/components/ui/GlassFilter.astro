@@ -4,8 +4,7 @@
 
 <svg class="sr-only" aria-hidden="true" focusable="false">
   <filter id="glass-refraction" color-interpolation-filters="sRGB">
-    <!-- A neutral map, in coefficients rather than colour: a failed `feImage`
-      then flattens the lens instead of sliding it. -->
+    {/* A neutral map in coefficients: a failed `feImage` then flattens the lens, not slides it. */}
     <feColorMatrix
       in="SourceGraphic"
       type="matrix"
@@ -25,7 +24,7 @@
       result="loaded"
     />
     <feComposite in="loaded" in2="neutral" operator="over" result="map" />
-    <!-- At most half the scale, in px: a cue at the rim, never enough to lose a stroke. -->
+    {/* At most half the scale, in px: a cue at the rim, never enough to lose a stroke. */}
     <feDisplacementMap
       in="SourceGraphic"
       in2="map"
