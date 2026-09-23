@@ -25,10 +25,11 @@
       result="loaded"
     />
     <feComposite in="loaded" in2="neutral" operator="over" result="map" />
+    <!-- At most half the scale, in px: a cue at the rim, never enough to lose a stroke. -->
     <feDisplacementMap
       in="SourceGraphic"
       in2="map"
-      scale="24"
+      scale="10"
       xChannelSelector="R"
       yChannelSelector="G"
     />
