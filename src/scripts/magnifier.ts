@@ -1,6 +1,6 @@
 /* The one client script (DESIGN.md §7); it sets custom properties, global.css styles the lens. */
 
-const FINE_POINTER = matchMedia('(hover: hover) and (pointer: fine)');
+const TOUCH = !matchMedia('(hover: hover) and (pointer: fine)').matches;
 const REDUCED_MOTION = matchMedia('(prefers-reduced-motion: reduce)');
 
 /** Lerp factor for the follow lag; 1 removes it. */
@@ -14,7 +14,6 @@ function attach(plate: HTMLElement): () => void {
   const source = plate.dataset.lens;
   if (!source) return () => {};
 
-  const touch = !FINE_POINTER.matches;
   let lens: HTMLDivElement | undefined;
   let rect = new DOMRect();
   let start!: Point;
@@ -35,18 +34,18 @@ function attach(plate: HTMLElement): () => void {
     if (!lens) return;
     rect = plate.getBoundingClientRect();
 
-    const follow = touch || REDUCED_MOTION.matches ? 1 : FOLLOW;
+    const follow = TOUCH || REDUCED_MOTION.matches ? 1 : FOLLOW;
     lensX += (targetX - lensX) * follow;
     lensY += (targetY - lensY) * follow;
 
-    set('x', lensX + (touch ? rect.left : 0));
-    set('y', lensY + (touch ? rect.top : 0));
+    set('x', lensX + (TOUCH ? rect.left : 0));
+    set('y', lensY + (TOUCH ? rect.top : 0));
     set('w', rect.width);
     set('h', rect.height);
     set('px', lensX / rect.width, '');
     set('py', lensY / rect.height, '');
 
-    if (active) schedule();
+    if (active && !TOUCH) schedule();
   };
 
   const schedule = (): void => {
@@ -56,6 +55,7 @@ function attach(plate: HTMLElement): () => void {
   const track = (point: Point): void => {
     targetX = point.clientX - rect.left;
     targetY = point.clientY - rect.top;
+    schedule();
   };
 
   const hide = (): void => {
@@ -76,10 +76,10 @@ function attach(plate: HTMLElement): () => void {
       // On engage, never upfront: the heaviest asset the gallery pulls.
       set('image', `url("${source}")`, '');
       // A touch lens is drawn outside the plate's clip.
-      (touch ? document.body : plate).append(lens);
+      (TOUCH ? document.body : plate).append(lens);
 
       Object.assign(new Image(), {
-        onload: () => lens?.setAttribute('data-ready', ''),
+        onload: () => (lens!.dataset.ready = ''),
         src: source,
       });
 
@@ -91,7 +91,7 @@ function attach(plate: HTMLElement): () => void {
     schedule();
   };
 
-  if (!touch) {
+  if (!TOUCH) {
     plate.addEventListener('pointerenter', show);
     plate.addEventListener('pointermove', track, { passive: true });
     plate.addEventListener('pointerleave', hide);

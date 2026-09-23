@@ -447,7 +447,9 @@
     pointer-events: none;
     opacity: 0;
     transition: opacity var(--duration-short) var(--ease-page);
-    transform: translate3d(var(--lens-x, 0), var(--lens-y, 0), 0);
+    --lens-x: 0px;
+    --lens-y: 0px;
+    transform: translate3d(var(--lens-x), var(--lens-y), 0);
 
     box-shadow:
       inset 0 0 0 1px oklch(from var(--color-ink) l c h / calc(var(--glass-contact) * 0.5)),
@@ -529,25 +531,31 @@
     }
   }
 
-  /* Fixed, outside the plate's clip: one diameter above the finger, gliding beside it near the top. */
-  body > .loupe {
-    --loupe-size: var(--loupe-size-touch);
-    --loupe-pad: calc(var(--loupe-size) * 3 / 22);
-    /* 0 far from the top, one diameter at it. */
-    --lens-lift: clamp(0px, var(--loupe-size) * 1.6 - var(--lens-y, 0px), var(--loupe-size));
-    position: fixed;
-    /* Above the masthead's 20: an instrument in the hand, and only while held. */
-    z-index: 30;
-    transform: translate3d(
-      clamp(
-        var(--loupe-size) * 0.6,
-        var(--lens-x, 0px) +
-          clamp(-1 * var(--lens-lift), (50vw - var(--lens-x, 0px)) * 1000, var(--lens-lift)),
-        100vw - var(--loupe-size) * 0.6
-      ),
-      max(var(--lens-y, 0px) - var(--loupe-size) + var(--lens-lift), var(--loupe-size) * 0.6),
-      0
-    );
+  /* The script's touch path: the same query, so size and placement follow the input. */
+  @media not all and (hover: hover) and (pointer: fine) {
+    /* On :root, so the derived pad follows it. */
+    :root {
+      --loupe-size: var(--loupe-size-touch);
+    }
+
+    /* Fixed, outside the plate's clip: one diameter above the finger, gliding beside it near the top. */
+    .loupe {
+      /* 0 far from the top, one diameter at it. */
+      --lens-lift: clamp(0px, var(--loupe-size) * 1.6 - var(--lens-y), var(--loupe-size));
+      position: fixed;
+      /* Above the masthead's 20: an instrument in the hand, and only while held. */
+      z-index: 30;
+      transform: translate3d(
+        clamp(
+          var(--loupe-size) * 0.6,
+          var(--lens-x) +
+            clamp(-1 * var(--lens-lift), (50vw - var(--lens-x)) * 1000, var(--lens-lift)),
+          100vw - var(--loupe-size) * 0.6
+        ),
+        max(var(--lens-y) - var(--loupe-size) + var(--lens-lift), var(--loupe-size) * 0.6),
+        0
+      );
+    }
   }
 
   /* Visible while empty: waiting reads as loading. */

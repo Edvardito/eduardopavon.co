@@ -563,9 +563,9 @@ Therefore:
   failure with no error anywhere. **`--loupe-pad` is therefore derived from the
   size, never set on its own**, so every lens size lands on the ratio the map is
   drawn to and a second size needs no second map. A custom property computes
-  where it is declared, so any rule that sets a lens size restates the pad's
-  derivation beside it. Change the derivation and redraw the file; the ratio and
-  the reason are written at the top of it.
+  where it is declared, so a lens size is only ever set on `:root`, by input,
+  where the one derivation can follow it. Change the derivation and redraw the
+  file; the ratio and the reason are written at the top of it.
 - **`--loupe-pad` is a budget, not a margin.** It must exceed the largest
   displacement, so the rim bends real image rather than the transparency outside
   it — and no more than that, because the filter runs over that whole box on
