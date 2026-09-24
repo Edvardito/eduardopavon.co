@@ -13,7 +13,7 @@ The **source code** is MIT ([LICENSE](LICENSE)). The **artworks, their
 reproductions and the artwork texts are not** — they are © José Eduardo
 Hernández Pavón and licensed [CC BY-NC-ND 4.0](ARTWORK-LICENSE.md): share with
 credit, no commercial use, no derivatives. Forking the code grants no right to
-the images in `src/assets/artworks/`.
+the images in `src/assets/artworks/` or the site icons in `public/`.
 
 ## Documentation
 
@@ -73,6 +73,7 @@ in the container instead.
 | `docker compose run --rm web pnpm format`  | Prettier, writing in place    |
 | `docker compose run --rm web pnpm build`   | Type check, then build        |
 | `docker compose run --rm web pnpm preview` | Serve the production build    |
+| `docker compose run --rm web pnpm icons`   | Regenerate the site icons     |
 | `docker compose down`                      | Stop and remove the container |
 
 Inside the Dev Container terminal, drop the prefix: `pnpm check`, `pnpm test`,

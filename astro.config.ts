@@ -82,6 +82,9 @@ export default defineConfig({
 
   image: {
     responsiveStyles: true,
+    ...(process.argv.includes('dev')
+      ? {}
+      : { endpoint: { route: '/_image', entrypoint: './src/image-endpoint.ts' } }),
   },
 
   fonts: [

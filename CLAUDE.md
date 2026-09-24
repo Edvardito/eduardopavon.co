@@ -13,7 +13,8 @@ Roadmap and architecture invariants: @SPEC.md
   second, a UI framework or a hydration directive.
 - **The closed palette, light mode only, and the work is never cropped.** The
   design rules unrelated work breaks by accident. The palette is test-enforced;
-  the other two are not, so check them by hand.
+  the other two are not, so check them by hand. The site icon is the one crop,
+  bounded to the icon (DESIGN.md §6).
 - **pnpm only.** Never npm or yarn — they ignore the lockfile and `.npmrc`.
 - **Never commit artwork originals.** Only the optimized derivatives in
   `src/assets/artworks/`.
@@ -34,6 +35,7 @@ docker compose run --rm web pnpm lint         # eslint
 docker compose run --rm web pnpm format       # prettier --write
 docker compose run --rm web pnpm build        # astro check + astro build
 docker compose --profile tools run --rm images  # import artwork originals
+docker compose run --rm web pnpm icons        # regenerate the favicon set
 docker compose down
 ```
 
@@ -78,7 +80,9 @@ component.
 
 **SEO.** `src/components/seo/Seo.astro` owns every `<head>` tag; `JsonLd.astro`
 owns structured data. Pages pass title/description as data — never hardcode meta
-tags in a page. Dimensions are stored structurally (`width`/`height`/`unit`) and
+tags in a page. Icon tags live there too; the icon files are generated into
+`public/` by `pnpm icons`, and `src/pages/manifest.webmanifest.ts` serves the
+manifest. Dimensions are stored structurally (`width`/`height`/`unit`) and
 always mean **width × height**; render them with `formatDimensions()`, never by
 string concatenation.
 
@@ -86,7 +90,9 @@ string concatenation.
 302s to `/es/` or `/en/`, which is why `/` is not in the sitemap and carries
 `Vary: Accept-Language`. It is the shape any future on-demand route takes
 (SPEC.md invariant 3). Do not switch the site to SSR for SEO — prerendered HTML
-is already optimal.
+is already optimal. Because one route is on-demand, Astro also builds its
+`/_image` endpoint into that function; `astro.config.ts` points it at a 404 stub
+(`src/image-endpoint.ts`) outside dev, so the function never carries sharp.
 
 **Motion is CSS only**, double-guarded (DESIGN.md §3, Motion). A client-side
 router or animation library breaks the one-script rule.

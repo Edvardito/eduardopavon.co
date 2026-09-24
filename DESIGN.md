@@ -795,6 +795,21 @@ It sits in the colophon, not the masthead, because the home page's masthead is
 the title card, whose one line is sized to fill the page and has no room for a
 second element (§6).
 
+**The site icon.** A detail of _Sin título_ — the head and its headphones — and
+the one place a work is shown cropped. An icon is a mark, not a reproduction: it
+stands for the site in a tab, a bookmark or a home screen, where no whole work
+survives at 16px, and no reader takes it for the drawing. That is the bound:
+**the crop may appear only as the site icon**, never on a page, in an OG image
+or in structured data, where a reader is looking at the work.
+
+It is derived, not authored: `scripts/generate-icons.mjs` cuts it from the
+committed detail tier at recorded coordinates, so it cannot drift from the work.
+**Where an icon needs padding** — the iOS touch icon and the maskable safe zone
+— the padding is more of the drawing, from a wider crop on the same centre,
+never a fill: a fill would be a colour outside the palette. For the same reason
+there is no `theme-color` and the manifest carries no colours. The manifest's
+`display` is `browser`: a home-screen icon opens the site, not an app.
+
 **The magnifier lens.** §7 owns its behaviour. Visually it is the glass material
 above, expressed as a plano-convex lens held above the paper rather than a sheet
 resting on it — which is the whole reason it is allowed to be brighter and
@@ -1031,8 +1046,9 @@ value is in §3. Test-enforced.
 
 **Never crop or distort the work.** A slot bounds width; the plate takes the
 work's proportion. A work that does not fit becomes smaller, never tighter. The
-plate's corner radius is the one bounded exception and it is measured in §6: it
-softens the sheet's edge, it does not tighten the work.
+plate's corner radius is one bounded exception and it is measured in §6: it
+softens the sheet's edge, it does not tighten the work. The site icon is the
+other, bounded to the icon alone (§6).
 
 **No muted ink.** Fading ink to build hierarchy fails AA. Use weight, size,
 space or a rule.

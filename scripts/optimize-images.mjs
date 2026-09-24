@@ -55,7 +55,7 @@ const XMP_RIGHTS = `<?xpacket begin="" id="W5M0MpCehiHzreSzNTczkc9d"?>
 <?xpacket end="r"?>`;
 const SOURCE_EXTENSIONS = new Set(['.jpg', '.jpeg', '.png', '.tif', '.tiff', '.webp']);
 
-const PROJECT_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+export const PROJECT_ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 export const outputDir = (tier) => path.join(PROJECT_ROOT, ...tier.dir);
 
 export function slugify(input) {
