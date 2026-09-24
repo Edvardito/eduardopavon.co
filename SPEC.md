@@ -57,8 +57,6 @@ what gives the JSON-LD an `acquireLicensePage` to point at.
 - **Confirm the eight English artwork titles.** Reverting one is deleting a
   line; the entry then falls back to Spanish on its own.
 - **Confirm the Typekit licence permits self-hosting** the two families.
-- **Confirm the artist accepts the site icon**, a crop of _Sin título_ — the one
-  place the site shows a work cropped (@DESIGN.md §6).
 
 ---
 
