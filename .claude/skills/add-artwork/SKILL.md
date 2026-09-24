@@ -49,6 +49,11 @@ are never written twice. Do not change any of these values for one image. If a
 new work exceeds its budget, lower `QUALITY` or that tier's `maxEdge` for the
 whole set and re-import, then record the change in DESIGN.md §8.
 
+The favicon set is cropped from `sin-titulo`'s detail tier at `FRAME` in
+`scripts/generate-icons.mjs`, stored as fractions of the width, so a tier resize
+needs nothing. A new scan or a removal of that work means re-measuring `FRAME`
+and running `pnpm icons`.
+
 There is **no field to add** for the detail tier: `src/artworks.ts` pairs it to
 the entry by slug.
 

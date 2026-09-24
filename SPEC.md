@@ -57,6 +57,8 @@ what gives the JSON-LD an `acquireLicensePage` to point at.
 - **Confirm the eight English artwork titles.** Reverting one is deleting a
   line; the entry then falls back to Spanish on its own.
 - **Confirm the Typekit licence permits self-hosting** the two families.
+- **Confirm the artist accepts the site icon**, a crop of _Sin título_ — the one
+  place the site shows a work cropped (@DESIGN.md §6).
 
 ---
 
@@ -85,7 +87,10 @@ feature.
    not publish their language; it is also `x-default` and the language of the
    host-level `404`. Do not collapse them.
 7. **Images go through the import script and `astro:assets`.** Originals never
-   enter the repo; `public/` is only for unprocessed files.
+   enter the repo; `public/` is only for unprocessed files. The one exception is
+   the site icon set, which must be served at fixed root URLs: it is derived
+   from a committed detail tier by `scripts/generate-icons.mjs`, never authored
+   by hand.
 8. **Licensing stays split** — code MIT, artwork CC BY-NC-ND 4.0 — and stays
    machine-readable. Rights constants live in `src/site.ts`.
 9. **`SITE_ORIGIN` is the one place the host is written.** `astro.config.ts`

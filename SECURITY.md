@@ -68,7 +68,7 @@ the deployed site.
 | `tailwindcss`, `@tailwindcss/vite`                                                                 | styling, and its official Vite integration        |
 | `zod`                                                                                              | content schema (Astro deprecates re-exporting it) |
 | `@astrojs/check`, `typescript` (dev)                                                               | type checking                                     |
-| `sharp` (dev)                                                                                      | the artwork import script                         |
+| `sharp` (dev)                                                                                      | the artwork import and icon scripts               |
 | `vitest`, `yaml` (dev)                                                                             | tests, which parse the artwork YAML               |
 | `eslint`, `@eslint/js`, `typescript-eslint`, `eslint-plugin-astro`, `eslint-config-prettier` (dev) | lint                                              |
 | `prettier`, `prettier-plugin-astro` (dev)                                                          | formatting                                        |
@@ -157,7 +157,8 @@ The repository is public. Two consequences worth stating:
   2000px and `src/assets/artworks/detail/` at 3000px, the latter added for the
   magnifier. They are licensed CC BY-NC-ND 4.0 and carry embedded EXIF/XMP
   rights metadata; that is a legal control, not a technical one. Anything the
-  artist does not want distributed at 3000px should not be committed.
+  artist does not want distributed at 3000px should not be committed. The site
+  icons in `public/` are a crop of one work, under the same licence.
 
 ## Reporting a vulnerability
 

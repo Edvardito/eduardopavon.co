@@ -13,6 +13,8 @@ The **artworks and their reproductions** are licensed separately, under
 
 - Every image under `src/assets/artworks/` — both the 2000px gallery tier and
   the 3000px `detail/` tier
+- The site icons in `public/` (`favicon.ico`, `apple-touch-icon.png` and the
+  `icon-*.png` files), a detail of _Sin título_
 - Every rendition of those images produced by the build
   (`.vercel/output/static/_astro/*`) and served from eduardopavon.co
 - The artwork titles, media descriptions and related text in
@@ -48,4 +50,4 @@ Rights are also declared machine-readably, so they travel with the work:
 
 Note that `astro:assets` re-encodes images for delivery and does not preserve
 embedded metadata, so the served renditions rely on the page-level rights markup
-above rather than on EXIF/XMP.
+above rather than on EXIF/XMP. The site icons carry no embedded metadata either.

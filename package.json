@@ -24,7 +24,8 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "astro": "astro",
-    "images:import": "node scripts/optimize-images.mjs"
+    "images:import": "node scripts/optimize-images.mjs",
+    "icons": "node scripts/generate-icons.mjs"
   },
   "pnpm": {
     "onlyBuiltDependencies": []
