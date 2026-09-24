@@ -82,6 +82,10 @@ export default defineConfig({
 
   image: {
     responsiveStyles: true,
+    // Every image is prebuilt; the stub keeps sharp out of the on-demand function.
+    ...(process.argv.includes('dev')
+      ? {}
+      : { endpoint: { route: '/_image', entrypoint: './src/image-endpoint.ts' } }),
   },
 
   fonts: [

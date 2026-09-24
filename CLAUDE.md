@@ -90,7 +90,9 @@ string concatenation.
 302s to `/es/` or `/en/`, which is why `/` is not in the sitemap and carries
 `Vary: Accept-Language`. It is the shape any future on-demand route takes
 (SPEC.md invariant 3). Do not switch the site to SSR for SEO — prerendered HTML
-is already optimal.
+is already optimal. Because one route is on-demand, Astro also builds its
+`/_image` endpoint into that function; `astro.config.ts` points it at a 404 stub
+(`src/image-endpoint.ts`) outside dev, so the function never carries sharp.
 
 **Motion is CSS only**, double-guarded (DESIGN.md §3, Motion). A client-side
 router or animation library breaks the one-script rule.
