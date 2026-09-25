@@ -32,8 +32,8 @@ describe('t', () => {
   });
 
   it('interpolates named placeholders', () => {
-    expect(t('es', 'artwork.alt', { title: 'Monolito', medium: 'Pluma bic' })).toBe(
-      'Monolito, Pluma bic, por Eduardo Pavón',
+    expect(t('es', 'artwork.alt', { title: 'Monolito', medium: 'Pluma Bic' })).toBe(
+      'Monolito, Pluma Bic, por Eduardo Pavón',
     );
   });
 

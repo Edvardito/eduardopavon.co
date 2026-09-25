@@ -85,7 +85,7 @@ title:
   en: Counterfeit bill
   fr: Faux billet
 medium:
-  es: Pluma bic sobre papel
+  es: Pluma Bic sobre papel
   en: Bic pen on paper
   fr: Stylo Bic sur papier
 ```

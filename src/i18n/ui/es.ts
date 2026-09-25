@@ -1,10 +1,10 @@
 export default {
   'site.title': 'Eduardo Pavón',
-  'site.tagline': 'Dibujo a pluma bic',
+  'site.tagline': 'Dibujo a pluma Bic',
   'site.description':
-    'Obra del artista Eduardo Pavón: dibujos hechos con pluma bic sobre papel y lona plástica. Galería de piezas originales.',
+    'Obra del artista Eduardo Pavón: dibujos hechos con pluma Bic sobre papel y lona plástica. Galería de piezas originales.',
 
-  'home.title': 'Eduardo Pavón — Dibujo a pluma bic',
+  'home.title': 'Eduardo Pavón — Dibujo a pluma Bic',
   'home.heading': 'Eduardo Pavón',
   'home.motto': 'Todo es un {word}.',
   'home.mottoWord': 'dibujo',
@@ -38,7 +38,7 @@ export default {
 
   'a11y.skipToContent': 'Saltar al contenido',
 
-  'seo.knowsAbout': 'Dibujo, Pluma bic, Arte contemporáneo',
+  'seo.knowsAbout': 'Dibujo, Pluma Bic, Arte contemporáneo',
 
   'notFound.title': 'Página no encontrada — Eduardo Pavón',
   'notFound.heading': 'Página no encontrada',
