@@ -142,8 +142,8 @@ ground. A printed object has one ground: a decision, not an omission.
 **`--color-pen` is decorative everywhere except links and the focus ring**,
 which are informational and hold 3:1 (1.4.11). Rules, folios, section labels and
 the glazing edge carry nothing the text does not already carry. Links are
-underlined — meaning is never colour alone (1.4.1) — with the one stated
-exception in §6.
+underlined — meaning is never colour alone (1.4.1) — with two stated exceptions,
+both in §6: the list of plates, and the running head, which is the logo.
 
 **Focus** (2.4.11 / 2.4.13) is two-ply: an inner ring in `--color-ground` inside
 an outer ring in `--color-ink`, so one ply always contrasts — against the
@@ -161,44 +161,47 @@ refused whatever it measures.
 
 ### Typography
 
-**Two faces, and the split is the same one the palette makes.** `--font-display`
-(Irregardless Variable) is the site's voice: the display step, section labels,
-folios, the colophon. `--font-text` (Polymath Text) is the work's voice: prose,
-work titles, catalogue lines. A reader can tell the catalogue from the
-catalogued by the letterforms alone, which is what makes principle 2 legible
-even in a screenshot with the colour removed.
+**One family, two roles, and the split is the same one the palette makes.**
+Everything is Polymath Text. `--font-display` is its **Super** weight (900), and
+it is the site's voice: the display step, section labels, the list of plates,
+the colophon. `--font-text` is the same family at 400 and 700, and it is the
+work's voice: prose, work titles, catalogue lines. One family cannot separate
+the two by letterform, so **weight and case** carry the split: the site speaks
+in Super capitals, the work in sentence case at 400 and 700. A screenshot with
+the colour removed still tells the catalogue from the catalogued, because
+nothing describing a specific drawing is ever set in Super or in capitals. The
+name is not type at all: it is the logo (§6).
 
-**The weight axis belongs to the display face**, which is variable over
-**300–800 — there is no 900 in it.** Two positions are used: **heavy** (the top
-of the range) for the name, and **bold**, the step below, for everything else it
-sets — section labels and the masthead strip. The name is the heaviest thing on
-the site and nothing else may match it.
+**Three weights exist and each belongs to one role.** Super belongs to the
+display role and is the only weight it sets. The text role has exactly **400 and
+700, plus both italics**, and its hierarchy is carried by size, space and
+**italic**, not by weight. Asking either role for anything else gets the nearest
+real weight or a synthesised one: a display element asking for 700 silently
+renders 900, and a text element asking for 500 or 600 gets a different
+letterform badly drawn. Italic has one standing job: a plate's descriptive line,
+where a catalogue has always used it.
 
-**The wide round alternates belong to the name alone.** They are the face's
-signature, and set on section labels or on the strip they read light and airy at
-those sizes, where the plain forms are denser for the same weight. One rule
-carries them, on `.display`; nothing else turns them on.
+**Super is a subset without substitutions.** The kit serves it with kerning but
+no GSUB, so it has no tabular figures, no case forms and no stylistic sets.
+Anything that must align figures sets in the text role: the folios in the list
+of plates are Bold for that reason.
 
-**The text face has exactly two weights — 400 and 700 — plus both italics.** Its
-hierarchy is therefore carried by size, space and **italic**, not by weight.
-Asking it for 500 or 600 gets a synthesised approximation, which is a different
-letterform badly drawn; the rule is that no text-face element may request a
-weight other than 400 or 700. Italic has one standing job: a plate's descriptive
-line, where a catalogue has always used it.
-
-**The display face has a floor: 30px.** It is condensed, with tall wide-round
-caps, and below that it stops reading as type and starts reading as texture. No
-step the display face uses may fall under the floor; test-enforced (§10). The
-consequence is a real constraint, not a note: **this face cannot do small
-furniture.** Anything that has to be small belongs to the text face.
+**The display role has a floor: 30px.** Super is the heaviest cut in the family;
+below that its counters close up and a line of capitals reads as a bar of ink
+rather than as words, which is principle 1's failure brought into the chrome. No
+step the display role uses may fall under the floor; test-enforced (§10). The
+consequence is a real constraint, not a note: **the display role cannot do small
+furniture.** Anything that has to be small belongs to the text role.
 
 **Three text steps** — caption, body, lede — a major third (1.25) apart. The
-display face does not use them: it has **two optical steps of its own**,
+display role does not use them: it has **two optical steps of its own**,
 `--text-label` and `--text-strip`, set by what each has to do rather than by a
 ratio, plus `--text-display`, which is fluid because its size is the measure it
-must fill. A fourth text step or a third display step needs a role no current
-one serves — not something that looks slightly too big. A step that stops being
-used gets deleted: a token nothing references is one more thing to keep true.
+must fill. The two optical steps are set against the collapsed logo: each must
+stay visibly quieter than the name. A fourth text step or a third display step
+needs a role no current one serves — not something that looks slightly too big.
+A step that stops being used gets deleted: a token nothing references is one
+more thing to keep true.
 
 Relationships that live nowhere in CSS:
 
@@ -213,21 +216,18 @@ Relationships that live nowhere in CSS:
 Text-spacing overrides (1.4.12) must break nothing: no step sets line height in
 px, and no box holding text has a fixed height.
 
-**Delivery.** Both faces are Adobe Typekit families, **self-hosted at build
+**Delivery.** Polymath Text is an Adobe Typekit family, **self-hosted at build
 time** through Astro's Adobe provider — `fontProviders.adobe({ id })` against
 the kit id, in `astro.config.ts`. A runtime `use.typekit.net` stylesheet would
 cost render-blocking requests on a third-party origin, no fallback metrics, and
 every visitor's IP sent to Adobe; self-hosting removes all three. `font-display`
 needs its own fix, below.
 
-Three properties the self-hosted files must keep, each of which would break the
-design silently if it went:
-
-- **The variable weight axis.** Request `['300 800']`, or the faces arrive as
-  static instances and 700 and 800 are synthesised.
-- **`ss02`**, which carries the name's wide round alternates at a measured
-  advance of 4.912 per 1px — the title card's divisor.
-- **Generated fallback metrics**, so the swap cannot shift layout.
+The family is requested as **two entries**, one per role: Super roman alone for
+the display role, so no Super italic ships, and 400/700 with italics for the
+text role. Astro hashes each entry's name, so both can be called Polymath Text.
+Each gets **generated fallback metrics** of its own, so the swap cannot shift
+layout; that is the one property the self-hosted files must keep.
 
 **`font-display: swap`, and the config must be what decides it.** Typekit
 publishes its kit CSS with `font-display: auto`, the Adobe provider reads that
@@ -238,8 +238,10 @@ faces carry `swap` on their own, so built HTML showing both values is the
 symptom of this going wrong. A CI step fails if any page ships
 `font-display:auto`.
 
-Only the display face is preloaded: it sets the name, which is the largest thing
-on the page.
+**No face is preloaded.** The largest paint is never display type: it is the
+lede, set in the text role, or the first plate. Under swap it paints in the
+fallback first, and a preload only competes with it for the connection; measured
+on a throttled connection, every preload made the LCP later.
 
 ### Space and grid
 
@@ -357,9 +359,9 @@ detail page is unglazed.
 **Job:** show the body of work in sequence and let a reader judge it without
 clicking.
 
-**Structure.** A **masthead** that stays: the artist's name as one line filling
-the page, with the **list of plates** as a pen band directly beneath it. The two
-stick together and the name shrinks inside them. Then the **statement** — the
+**Structure.** A **masthead** that stays: the logo filling the width of the
+page, with the **list of plates** as a pen band directly beneath it. The two
+stick together and the logo shrinks inside them. Then the **statement** — the
 one element at the top of the page that scrolls away, which is what tells the
 reader the page has started moving: large, centred, in caps. Then the gallery:
 section label, rule, and a single column of plates at the common measure. Then
@@ -599,18 +601,22 @@ the verified pair inverted, so nothing in it may be faded.
 palette here, so the folio takes the title's colour and is separated from it by
 weight and by its tabular figures instead. The red works only on an ink field.
 
-They are set in the **display face**, like the name above them — without its
-wide round alternates, which belong to the name alone — and set **tight**: folio
-and title almost touching, entries barely apart, so the band reads as one
+The titles are set in the **display role**, Super capitals, and set **tight**:
+folio and title almost touching, entries barely apart, so the band reads as one
 running line rather than a row of labels. **The folio is one weight lighter than
-the title** — 400 against the strip's 700 — so the number recedes and the title
-leads. A wider gap reads as two labels, not one line.
+the title** — Bold against Super — so the number recedes and the title leads. It
+sets in the text role, because Super has no tabular figures (§3); its line box
+is held inside the title's, or two faces' metrics on one baseline grow the strip
+past the sum `--masthead-collapsed` is built from. A wider gap reads as two
+labels, not one line.
 
 **The line moves, endlessly.** The track holds the list twice and travels
 exactly half its own width, so the seam never shows; the duplicate is
 `aria-hidden` and out of the tab order, so nothing is announced or focusable
 twice. The duration is fixed rather than derived from the content, so adding
-works makes the strip longer and its pace slower.
+works makes the strip longer and its pace slower. It is tuned to hold about 40px
+a second over today's list; a wider face or a larger strip step changes the
+pace, so retune it with them.
 
 **It is a marquee or a scroll strip, and never both at once.** The two cannot
 share one element: the track's translate and the container's scroll offset
@@ -731,43 +737,67 @@ taller than the sum `--masthead-collapsed` is built from, and the sticky section
 head below pins to that sum.
 
 **The title card.** The home page's masthead, and the site's one piece of
-theatre. The name is **always one line**, sized to fill the width of the page —
-never wrapped, never two lines. What changes on scroll is its **font-size**,
-falling to `--titlecard-min` over the first third of a screen and then holding
-while the page runs on beneath it.
+theatre. The artist's name is **the logo**: a drawn mark, one path, filled in
+`currentColor` so it is `--color-pen` like every other piece of the site's
+voice. It is **always one line** and its proportion is fixed. At the top of the
+page it spans the title card's content box; over the first third of a screen it
+shrinks to its collapsed size and then holds while the page runs on beneath it.
 
-- **It is a sticky bar only as tall as its own text plus padding**, so it costs
+- **Its proportion is the viewBox, 1017 × 140, and nothing may distort it.** The
+  mark is sized by width and its height follows from the ratio; there is no
+  `preserveAspectRatio="none"`, and the viewBox is never cropped, because the
+  capitals sit centred in it with the accent in the top band. Every size in the
+  masthead sum derives from `--logo-ratio`.
+- **Its width comes from its container, never from `100vw`**, which counts a
+  classic scrollbar. The title card's content box is `<main>`'s width less the
+  margins, so `<main>` is the query container the sums measure.
+- **The collapsed size is the smaller of `--logo-collapsed` and the full-width
+  size.** At 320px the content box is 280px and the full-width logo is 38.5px
+  tall, below the collapsed size, so there it does not shrink at all and it
+  never overflows. The collapsed size was chosen against the strip: the name's
+  capitals must stay larger than the strip's, or the contents out-shout the
+  artist.
+- **It is a sticky bar only as tall as its own mark plus padding**, so it costs
   no viewport of its own, and it — with the strip beneath it — must be a child
   of the page's main element: sticky is bounded by its containing block, and
   nested in a section it unsticks the moment that section ends.
-- **The name and the list of plates stick as one block.** They cannot be two
-  sticky elements: the name's height changes as it shrinks, so anything pinned
+- **The logo and the list of plates stick as one block.** They cannot be two
+  sticky elements: the logo's height changes as it shrinks, so anything pinned
   below it at a fixed offset would drift. One sticky wrapper, both inside.
+- **The sticky stack is a sum, and every offset reads it.**
+  `--masthead-collapsed` is the collapsed logo, the title card's padding and the
+  strip's line box and padding; the section head pins at it. The mark is
+  `display: block`, or it sits on a baseline with a descender gap under it that
+  no token accounts for.
 - **Its resting size is the small one.** The large size lives in the keyframe,
   so a browser without scroll timelines — or a reader who has asked for no
   motion — gets a modest bar rather than one permanently covering a quarter of
   the page.
-- **It is the one place the site animates a layout property.** No transform
-  reproduces "one line, always filling the page, getting smaller"; a scale would
-  change the width too. It is a single text node, and the cost is bounded to it.
-- **Its width divisor is tied to one string.** The size is the page's inner
-  width divided by the measured advance of _this name_, in this face, in caps
-  with the wide round alternates, per 1px of font-size. **Change the artist's
-  name and it must be measured again**, or the line stops filling the page. This
-  is the only value in the system that depends on its content.
+- **It is the one place the site animates a layout property.** A transform would
+  scale the mark but not the sticky bar around it, and the section head pinned
+  under it would drift. It is a single element, and the cost is bounded to it.
+- **The name stays text.** The mark is `aria-hidden`; the `<h1>` holds the name
+  in a visually hidden span, so readers and crawlers get "Eduardo Pavón" and the
+  drawing is not asked to carry it.
 
 - **The name is the glass.** The page blurs as it passes _behind_ it: a
   translucent ground with a backdrop blur on the title card itself, not a
   blurred band below the whole masthead — under an opaque strip that blurs
   nothing but the content just emerging. The masthead must not be an isolated
   stacking context, or the backdrop root becomes the masthead itself and there
-  is nothing behind it to sample.
+  is nothing behind it to sample. `<main>`'s container type is containment, not
+  a backdrop root, so the glass still samples through it.
 
-**The masthead.** On every page but the home page: the artist's name set as
-furniture, in pen, linking home — a running head, not a banner. **The home page
-does not carry it**, because there the name _is_ the display step: the cover
-sets the name large, interior pages carry the running head. The two share a
-`view-transition-name`, so navigating between them morphs one into the other.
+**The masthead.** On every page but the home page: the logo, in pen, linking
+home — a running head, not a banner. **The home page does not carry it**,
+because there the logo _is_ the title card: the cover sets it large, interior
+pages carry the running head at the collapsed size. The two share a
+`view-transition-name`, set on the mark itself on both pages, so the morph is
+one box of one proportion scaling, never a stretch. The link's box is exactly
+the mark's, it clears 24px at every width (2.5.8), and it takes the two-ply
+focus ring. **It is the second link that is not underlined**: a drawing cannot
+carry an underline, and it is a standalone link rather than a link inside text,
+which is what 1.4.1 concerns. Its accessible name is the visually hidden name.
 
 **The colophon (footer).** A section label in pen, the rule, then rights,
 licence and the site's own credit at caption size in ink. The credit names
@@ -1076,7 +1106,7 @@ Load-bearing; everything else here is advisory prose.
 | No colour literal under `src/` outside `@theme`      | `tests/design.test.ts`  |
 | Exactly one client script, within its byte budget    | `tests/design.test.ts`  |
 | Every `animation` sits inside a reduced-motion guard | `tests/design.test.ts`  |
-| The display face never sets below 30px               | `tests/design.test.ts`  |
+| The display role never sets below 30px               | `tests/design.test.ts`  |
 | Both image tiers, own budgets, no orphans            | `tests/content.test.ts` |
 | No face ships `font-display:auto`                    | `ci.yml`, post-build    |
 | Every published URL gets its CSP header              | `ci.yml`, post-build    |

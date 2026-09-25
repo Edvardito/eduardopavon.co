@@ -4,6 +4,7 @@ import Contact from '~/components/layout/Contact.astro';
 import JsonLd from '~/components/seo/JsonLd.astro';
 import ArtworkCard from '~/components/ui/ArtworkCard.astro';
 import GlassFilter from '~/components/ui/GlassFilter.astro';
+import Logo from '~/components/ui/Logo.astro';
 import PlateIndex from '~/components/ui/PlateIndex.astro';
 import { useTranslations, type Locale } from '~/i18n';
 import BaseLayout from '~/layouts/BaseLayout.astro';
@@ -37,8 +38,8 @@ const EAGER_PLATES = 1;
   {/* Sticky is bounded by its containing block, so this lives in <main>. */}
   <div class="masthead">
     <div class="titlecard">
-      <h1 id="page-heading" class="display vt-masthead titlecard__name">
-        {tr('home.heading')}
+      <h1 id="page-heading">
+        <Logo locale={locale} class="vt-masthead titlecard__logo" />
       </h1>
     </div>
 

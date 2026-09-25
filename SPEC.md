@@ -56,7 +56,7 @@ what gives the JSON-LD an `acquireLicensePage` to point at.
 - **Confirm the gallery `order`** reflects how the artist wants the work hung.
 - **Confirm the eight English artwork titles.** Reverting one is deleting a
   line; the entry then falls back to Spanish on its own.
-- **Confirm the Typekit licence permits self-hosting** the two families.
+- **Confirm the Typekit licence permits self-hosting** Polymath Text.
 
 ---
 

@@ -19,8 +19,8 @@
   /* Super: the display face's only weight. */
   --font-weight-super: 900;
 
-  --text-label: 2.5rem;
-  --text-strip: 2.5rem;
+  --text-label: 1.875rem;
+  --text-strip: 1.875rem;
   --text-caption: 0.85rem;
   --text-body: 1.0625rem;
   --text-lede: 1.328rem;
@@ -69,12 +69,19 @@
     --glass-cast: 0.2;
     --glass-sheen: 0.55;
 
-    --titlecard-min: 50px;
+    /* The logo's viewBox; every logo box derives from it, so the mark never distorts. */
+    --logo-ratio: calc(1017 / 140);
+    --logo-collapsed: 64px;
 
-    --masthead-collapsed: calc(
-      var(--titlecard-min) * var(--leading-display) + var(--text-strip) * var(--leading-text) +
-        var(--space-caption) * 4
+    /* The sticky stack, summed from its parts so the offsets cannot drift from it. */
+    --strip-block: calc(var(--text-strip) * var(--leading-text) + var(--space-caption) * 2);
+    --section-head-block: calc(
+      var(--text-label) * var(--leading-text) + var(--space-caption) + 1px
     );
+    /* `cqi` is <main>'s width, so these resolve only inside it; 100vw would count the scrollbar. */
+    --logo-full: calc((100cqi - var(--space-margin) * 2) / var(--logo-ratio));
+    --logo-rest: min(var(--logo-collapsed), var(--logo-full));
+    --masthead-collapsed: calc(var(--logo-rest) + var(--space-caption) * 2 + var(--strip-block));
 
     --loupe-size: 11rem;
     /* Clear of a finger at 320px; a touch lens must sit beside it, not under it. */
@@ -117,6 +124,11 @@
 }
 
 @layer components {
+  /* What the masthead sums measure. Containment is not a backdrop root, so the glass still samples. */
+  main {
+    container-type: inline-size;
+  }
+
   .page {
     margin-inline: auto;
     inline-size: 100%;
@@ -160,16 +172,24 @@
     padding-block: var(--space-caption);
   }
 
-  /* 8.948 is this name's advance per 1px in Super, unkerned. Re-measure if the name changes. */
-  .titlecard__name {
+  /* Block, or the SVG sits on a baseline and a descender gap breaks the masthead sum. */
+  .logo {
     display: block;
     inline-size: 100%;
-    /* Resting small: without scroll timelines it would never shrink. */
-    font-size: var(--titlecard-min);
-    line-height: var(--leading-display);
-    white-space: nowrap;
-    text-align: center;
-    text-wrap: nowrap;
+    aspect-ratio: 1017 / 140;
+    block-size: auto;
+    color: var(--color-pen);
+  }
+
+  /* Resting small: without scroll timelines it would never shrink. */
+  .titlecard__logo {
+    margin-inline: auto;
+    inline-size: min(100%, var(--logo-collapsed) * var(--logo-ratio));
+  }
+
+  .running-head {
+    display: block;
+    inline-size: min(100%, var(--logo-collapsed) * var(--logo-ratio));
   }
 
   .furniture {
@@ -372,6 +392,8 @@
     font-family: var(--font-text);
     font-variant-numeric: tabular-nums;
     font-weight: var(--font-weight-bold);
+    /* Inside the title's line box; baseline-aligned, a second face's metrics would grow the strip. */
+    line-height: 1;
   }
 
   .plate-index__link {
@@ -658,7 +680,8 @@
       }
 
       .plate-strip__track {
-        animation: plate-strip 48s linear infinite;
+        /* Fixed, not derived: tuned to ~39px/s over today's list, so more works run slower. */
+        animation: plate-strip 78s linear infinite;
       }
 
       .plate-strip:hover .plate-strip__track,
@@ -668,13 +691,10 @@
       }
     }
 
-    /* No transform gives "one line, full width, getting smaller". */
+    /* A transform would not shrink the sticky bar; `to` is the resting size. */
     @keyframes titlecard {
       from {
-        font-size: max(var(--titlecard-min), calc((100vw - 2 * var(--space-margin)) / 8.948));
-      }
-      to {
-        font-size: var(--titlecard-min);
+        inline-size: 100%;
       }
     }
 
@@ -699,7 +719,7 @@
       animation: loupe-waiting 1.1s ease-in-out infinite;
     }
 
-    .titlecard__name {
+    .titlecard__logo {
       animation: titlecard linear both;
       /* `scroll()`, not `scroll(root)`: minified into the shorthand, an argument kills it. */
       animation-timeline: scroll();
