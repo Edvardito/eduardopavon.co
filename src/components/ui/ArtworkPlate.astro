@@ -23,7 +23,7 @@ const style = [
   `--plate-w:${image.width}`,
   `--plate-h:${image.height}`,
   ...(placeholder ? [`--plate-lqip:${placeholder}`] : []),
-  `view-transition-name:artwork-${artwork.id}`,
+  `--plate-vt:artwork-${artwork.id}`,
 ].join(';');
 ---
 

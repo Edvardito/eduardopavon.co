@@ -794,19 +794,23 @@ beneath it.
 - **The sticky stack is a sum, and every offset reads it.**
   `--masthead-collapsed` is the collapsed logo, the title card's padding and the
   strip's line box and padding; the section head pins at it, and a strip jump
-  lands a row below it and the section head. The mark is `display: block`, or it
-  sits on a baseline with a descender gap under it that no token accounts for.
-- **A jump carries the collapse still to come.** A jump's target is fixed when
-  it starts, while the logo may still be large, so the plates' scroll margin
-  runs on the same scroll timeline and adds whatever the logo has yet to lose.
-  From the top of the page or from mid-page, a work lands in the same place.
+  lands a row below it and the section head. The mark is a block (the preflight
+  makes every SVG one), or it sits on a baseline with a descender gap under it
+  that no token accounts for.
+- **Nothing below the masthead moves while it shrinks.** Its bottom margin grows
+  by exactly what the logo loses, on the same scroll timeline and range, so the
+  page's geometry is the same at every scroll offset. Every scroll target — a
+  strip jump, find-in-page, focus — therefore lands where the static sums say,
+  with no correction of its own. The statement below is a flow root, or its
+  larger top margin would swallow the masthead's.
 - **Its resting size is the small one.** The large size lives in the keyframe,
   so a browser without scroll timelines — or a reader who has asked for no
   motion — gets a modest bar rather than one permanently covering a quarter of
   the page.
-- **It is the one place the site animates a layout property.** A transform would
-  scale the mark but not the sticky bar around it, and the section head pinned
-  under it would drift. It is a single element, and the cost is bounded to it.
+- **It is the one place the site animates layout.** A transform would scale the
+  mark but not the sticky bar around it, and the section head pinned under it
+  would drift. The logo's width and the masthead's margin are one gesture on one
+  timeline, and the cost is bounded to those two elements.
 - **The name stays text.** The mark is `aria-hidden`; the `<h1>` holds the name
   in a visually hidden span, so readers and crawlers get "Eduardo Pavón" and the
   drawing is not asked to carry it.
@@ -948,14 +952,15 @@ fragment stays in the document and gets no view transition — and the page is n
 scrolled at all. The page being left dissolves, the logo morphs into its
 collapsed size, the section head glides to its pin, and **the chosen work rises
 from below the screen into the place the jump lands it**, arriving as its
-placeholder if the drawing is still in flight. Only that work is captured: the
-page being left names no plate (a strip link holds focus), and the arriving page
-names only its `:target`, so it enters rather than morphing from wherever it sat
-before, and nothing streaks. There is no `scroll-behavior: smooth`: it would
-turn the arriving page's fragment scroll back into the smear. The query changes
-nothing the page renders; the canonical URL stays the edition's. Where view
-transitions are missing or motion is reduced, the jump is an instant load at the
-same landing point.
+placeholder if the drawing is still in flight. Only a `:target` plate is ever
+named — each plate carries its name as a custom property and CSS applies it to
+the target alone — so the arriving work enters rather than morphing from
+wherever it sat before, the one the reader leaves fades where it is, and nothing
+streaks. There is no `scroll-behavior: smooth`: it would turn the arriving
+page's fragment scroll back into the smear. The query changes nothing the page
+renders; the canonical URL stays the edition's. Where view transitions are
+missing or motion is reduced, the jump is an instant load at the same landing
+point.
 
 **Works rise, and text only ever moves.** Each plate starts a fifth of a screen
 low and floats up as it enters, a little slower than the scroll, and **its

@@ -14,7 +14,6 @@
   --font-display: var(--font-polymath-super);
   --font-text: var(--font-polymath);
 
-  --font-weight-regular: 400;
   --font-weight-bold: 700;
   /* Super: the display face's only weight. */
   --font-weight-super: 900;
@@ -74,17 +73,22 @@
     --logo-collapsed: 64px;
     /* The top of the page: the full width, up to this height. */
     --logo-max: 100px;
+    /* His lettering's lean: the motto and RISE. */
+    --slant: -12deg;
+    --rule-width: 1px;
 
     /* The sticky stack, summed from its parts so the offsets cannot drift from it. */
     --strip-block: calc(var(--text-strip) * var(--leading-text) + var(--space-caption) * 2);
     --section-head-block: calc(
-      var(--text-label) * var(--leading-text) + var(--space-caption) + 1px
+      var(--text-label) * var(--leading-text) + var(--space-caption) + var(--rule-width)
     );
     /* `cqi` is <main>'s width, so these resolve only inside it; 100vw would count the scrollbar. */
     --logo-full: min(var(--logo-max), (100cqi - var(--space-margin) * 2) / var(--logo-ratio));
     --logo-rest: min(var(--logo-collapsed), var(--logo-full));
     --masthead-collapsed: calc(var(--logo-rest) + var(--space-caption) * 2 + var(--strip-block));
     --plate-jump: calc(var(--masthead-collapsed) + var(--section-head-block) + var(--space-row));
+    /* The line a strip jump lands a work on; an arriving work's motion is done by it. */
+    --arrival-end: calc(100svh - var(--plate-jump));
 
     --loupe-size: 11rem;
     /* Clear of a finger at 320px; a touch lens must sit beside it, not under it. */
@@ -109,12 +113,6 @@
 
   .vt-masthead {
     view-transition-name: masthead;
-  }
-
-  ::view-transition-old(root),
-  ::view-transition-new(root) {
-    animation-duration: var(--duration-long);
-    animation-timing-function: var(--ease-page);
   }
 
   /* Two-ply, so one ply always contrasts. */
@@ -146,13 +144,13 @@
   .display,
   .furniture {
     font-family: var(--font-display);
+    font-weight: var(--font-weight-super);
     text-transform: uppercase;
     color: var(--color-pen);
   }
 
   .display {
     font-size: var(--text-display);
-    font-weight: var(--font-weight-super);
     line-height: var(--leading-display);
     text-wrap: balance;
   }
@@ -161,6 +159,11 @@
     position: sticky;
     inset-block-start: 0;
     z-index: 20;
+  }
+
+  /* So the masthead's margin is not swallowed by the statement's larger one. */
+  .masthead + * {
+    display: flow-root;
   }
 
   .titlecard,
@@ -175,29 +178,28 @@
     padding-block: var(--space-caption);
   }
 
-  /* Block, or the SVG sits on a baseline and a descender gap breaks the masthead sum. */
   .logo {
-    display: block;
     inline-size: 100%;
-    aspect-ratio: 1017 / 140;
-    block-size: auto;
+    aspect-ratio: var(--logo-ratio);
     color: var(--color-pen);
   }
 
   /* Resting small: without scroll timelines it would never shrink. */
+  .titlecard__logo,
+  .running-head {
+    inline-size: min(100%, var(--logo-collapsed) * var(--logo-ratio));
+  }
+
   .titlecard__logo {
     margin-inline: auto;
-    inline-size: min(100%, var(--logo-collapsed) * var(--logo-ratio));
   }
 
   .running-head {
     display: block;
-    inline-size: min(100%, var(--logo-collapsed) * var(--logo-ratio));
   }
 
   .furniture {
     font-size: var(--text-label);
-    font-weight: var(--font-weight-super);
     line-height: var(--leading-text);
     letter-spacing: var(--tracking-label);
   }
@@ -212,23 +214,18 @@
 
   .rule {
     border: 0;
-    border-block-start: 1px solid var(--color-pen);
+    border-block-start: var(--rule-width) solid var(--color-pen);
   }
 
   /* His own lettering: RISE and FOCUS are hollow, slanted caps. Outline only, so no mass of ink. */
   .motto {
     margin-block-start: var(--space-section);
-    font-family: var(--font-display);
     font-size: clamp(2.25rem, 1rem + 5.5vw, 5rem);
-    font-weight: var(--font-weight-super);
-    line-height: var(--leading-display);
     text-align: center;
-    text-transform: uppercase;
-    text-wrap: balance;
     color: var(--color-ink);
     -webkit-text-fill-color: transparent;
     -webkit-text-stroke: max(1.5px, 0.03em) currentColor;
-    transform: skewX(-12deg);
+    transform: skewX(var(--slant));
   }
 
   .sparkle {
@@ -245,14 +242,14 @@
     font-family: var(--font-display);
     font-weight: var(--font-weight-super);
     letter-spacing: 0.04em;
-    transform: skewX(-12deg);
+    transform: skewX(var(--slant));
   }
 
   .statement {
     margin-inline: auto;
     margin-block-start: var(--space-row);
     font-size: clamp(var(--text-lede), 1rem + 0.8vw, 1.65rem);
-    line-height: 1.45;
+    line-height: var(--leading-text);
     text-align: center;
     text-wrap: balance;
   }
@@ -437,7 +434,7 @@
     font-family: var(--font-text);
     font-variant-numeric: tabular-nums;
     font-weight: var(--font-weight-bold);
-    /* Inside the title's line box; baseline-aligned, a second face's metrics would grow the strip. */
+    /* Bold's line box sits lower than Super's; at 1 it cannot grow the strip. */
     line-height: 1;
   }
 
@@ -491,7 +488,7 @@
     content: '';
     display: block;
     margin-block-start: var(--space-row);
-    border-block-start: 1px solid var(--color-pen);
+    border-block-start: var(--rule-width) solid var(--color-pen);
   }
 
   .loupe {
@@ -659,13 +656,11 @@
   .plate[data-lens-touch] img {
     -webkit-user-drag: none;
   }
-}
 
-/* A strip jump: the page being left captures no plate, the arriving page only its target,
-   so the one work enters and nothing streaks across. !important beats the inline name. */
-:root:has(.plate-strip :focus) .plate,
-:root:has(.cadence > :target) .cadence > :not(:target) .plate {
-  view-transition-name: none !important;
+  /* Only the work a jump lands on is captured, so it enters and nothing streaks. */
+  .cadence > :target .plate {
+    view-transition-name: var(--plate-vt);
+  }
 }
 
 /* Every displaced start state lives in here, or content strands invisible. */
@@ -691,7 +686,9 @@
     navigation: auto;
   }
 
-  ::view-transition-group(*) {
+  ::view-transition-group(*),
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
     animation-duration: var(--duration-long);
     animation-timing-function: var(--ease-page);
   }
@@ -719,36 +716,30 @@
 
   @supports (animation-timeline: view()) {
     /* Transform only: a scroll-linked opacity rests, and faded ink fails AA. */
-    @keyframes reveal {
-      from {
-        transform: translateY(3rem);
-      }
-      to {
-        transform: none;
-      }
-    }
-
-    .reveal {
-      animation: reveal linear both;
-      animation-timeline: view();
-      animation-range: entry 0% entry calc(100svh - var(--plate-jump));
-    }
-
-    /* The work and its caption as one piece, or the record drifts from what it describes.
-       Transform only: done by the line a strip jump lands on, so an arriving work rests in place. */
     @keyframes rise {
       from {
-        transform: translateY(min(22vh, 14rem));
+        transform: translateY(var(--rise));
       }
     }
 
+    .reveal,
     .cadence figure {
       animation: rise linear both;
       animation-timeline: view();
-      animation-range: entry 0% entry calc(100svh - var(--plate-jump));
     }
 
-    /* The drawing alone resolves out of its placeholder, never text; not the first plate, which paints on load. */
+    .reveal {
+      --rise: 3rem;
+      animation-range: entry 0% entry 90%;
+    }
+
+    /* The work and its caption as one piece, or the record drifts from what it describes. */
+    .cadence figure {
+      --rise: min(22vh, 14rem);
+      animation-range: entry 0% entry var(--arrival-end);
+    }
+
+    /* The drawing alone, never text; not the first plate, which paints on load. */
     @keyframes develop {
       from {
         opacity: 0;
@@ -758,7 +749,7 @@
     .cadence > :not(:first-child) .plate img {
       animation: develop linear both;
       animation-timeline: view();
-      animation-range: entry 0% entry calc((100svh - var(--plate-jump)) * 0.6);
+      animation-range: entry 0% entry calc(var(--arrival-end) * 0.6);
     }
 
     /* Half the track, which holds the list twice, so no seam shows. */
@@ -819,22 +810,24 @@
       animation: loupe-waiting 1.1s ease-in-out infinite;
     }
 
-    /* A jump's target is fixed when it starts, so the margin carries the collapse still to come. */
-    @keyframes plate-jump {
-      from {
-        scroll-margin-block-start: calc(var(--plate-jump) + var(--logo-full) - var(--logo-rest));
+    /* The masthead gives back in margin what the logo loses, so nothing below it moves. */
+    @keyframes masthead-hold {
+      to {
+        margin-block-end: calc(var(--logo-full) - var(--logo-rest));
       }
     }
 
-    .cadence > * {
-      animation: plate-jump linear both;
-      animation-timeline: scroll();
-      animation-range: 0 30svh;
+    .masthead {
+      animation: masthead-hold linear both;
     }
 
     .titlecard__logo {
       animation: titlecard linear both;
-      /* `scroll()`, not `scroll(root)`: minified into the shorthand, an argument kills it. */
+    }
+
+    /* One collapse for both. `scroll()`, not `scroll(root)`: minified, an argument kills it. */
+    .masthead,
+    .titlecard__logo {
       animation-timeline: scroll();
       animation-range: 0 30svh;
     }
