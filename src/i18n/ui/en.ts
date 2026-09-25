@@ -8,7 +8,7 @@ export default {
   'home.heading': 'Eduardo Pavón',
   'home.motto': 'Sorcerer',
   'home.intro':
-    'Eduardo Pavón draws from Mexico City with a Bic pen and a patience that has almost disappeared. Stroke by stroke, without hurry, he builds hyperrealistic images where every fold, every texture and every shadow is placed by hand. His work stares down power, money and haste, and answers with the one thing that cannot be rushed: time. Every line is a small insurrection; together they raise a barricade of ink against a world that will not stop. And behind it, asking no one’s permission: {rise}',
+    'Eduardo Pavón draws from Mexico City with a Bic pen and a patience that has almost disappeared. Stroke by stroke, at his own cadence, he builds hyperrealistic images where every fold, every texture and every shadow is placed by hand. His work stares down power, money and frenzy, and answers with the one thing that cannot be rushed: time. Every line is a small insurrection; together they raise a barricade of ink against a world that will not stop. And behind it, asking no one’s permission: {rise}',
   'home.rise': 'RISE',
   'gallery.heading': 'Work',
   'gallery.plates': 'Plates',

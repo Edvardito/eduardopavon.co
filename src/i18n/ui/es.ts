@@ -8,7 +8,7 @@ export default {
   'home.heading': 'Eduardo Pavón',
   'home.motto': 'Hechicero',
   'home.intro':
-    'Eduardo Pavón dibuja desde la Ciudad de México con una pluma Bic y una paciencia que ya casi no existe. Trazo a trazo, sin prisa, levanta imágenes hiperrealistas donde cada pliegue, cada textura y cada sombra está puesta a mano. Su obra mira de frente al poder, al dinero y a la prisa, y responde con lo único que no se puede apresurar: el tiempo. Cada raya es una pequeña insurrección; juntas levantan una barricada de tinta contra un mundo que no se detiene. Y detrás de ella, sin pedirle permiso a nadie: {rise}',
+    'Eduardo Pavón dibuja desde la Ciudad de México con una pluma Bic y una paciencia que ya casi no existe. Trazo a trazo, a su propia cadencia, construye imágenes hiperrealistas donde cada pliegue, cada textura y cada sombra está puesta a mano. Su obra mira de frente al poder, al dinero y al vértigo, y responde con lo único que no se deja acelerar: el tiempo. Cada raya es una pequeña insurrección; juntas levantan una barricada de tinta contra un mundo que no se detiene. Y detrás de ella, sin pedirle permiso a nadie: {rise}',
   'home.rise': 'RISE',
   'gallery.heading': 'Obra',
   'gallery.plates': 'Láminas',
