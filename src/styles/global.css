@@ -11,13 +11,13 @@
   --color-pen-pale: #90b6ff;
 
   /* Self-hosted at build time; the stacks come from astro.config.ts. */
-  --font-display: var(--font-irregardless);
+  --font-display: var(--font-polymath-super);
   --font-text: var(--font-polymath);
 
   --font-weight-regular: 400;
   --font-weight-bold: 700;
-  /* The top of this face; there is no 900 in it. */
-  --font-weight-heavy: 800;
+  /* Super: the display face's only weight. */
+  --font-weight-super: 900;
 
   --text-label: 2.5rem;
   --text-strip: 2.5rem;
@@ -137,11 +137,8 @@
 
   .display {
     font-size: var(--text-display);
-    font-feature-settings: 'ss02' 1;
-    font-weight: var(--font-weight-heavy);
+    font-weight: var(--font-weight-super);
     line-height: var(--leading-display);
-    /* These alternates collide under negative tracking. */
-    letter-spacing: 0;
     text-wrap: balance;
   }
 
@@ -163,7 +160,7 @@
     padding-block: var(--space-caption);
   }
 
-  /* 4.912 is this name's advance per 1px. Re-measure if the name changes. */
+  /* 8.948 is this name's advance per 1px in Super, unkerned. Re-measure if the name changes. */
   .titlecard__name {
     display: block;
     inline-size: 100%;
@@ -177,7 +174,7 @@
 
   .furniture {
     font-size: var(--text-label);
-    font-weight: var(--font-weight-bold);
+    font-weight: var(--font-weight-super);
     line-height: var(--leading-text);
     letter-spacing: var(--tracking-label);
   }
@@ -358,7 +355,7 @@
     padding-inline: var(--space-margin);
     font-family: var(--font-display);
     font-size: var(--text-strip);
-    font-weight: var(--font-weight-bold);
+    font-weight: var(--font-weight-super);
     text-transform: uppercase;
   }
 
@@ -370,10 +367,11 @@
     flex: none;
   }
 
-  /* No second readable colour on pen: red 2.15:1, ink 1.86:1. */
+  /* No second readable colour on pen: red 2.15:1, ink 1.86:1. Super has no `tnum`; Bold does. */
   .plate-index__folio {
+    font-family: var(--font-text);
     font-variant-numeric: tabular-nums;
-    font-weight: var(--font-weight-regular);
+    font-weight: var(--font-weight-bold);
   }
 
   .plate-index__link {
@@ -673,7 +671,7 @@
     /* No transform gives "one line, full width, getting smaller". */
     @keyframes titlecard {
       from {
-        font-size: max(var(--titlecard-min), calc((100vw - 2 * var(--space-margin)) / 4.912));
+        font-size: max(var(--titlecard-min), calc((100vw - 2 * var(--space-margin)) / 8.948));
       }
       to {
         font-size: var(--titlecard-min);

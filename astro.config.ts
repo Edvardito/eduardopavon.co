@@ -88,11 +88,12 @@ export default defineConfig({
   },
 
   fonts: [
+    // Super, the display role: its own entry so no Super italic ships.
     {
-      name: 'Irregardless Variable',
+      name: 'Polymath Text',
       provider: adobe({ id: TYPEKIT_KIT }),
-      cssVariable: '--font-irregardless',
-      weights: ['300 800'],
+      cssVariable: '--font-polymath-super',
+      weights: [900],
       styles: ['normal'],
       display: 'swap',
       subsets: ['latin'],
