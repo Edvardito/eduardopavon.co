@@ -744,8 +744,10 @@ head below pins to that sum.
 theatre. The artist's name is **the logo**: a drawn mark, one path, filled in
 `currentColor` so it is `--color-pen` like every other piece of the site's
 voice. It is **always one line** and its proportion is fixed. At the top of the
-page it spans the title card's content box; over the first third of a screen it
-shrinks to its collapsed size and then holds while the page runs on beneath it.
+page it spans the title card's content box, up to `--logo-max` tall — on a wide
+screen a full-width mark is a banner, not a name — and over the first third of a
+screen it shrinks to its collapsed size and then holds while the page runs on
+beneath it.
 
 - **Its proportion is the viewBox, 1017 × 140, and nothing may distort it.** The
   mark is sized by width and its height follows from the ratio; there is no

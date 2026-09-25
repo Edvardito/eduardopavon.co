@@ -72,6 +72,8 @@
     /* The logo's viewBox; every logo box derives from it, so the mark never distorts. */
     --logo-ratio: calc(1017 / 140);
     --logo-collapsed: 64px;
+    /* The top of the page: the full width, up to this height. */
+    --logo-max: 100px;
 
     /* The sticky stack, summed from its parts so the offsets cannot drift from it. */
     --strip-block: calc(var(--text-strip) * var(--leading-text) + var(--space-caption) * 2);
@@ -79,7 +81,7 @@
       var(--text-label) * var(--leading-text) + var(--space-caption) + 1px
     );
     /* `cqi` is <main>'s width, so these resolve only inside it; 100vw would count the scrollbar. */
-    --logo-full: calc((100cqi - var(--space-margin) * 2) / var(--logo-ratio));
+    --logo-full: min(var(--logo-max), (100cqi - var(--space-margin) * 2) / var(--logo-ratio));
     --logo-rest: min(var(--logo-collapsed), var(--logo-full));
     --masthead-collapsed: calc(var(--logo-rest) + var(--space-caption) * 2 + var(--strip-block));
     --plate-jump: calc(var(--masthead-collapsed) + var(--section-head-block) + var(--space-row));
@@ -733,7 +735,7 @@
     /* A transform would not shrink the sticky bar; `to` is the resting size. */
     @keyframes titlecard {
       from {
-        inline-size: 100%;
+        inline-size: min(100%, var(--logo-max) * var(--logo-ratio));
       }
     }
 
