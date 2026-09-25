@@ -6,9 +6,10 @@ export default {
 
   'home.title': 'Eduardo Pavón — Bic ballpoint pen drawing',
   'home.heading': 'Eduardo Pavón',
-  'home.motto': 'Everything is a drawing.',
+  'home.motto': 'Everything is a drawing',
   'home.intro':
-    'Eduardo Pavón is a sorcerer armed with the same Bic pen rattling around the bottom of your bag. Line over line, thousands of times, until an empty jacket weighs as much as a body, a 500-peso bill becomes his own and a trash bag gleams like a relic. He draws guilt, desolation, a riot cop coming apart. And then, against everything: RISE.',
+    'Jackets with nobody inside. Heads that took off and left nothing but cartoon eyes, dripping. A faceless riot cop holding a rose. Eduardo Pavón pours hours and hours of Bic pen into every nylon wrinkle and every crease of plastic, until the clothes weigh more than the body that is gone. And stamped over all of it, like a tattoo: {rise}',
+  'home.rise': 'RISE',
   'gallery.heading': 'Work',
   'gallery.plates': 'Plates',
   'gallery.plateLabel': 'Plate {number}',

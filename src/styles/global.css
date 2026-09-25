@@ -215,19 +215,44 @@
     border-block-start: 1px solid var(--color-pen);
   }
 
-  .lede {
-    font-size: clamp(1.75rem, 1rem + 3.5vw, 3.4rem);
-    line-height: var(--leading-tight);
+  /* His own lettering: RISE and FOCUS are hollow, slanted caps. Outline only, so no mass of ink. */
+  .motto {
+    margin-block-start: var(--space-section);
+    font-family: var(--font-display);
+    font-size: clamp(2.25rem, 1rem + 5.5vw, 5rem);
+    font-weight: var(--font-weight-super);
+    line-height: var(--leading-display);
     text-align: center;
     text-transform: uppercase;
     text-wrap: balance;
-    margin-block-start: var(--space-section);
+    color: var(--color-ink);
+    -webkit-text-fill-color: transparent;
+    -webkit-text-stroke: max(1.5px, 0.03em) currentColor;
+    transform: skewX(-12deg);
+  }
+
+  .sparkle {
+    display: inline-block;
+    inline-size: 0.6em;
+    block-size: 0.8em;
+    margin-inline: 0.3em;
+    vertical-align: -0.02em;
+  }
+
+  /* His tag, set the way he letters it: heavy and slanted. */
+  .rise {
+    display: inline-block;
+    font-family: var(--font-display);
+    font-weight: var(--font-weight-super);
+    letter-spacing: 0.04em;
+    transform: skewX(-12deg);
   }
 
   .statement {
     margin-inline: auto;
     margin-block-start: var(--space-row);
-    font-size: var(--text-lede);
+    font-size: clamp(var(--text-lede), 1rem + 0.8vw, 1.65rem);
+    line-height: 1.45;
     text-align: center;
     text-wrap: balance;
   }

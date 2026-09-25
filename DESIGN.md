@@ -172,6 +172,13 @@ the colour removed still tells the catalogue from the catalogued, because
 nothing describing a specific drawing is ever set in Super or in capitals. The
 name is not type at all: it is the logo (§6).
 
+**The artist's own lettering is the one exception, and it is in ink.** The motto
+and his tag RISE are set the way he letters them in the drawings — heavy,
+slanted, the motto hollow like RISE and FOCUS — in `--color-ink`, because they
+are his voice, not the site's furniture. The motto is outline only, so a line
+that large carries no mass of ink (principle 1). The slant is a skew of Super,
+not a drawn italic, and it belongs to these two and nothing else.
+
 **Three weights exist and each belongs to one role.** Super belongs to the
 display role and is the only weight it sets. The text role has exactly **400 and
 700, plus both italics**, and its hierarchy is carried by size, space and
@@ -365,16 +372,17 @@ clicking.
 page, with the **list of plates** as a pen band directly beneath it. The two
 stick together and the logo shrinks inside them. Then the **statement** — the
 one element at the top of the page that scrolls away, which is what tells the
-reader the page has started moving. It is the artist's motto, large, centred, in
-caps; then a short paragraph at the lede step, in the third person and the
-present tense. It is built from the artist's own material — the things he draws
-and the words he has used for them — and never from a description of the medium,
-which the captions already give and which could introduce anyone who owns a pen.
-Its voice has the drawings' nerve, not a CV's: vivid, direct, a little reckless,
-and in the artist's own words where he has them. Its facts stay his — nothing is
-claimed that his work and his own statements do not carry. Then the gallery:
-section label, rule, and a single column of plates at the common measure. Then
-contact, then the colophon.
+reader the page has started moving. It is the artist's motto in his own
+lettering (§3), between two of his four-point sparkles (§6); then a short
+paragraph at the lede step, in the third person and the present tense. It is
+built from the artist's own material — the things he draws and the words he has
+used for them — and never from a description of the medium, which the captions
+already give and which could introduce anyone who owns a pen. Its voice has the
+drawings' nerve, not a CV's: vivid, direct, a little reckless, and in the
+artist's own words where he has them. Its facts stay his — nothing is claimed
+that his work and his own statements do not carry. Then the gallery: section
+label, rule, and a single column of plates at the common measure. Then contact,
+then the colophon.
 
 **There is no hero.** A frontispiece spread puts one work in a privileged
 position ahead of the others, which is a claim the single column gives up
@@ -676,6 +684,11 @@ The labels stay in the message files because those two consumers use them. This
 holds on every archetype, Phase 3's detail page included: no badge, chip,
 bracketed note or caption suffix. A page that needs to state availability is a
 new decision with its own entry here.
+
+**The sparkle.** His four-point star, from the RISE borders, drawn as inline SVG
+filled with `currentColor` and `aria-hidden`; it flanks the motto and nowhere
+else. It is the fourth drawn glyph on the site, after the logo and the two
+contact glyphs, and still not a system: each is written where it is used.
 
 **The contact section.** The last thing the gallery says, sitting between the
 closing rule and the colophon: section label, rule, one line of prose at the

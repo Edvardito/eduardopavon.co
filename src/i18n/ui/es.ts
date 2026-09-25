@@ -6,9 +6,10 @@ export default {
 
   'home.title': 'Eduardo Pavón — Dibujo a pluma Bic',
   'home.heading': 'Eduardo Pavón',
-  'home.motto': 'Todo es un dibujo.',
+  'home.motto': 'Todo es un dibujo',
   'home.intro':
-    'Eduardo Pavón es un hechicero armado con la misma pluma Bic que traes rodando en la mochila. Raya sobre raya, miles de veces, hasta que una chamarra vacía pesa como un cuerpo, un billete de 500 varos se vuelve suyo y una bolsa de basura brilla como reliquia. Dibuja la culpa, la desolación, a un granadero hecho pedazos. Y luego, contra todo: RISE.',
+    'Chamarras sin nadie adentro. Cabezas que se largaron y dejaron nomás unos ojos de caricatura, chorreando. Un granadero sin cara con una rosa en la mano. Eduardo Pavón le mete horas y horas de pluma Bic a cada arruga de nylon y a cada pliegue de plástico, hasta que la ropa pesa más que el cuerpo que ya no está. Y encima, como tatuaje: {rise}',
+  'home.rise': 'RISE',
   'gallery.heading': 'Obra',
   'gallery.plates': 'Láminas',
   'gallery.plateLabel': 'Lámina {number}',
