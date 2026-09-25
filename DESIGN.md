@@ -766,9 +766,13 @@ shrinks to its collapsed size and then holds while the page runs on beneath it.
   below it at a fixed offset would drift. One sticky wrapper, both inside.
 - **The sticky stack is a sum, and every offset reads it.**
   `--masthead-collapsed` is the collapsed logo, the title card's padding and the
-  strip's line box and padding; the section head pins at it. The mark is
-  `display: block`, or it sits on a baseline with a descender gap under it that
-  no token accounts for.
+  strip's line box and padding; the section head pins at it, and a strip jump
+  lands a row below it and the section head. The mark is `display: block`, or it
+  sits on a baseline with a descender gap under it that no token accounts for.
+- **A jump carries the collapse still to come.** A jump's target is fixed when
+  it starts, while the logo may still be large, so the plates' scroll margin
+  runs on the same scroll timeline and adds whatever the logo has yet to lose.
+  From the top of the page or from mid-page, a work lands in the same place.
 - **Its resting size is the small one.** The large size lives in the keyframe,
   so a browser without scroll timelines — or a reader who has asked for no
   motion — gets a modest bar rather than one permanently covering a quarter of

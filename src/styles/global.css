@@ -82,6 +82,7 @@
     --logo-full: calc((100cqi - var(--space-margin) * 2) / var(--logo-ratio));
     --logo-rest: min(var(--logo-collapsed), var(--logo-full));
     --masthead-collapsed: calc(var(--logo-rest) + var(--space-caption) * 2 + var(--strip-block));
+    --plate-jump: calc(var(--masthead-collapsed) + var(--section-head-block) + var(--space-row));
 
     --loupe-size: 11rem;
     /* Clear of a finger at 320px; a touch lens must sit beside it, not under it. */
@@ -423,8 +424,8 @@
   .cadence > * {
     inline-size: 100%;
     max-inline-size: var(--container-plate);
-    /* The strip jumps here; a work on the edge reads as a failed load. */
-    scroll-margin-block-start: var(--space-row);
+    /* Below the whole sticky stack, and a row clear of it: a work on the edge reads as a failed load. */
+    scroll-margin-block-start: var(--plate-jump);
   }
 
   .cadence > :nth-child(5n + 1) {
@@ -717,6 +718,19 @@
 
     .loupe[data-active]:not([data-ready]) {
       animation: loupe-waiting 1.1s ease-in-out infinite;
+    }
+
+    /* A jump's target is fixed when it starts, so the margin carries the collapse still to come. */
+    @keyframes plate-jump {
+      from {
+        scroll-margin-block-start: calc(var(--plate-jump) + var(--logo-full) - var(--logo-rest));
+      }
+    }
+
+    .cadence > * {
+      animation: plate-jump linear both;
+      animation-timeline: scroll();
+      animation-range: 0 30svh;
     }
 
     .titlecard__logo {
