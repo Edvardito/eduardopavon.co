@@ -701,7 +701,7 @@
       animation-range: entry 0% entry calc(100svh - var(--plate-jump));
     }
 
-    /* The plate and its caption, each on its own timeline, so the caption follows a beat behind.
+    /* The work and its caption as one piece, or the record drifts from what it describes.
        Transform only: done by the line a strip jump lands on, so an arriving work rests in place. */
     @keyframes rise {
       from {
@@ -709,8 +709,7 @@
       }
     }
 
-    .cadence .plate,
-    .cadence .caption {
+    .cadence figure {
       animation: rise linear both;
       animation-timeline: view();
       animation-range: entry 0% entry calc(100svh - var(--plate-jump));

@@ -938,11 +938,11 @@ transitions are missing or motion is reduced, the jump is an instant load at the
 same landing point.
 
 **Works rise, and text only ever moves.** Each plate starts a fifth of a screen
-low and floats up as it enters, a little slower than the scroll; its caption
-rises the same distance on its own timeline, so it follows a beat behind and is
-never closer to the next work than to its own. Both are done by the line a strip
-jump lands on, so an arriving work rests exactly in place. Translate only, so
-the lens stays on the cursor. With `animation-timeline: view()` opacity is a
+low and floats up as it enters, a little slower than the scroll, and **its
+caption moves with it as one piece**: a caption on its own timeline trails its
+work and reads as belonging to something else. The rise is done by the line a
+strip jump lands on, so an arriving work rests exactly in place. Translate only,
+so the lens stays on the cursor. With `animation-timeline: view()` opacity is a
 _function of scroll position_, not a transition that finishes, so a reader who
 stops mid-entry rests at whatever contrast a fade is passing through. Ink needs
 **0.712** opacity to hold the 7:1 floor and **0.580** to clear AA at all, so no
