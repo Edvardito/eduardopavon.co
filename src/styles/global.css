@@ -348,6 +348,8 @@
   }
 
   .plate-strip {
+    /* Holds the hidden folio labels; unanchored, they escape the scroll box and widen the page. */
+    position: relative;
     background-color: var(--color-pen);
     color: var(--color-ground);
     padding-block: var(--space-caption);
