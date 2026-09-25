@@ -37,7 +37,12 @@ const entries = artworks.map((artwork, index) => ({
       >
         {entries.map((entry) => (
           <li class="plate-index__item">
-            <a class="plate-index__link" href={`#${entry.id}`} tabindex={isClone ? -1 : undefined}>
+            {/* The query makes the jump a navigation, so it can run a view transition. */}
+            <a
+              class="plate-index__link"
+              href={`?p=${entry.id}#${entry.id}`}
+              tabindex={isClone ? -1 : undefined}
+            >
               <span class="plate-index__folio">
                 <span aria-hidden="true">{entry.folio}</span>
                 <span class="sr-only">{entry.label}</span>

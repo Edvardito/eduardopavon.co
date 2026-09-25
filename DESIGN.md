@@ -647,12 +647,12 @@ the pointer at the top of every page in exchange for nothing: the strip has
 nothing to scroll vertically.
 
 No buttons, no autoplay control, no script — the whole thing is CSS. Every row
-links to that work's plate below, scrolling smoothly (§7); rows clear 24px
-(2.5.8). **This is the one place links are not underlined at rest:** when every
-row is a link the underline is a texture rather than a signal, the list's
-semantics carry the affordance, and hover and focus restore the rule. In Phase 3
-the rows retarget to the detail route and gain a current-item marker; nothing
-else changes.
+links to that work's plate below (§7, the arrival); rows clear 24px (2.5.8).
+**This is the one place links are not underlined at rest:** when every row is a
+link the underline is a texture rather than a signal, the list's semantics carry
+the affordance, and hover and focus restore the rule. In Phase 3 the rows
+retarget to the detail route and gain a current-item marker; nothing else
+changes.
 
 **The plate carries no status mark.** A caption that ends on the catalogue line
 reads as a catalogue line; a chip after it reads as commerce, and whether a work
@@ -900,8 +900,8 @@ the main path.
 | Type entrance (404)   | document ready | reduced-motion                             | CSS        | type already in place   |
 | Plate placeholder     | load           | reduced-motion; finite, 8 breaths          | CSS        | a static blurred copy   |
 | Scroll reveal         | scroll         | `@supports (animation-timeline)` + r-m     | CSS        | works already visible   |
-| Smooth scroll         | list of plates | reduced-motion                             | CSS        | the jump is instant     |
-| View-transition morph | navigation     | `@view-transition` opt-in                  | CSS        | a plain navigation      |
+| Arrival               | list of plates | `@view-transition` inside r-m              | CSS        | the jump is instant     |
+| View-transition morph | navigation     | `@view-transition` inside r-m              | CSS        | a plain navigation      |
 | Magnifier             | hover, or hold | fine pointer: hover; else a still hold     | **script** | the gallery is complete |
 | Title card shrink     | scroll         | `@supports (animation-timeline)` + r-m     | CSS        | a small sticky bar      |
 | Plate strip marquee   | none, endless  | reduced-motion; pauses on hover/hold/focus | CSS        | a static scroll strip   |
@@ -914,7 +914,25 @@ including the longest stagger must not exceed 600 ms** — an entrance must neve
 be what pushes a passing page into a failing LCP. **Plates never animate on
 load**, only on scroll.
 
-**The scroll reveal moves, it does not fade.** With `animation-timeline: view()`
+**A strip jump is an arrival, not a scroll.** A smooth scroll to a work six
+screens down passes five other works at some 16,000px a second: a smear, then a
+landing with no event, and CSS cannot slow or re-ease the browser's own scroll.
+So a row is a navigation to the same page — `?p=<slug>#<slug>`, because a bare
+fragment stays in the document and gets no view transition — and the page is not
+scrolled at all. The page being left dissolves, the logo morphs into its
+collapsed size, the section head glides to its pin, and **the chosen work rises
+from below the screen into the place the jump lands it**, arriving as its
+placeholder if the drawing is still in flight. Only that work is captured: the
+page being left names no plate (a strip link holds focus), and the arriving page
+names only its `:target`, so it enters rather than morphing from wherever it sat
+before, and nothing streaks. There is no `scroll-behavior: smooth`: it would
+turn the arriving page's fragment scroll back into the smear. The query changes
+nothing the page renders; the canonical URL stays the edition's. Where view
+transitions are missing or motion is reduced, the jump is an instant load at the
+same landing point.
+
+**The scroll reveal moves, it does not fade.** It ends at the line a strip jump
+lands on, so an arriving work never rests low. With `animation-timeline: view()`
 opacity is a _function of scroll position_, not a transition that finishes, so a
 reader who stops mid-entry rests at whatever contrast the fade is passing
 through. Ink needs **0.712** opacity to hold the 7:1 floor and **0.580** to

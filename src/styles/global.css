@@ -202,6 +202,7 @@
 
   /* Under the masthead's z-index, so it tucks rather than overlaps. */
   .section-head {
+    view-transition-name: section-head;
     position: sticky;
     inset-block-start: var(--masthead-collapsed);
     z-index: 10;
@@ -262,6 +263,7 @@
 
   /* A percentage height does not resolve against this ratio, so it would crop. */
   .plate {
+    view-transition-class: plate;
     position: relative;
     inline-size: 100%;
     aspect-ratio: var(--plate-w) / var(--plate-h);
@@ -348,6 +350,7 @@
   }
 
   .plate-strip {
+    view-transition-name: plate-strip;
     /* Holds the hidden folio labels; unanchored, they escape the scroll box and widen the page. */
     position: relative;
     background-color: var(--color-pen);
@@ -619,8 +622,11 @@
   }
 }
 
-@view-transition {
-  navigation: auto;
+/* A strip jump: the page being left captures no plate, the arriving page only its target,
+   so the one work enters and nothing streaks across. !important beats the inline name. */
+:root:has(.plate-strip :focus) .plate,
+:root:has(.cadence > :target) .cadence > :not(:target) .plate {
+  view-transition-name: none !important;
 }
 
 /* Every displaced start state lives in here, or content strands invisible. */
@@ -642,8 +648,34 @@
     animation-delay: calc(var(--enter-step, 0) * 70ms);
   }
 
-  html {
-    scroll-behavior: smooth;
+  @view-transition {
+    navigation: auto;
+  }
+
+  ::view-transition-group(*) {
+    animation-duration: var(--duration-long);
+    animation-timing-function: var(--ease-page);
+  }
+
+  /* The work the strip sent the reader to rises into its place. */
+  @keyframes plate-arrive {
+    from {
+      transform: translateY(100vh);
+    }
+  }
+
+  ::view-transition-new(.plate):only-child {
+    animation: plate-arrive var(--duration-long) var(--ease-page) both;
+  }
+
+  /* The marquee restarts on arrival: swap the line rather than ghost two. */
+  ::view-transition-old(plate-strip) {
+    animation: none;
+    opacity: 0;
+  }
+
+  ::view-transition-new(plate-strip) {
+    animation: none;
   }
 
   @supports (animation-timeline: view()) {
@@ -657,11 +689,11 @@
       }
     }
 
-    /* `entry` alone: a plate taller than the viewport never reaches `cover`. */
+    /* Done by the line a strip jump lands on, so an arriving work never rests low. */
     .reveal {
       animation: reveal linear both;
       animation-timeline: view();
-      animation-range: entry 0% entry 90%;
+      animation-range: entry 0% entry calc(100svh - var(--plate-jump));
     }
 
     /* Half the track, which holds the list twice, so no seam shows. */
