@@ -220,7 +220,9 @@
   /* His own lettering: RISE and FOCUS are hollow, slanted caps. Outline only, so no mass of ink. */
   .motto {
     margin-block-start: var(--space-section);
-    font-size: clamp(2.25rem, 1rem + 5.5vw, 5rem);
+    /* One line with its sparkles; the size follows the column so it always fits. */
+    font-size: min(clamp(2.25rem, 1rem + 5.5vw, 5rem), 100cqi / 10.5);
+    white-space: nowrap;
     text-align: center;
     color: var(--color-ink);
     -webkit-text-fill-color: transparent;

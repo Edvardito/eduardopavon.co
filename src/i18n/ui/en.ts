@@ -6,9 +6,9 @@ export default {
 
   'home.title': 'Eduardo Pavón — Bic ballpoint pen drawing',
   'home.heading': 'Eduardo Pavón',
-  'home.motto': 'Everything is a drawing',
+  'home.motto': 'Sorcerer',
   'home.intro':
-    'From Mexico City, Eduardo Pavón draws with a Bic pen and all the time in the world. While everything rushes, he stays: line after line, until the banknote loses its worth, the uniform is left with no one inside and the riot cop carries a rose. Drawing slowly is how he disobeys. And from so many slow lines, something rises: {rise}',
+    'Eduardo Pavón draws from Mexico City with a Bic pen and a patience that has almost disappeared. Stroke by stroke, without hurry, he builds hyperrealistic images where every fold, every texture and every shadow is placed by hand. His work stares down power, money and haste, and answers with the one thing that cannot be rushed: time. Drawing slowly is how he resists. And from so many slow lines, something rises: {rise}',
   'home.rise': 'RISE',
   'gallery.heading': 'Work',
   'gallery.plates': 'Plates',

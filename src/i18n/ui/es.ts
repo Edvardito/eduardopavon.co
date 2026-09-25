@@ -6,9 +6,9 @@ export default {
 
   'home.title': 'Eduardo Pavón — Dibujo a pluma Bic',
   'home.heading': 'Eduardo Pavón',
-  'home.motto': 'Todo es un dibujo',
+  'home.motto': 'Hechicero',
   'home.intro':
-    'Desde la Ciudad de México, Eduardo Pavón dibuja con una pluma Bic y todo el tiempo del mundo. Mientras todo corre, él se detiene: raya tras raya, hasta que el billete pierde su valor, el uniforme se queda sin nadie adentro y el granadero carga una rosa. Dibujar despacio es su manera de desobedecer. Y de tanta línea lenta, algo se levanta: {rise}',
+    'Eduardo Pavón dibuja desde la Ciudad de México con una pluma Bic y una paciencia que ya casi no existe. Trazo a trazo, sin prisa, levanta imágenes hiperrealistas donde cada pliegue, cada textura y cada sombra está puesta a mano. Su obra mira de frente al poder, al dinero y a la prisa, y responde con lo único que no se puede apresurar: el tiempo. Dibujar despacio es su forma de resistir. Y de tanta línea lenta, algo se levanta: {rise}',
   'home.rise': 'RISE',
   'gallery.heading': 'Obra',
   'gallery.plates': 'Láminas',
