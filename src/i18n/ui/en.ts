@@ -8,7 +8,7 @@ export default {
   'home.heading': 'Eduardo Pavón',
   'home.motto': 'Everything is a drawing',
   'home.intro':
-    'Jackets with nobody inside. Heads that took off and left nothing but cartoon eyes, dripping. A faceless riot cop holding a rose. Eduardo Pavón pours hours and hours of Bic pen into every nylon wrinkle and every crease of plastic, until the clothes weigh more than the body that is gone. And stamped over all of it, like a tattoo: {rise}',
+    'From Mexico City, Eduardo Pavón draws with a Bic pen and all the time in the world. While everything rushes, he stays: line after line, until the banknote loses its worth, the uniform is left with no one inside and the riot cop carries a rose. Drawing slowly is how he disobeys. And from so many slow lines, something rises: {rise}',
   'home.rise': 'RISE',
   'gallery.heading': 'Work',
   'gallery.plates': 'Plates',

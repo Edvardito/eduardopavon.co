@@ -8,7 +8,7 @@ export default {
   'home.heading': 'Eduardo Pavón',
   'home.motto': 'Todo es un dibujo',
   'home.intro':
-    'Chamarras sin nadie adentro. Cabezas que se largaron y dejaron nomás unos ojos de caricatura, chorreando. Un granadero sin cara con una rosa en la mano. Eduardo Pavón le mete horas y horas de pluma Bic a cada arruga de nylon y a cada pliegue de plástico, hasta que la ropa pesa más que el cuerpo que ya no está. Y encima, como tatuaje: {rise}',
+    'Desde la Ciudad de México, Eduardo Pavón dibuja con una pluma Bic y todo el tiempo del mundo. Mientras todo corre, él se detiene: raya tras raya, hasta que el billete pierde su valor, el uniforme se queda sin nadie adentro y el granadero carga una rosa. Dibujar despacio es su manera de desobedecer. Y de tanta línea lenta, algo se levanta: {rise}',
   'home.rise': 'RISE',
   'gallery.heading': 'Obra',
   'gallery.plates': 'Láminas',
