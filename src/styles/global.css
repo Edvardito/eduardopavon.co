@@ -20,7 +20,7 @@
   --font-weight-super: 900;
 
   --text-label: 1.875rem;
-  --text-strip: 1.875rem;
+  --text-strip: 1.5rem;
   --text-caption: 0.85rem;
   --text-body: 1.0625rem;
   --text-lede: 1.328rem;
@@ -684,7 +684,7 @@
 
       .plate-strip__track {
         /* Fixed, not derived: tuned to ~39px/s over today's list, so more works run slower. */
-        animation: plate-strip 78s linear infinite;
+        animation: plate-strip 63s linear infinite;
       }
 
       .plate-strip:hover .plate-strip__track,

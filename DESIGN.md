@@ -186,12 +186,14 @@ no GSUB, so it has no tabular figures, no case forms and no stylistic sets.
 Anything that must align figures sets in the text role: the folios in the list
 of plates are Bold for that reason.
 
-**The display role has a floor: 30px.** Super is the heaviest cut in the family;
-below that its counters close up and a line of capitals reads as a bar of ink
-rather than as words, which is principle 1's failure brought into the chrome. No
-step the display role uses may fall under the floor; test-enforced (§10). The
-consequence is a real constraint, not a note: **the display role cannot do small
-furniture.** Anything that has to be small belongs to the text role.
+**The display role has a floor: 24px**, the size at which WCAG counts text as
+large (the same threshold that bounds `--color-pen-red`). The floor is set by
+role, not by legibility: Super still reads as type below it, but the site's
+voice is always large text, and a Super capital small enough to sit in a line of
+body copy is furniture pretending to be a heading. No step the display role uses
+may fall under the floor; test-enforced (§10). The consequence is a real
+constraint, not a note: **the display role cannot do small furniture.** Anything
+that has to be small belongs to the text role.
 
 **Three text steps** — caption, body, lede — a major third (1.25) apart. The
 display role does not use them: it has **two optical steps of its own**,
@@ -1110,7 +1112,7 @@ Load-bearing; everything else here is advisory prose.
 | No colour literal under `src/` outside `@theme`      | `tests/design.test.ts`  |
 | Exactly one client script, within its byte budget    | `tests/design.test.ts`  |
 | Every `animation` sits inside a reduced-motion guard | `tests/design.test.ts`  |
-| The display role never sets below 30px               | `tests/design.test.ts`  |
+| The display role never sets below 24px               | `tests/design.test.ts`  |
 | Both image tiers, own budgets, no orphans            | `tests/content.test.ts` |
 | No face ships `font-display:auto`                    | `ci.yml`, post-build    |
 | Every published URL gets its CSP header              | `ci.yml`, post-build    |

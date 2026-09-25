@@ -135,7 +135,7 @@ describe('type floors', () => {
     for (const token of tokens) {
       const match = new RegExp(`${token}:\\s*([^;]+);`).exec(css);
       expect(match, `${token} is missing`).not.toBeNull();
-      expect(rem(match![1]!.trim()), `${token} is under the 30px floor`).toBeGreaterThanOrEqual(30);
+      expect(rem(match![1]!.trim()), `${token} is under the 24px floor`).toBeGreaterThanOrEqual(24);
     }
   });
 });
