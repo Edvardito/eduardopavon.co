@@ -128,14 +128,17 @@ describe('the script exception', () => {
 describe('type floors', () => {
   it('never sets the display face below its floor', async () => {
     const css = await readFile(STYLESHEET, 'utf8');
-    const rem = (value: string) =>
-      value.endsWith('rem') ? parseFloat(value) * 16 : parseFloat(value);
+    // A fluid step's floor is its clamp() minimum.
+    const px = (value: string) => {
+      const min = /^clamp\(\s*([^,]+),/.exec(value)?.[1]?.trim() ?? value;
+      return min.endsWith('rem') ? parseFloat(min) * 16 : parseFloat(min);
+    };
 
-    const tokens = ['--text-label', '--text-strip'];
+    const tokens = ['--text-label', '--text-strip', '--text-display', '--text-motto'];
     for (const token of tokens) {
       const match = new RegExp(`${token}:\\s*([^;]+);`).exec(css);
       expect(match, `${token} is missing`).not.toBeNull();
-      expect(rem(match![1]!.trim()), `${token} is under the 18px floor`).toBeGreaterThanOrEqual(18);
+      expect(px(match![1]!.trim()), `${token} is under the 18px floor`).toBeGreaterThanOrEqual(18);
     }
   });
 });

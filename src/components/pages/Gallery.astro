@@ -17,6 +17,7 @@ interface Props {
 const { locale } = Astro.props;
 const tr = useTranslations(locale);
 
+const motto = tr('home.motto');
 const [introBefore, introAfter] = splitAroundSlot(tr('home.intro', { rise: SLOT }));
 
 const artworks = await getSortedArtworks();
@@ -50,14 +51,14 @@ const EAGER_PLATES = 1;
   </div>
 
   <div class="page reveal">
-    <p class="display motto">
+    <p class="lettering motto" style={`--motto-chars:${motto.length}`}>
       <Sparkle />
-      {tr('home.motto')}
+      {motto}
       <Sparkle />
     </p>
     <p class="measure statement">
       {introBefore}
-      <span class="rise">{tr('home.rise')}</span>
+      <span class="lettering rise">{tr('home.rise')}</span>
       {introAfter}
     </p>
   </div>

@@ -177,7 +177,12 @@ and his tag RISE are set the way he letters them in the drawings — heavy,
 slanted, the motto hollow like RISE and FOCUS — in `--color-ink`, because they
 are his voice, not the site's furniture. The motto is outline only, so a line
 that large carries no mass of ink (principle 1). The slant is a skew of Super,
-not a drawn italic, and it belongs to these two and nothing else.
+not a drawn italic, and it belongs to these two and nothing else: one class,
+`.lettering`, carries it. **The motto stays on one line whatever the word**: its
+size is the column divided by its own length, at 0.72em a character (Super's
+capitals average 0.687em) plus 2.6em for the sparkles and the slant, so a longer
+word in another language sets smaller rather than overflowing. That constant
+belongs to the typeface, not to the word.
 
 **Three weights exist and each belongs to one role.** Super belongs to the
 display role and is the only weight it sets. The text role has exactly **400 and
@@ -799,8 +804,8 @@ beneath it.
   by exactly what the logo loses, on the same scroll timeline and range, so the
   page's geometry is the same at every scroll offset. Every scroll target — a
   strip jump, find-in-page, focus — therefore lands where the static sums say,
-  with no correction of its own. The statement below is a flow root, or its
-  larger top margin would swallow the masthead's.
+  with no correction of its own. The masthead owns the whole gap to the
+  statement, so no other margin can collapse with its growth and swallow it.
 - **Its resting size is the small one.** The large size lives in the keyframe,
   so a browser without scroll timelines — or a reader who has asked for no
   motion — gets a modest bar rather than one permanently covering a quarter of
