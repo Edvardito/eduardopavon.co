@@ -356,6 +356,8 @@
     background-color: var(--color-pen);
     color: var(--color-ground);
     padding-block: var(--space-caption);
+    /* The page margin sits here, outside the loop, so it never opens a seam in it. */
+    padding-inline: var(--space-margin);
     /* Scrollable even when static: the only path without the marquee. */
     overflow-x: auto;
     /* Or the block axis becomes a scroll target too, for nothing to scroll. */
@@ -376,9 +378,11 @@
   }
 
   .plate-index {
+    --entry-gap: 0.9em;
     display: flex;
-    gap: 0.9em;
-    padding-inline: var(--space-margin);
+    gap: var(--entry-gap);
+    /* A gap after the last entry too, so the loop's seam is the same gap as every other. */
+    padding-inline-end: var(--entry-gap);
     font-family: var(--font-display);
     font-size: var(--text-strip);
     font-weight: var(--font-weight-super);

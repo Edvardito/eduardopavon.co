@@ -613,12 +613,14 @@ past the sum `--masthead-collapsed` is built from. A wider gap reads as two
 labels, not one line.
 
 **The line moves, endlessly.** The track holds the list twice and travels
-exactly half its own width, so the seam never shows; the duplicate is
-`aria-hidden` and out of the tab order, so nothing is announced or focusable
-twice. The duration is fixed rather than derived from the content, so adding
-works makes the strip longer and its pace slower. It is tuned to hold about 40px
-a second over today's list; a wider face or a larger strip step changes the
-pace, so retune it with them.
+exactly half its own width, so the seam never shows. That holds only if each
+list ends with one entry gap and nothing else: the page margin is the strip's
+own padding, outside the loop, or it opens a hole two margins wide at the seam.
+The duplicate is `aria-hidden` and out of the tab order, so nothing is announced
+or focusable twice. The duration is fixed rather than derived from the content,
+so adding works makes the strip longer and its pace slower. It is tuned to hold
+about 40px a second over today's list; a wider face or a larger strip step
+changes the pace, so retune it with them.
 
 **It is a marquee or a scroll strip, and never both at once.** The two cannot
 share one element: the track's translate and the container's scroll offset
