@@ -365,9 +365,13 @@ clicking.
 page, with the **list of plates** as a pen band directly beneath it. The two
 stick together and the logo shrinks inside them. Then the **statement** — the
 one element at the top of the page that scrolls away, which is what tells the
-reader the page has started moving: large, centred, in caps. Then the gallery:
-section label, rule, and a single column of plates at the common measure. Then
-contact, then the colophon.
+reader the page has started moving. It is the artist's motto, large, centred, in
+caps, with one word under the scrawl (§6); then a short paragraph at the lede
+step, in the third person and the present tense, saying who draws, with what,
+how and about what. Nothing in it is claimed that the artist has not said
+himself, and it carries no adjectives about him: a curator reads a statement for
+facts. Then the gallery: section label, rule, and a single column of plates at
+the common measure. Then contact, then the colophon.
 
 **There is no hero.** A frontispiece spread puts one work in a privileged
 position ahead of the others, which is a claim the single column gives up
@@ -670,6 +674,14 @@ holds on every archetype, Phase 3's detail page included: no badge, chip,
 bracketed note or caption suffix. A page that needs to state availability is a
 new decision with its own entry here.
 
+**The scrawl.** A ballpoint scribble under the one word of the motto that names
+the practice, in pen: the site's voice drawing, not describing a work. It is
+inline line-work SVG like the contact glyphs, `aria-hidden`, stroked in
+`currentColor` and stretched to the word's width with a non-scaling stroke, so
+it never distorts the line's weight. It sits below the baseline and never
+crosses a letter, so the text's contrast is untouched. One per page, under the
+motto only; a second scrawl is a pattern, and this is a mark.
+
 **The contact section.** The last thing the gallery says, sitting between the
 closing rule and the colophon: section label, rule, one line of prose at the
 measure, then the contact points as links. It is the site's voice, not a work's
@@ -900,25 +912,28 @@ the main path.
 
 ## 7. Motion and interaction
 
-| Effect                | Trigger        | Guard                                      | Cost       | Without it              |
-| --------------------- | -------------- | ------------------------------------------ | ---------- | ----------------------- |
-| Type entrance (404)   | document ready | reduced-motion                             | CSS        | type already in place   |
-| Plate placeholder     | load           | reduced-motion; finite, 8 breaths          | CSS        | a static blurred copy   |
-| Rise                  | scroll         | `@supports (animation-timeline)` + r-m     | CSS        | works already in place  |
-| Develop               | scroll         | `@supports (animation-timeline)` + r-m     | CSS        | works already resolved  |
-| Strip arrival         | list of plates | `@view-transition` inside r-m              | CSS        | the jump is instant     |
-| View-transition morph | navigation     | `@view-transition` inside r-m              | CSS        | a plain navigation      |
-| Magnifier             | hover, or hold | fine pointer: hover; else a still hold     | **script** | the gallery is complete |
-| Title card shrink     | scroll         | `@supports (animation-timeline)` + r-m     | CSS        | a small sticky bar      |
-| Plate strip marquee   | none, endless  | reduced-motion; pauses on hover/hold/focus | CSS        | a static scroll strip   |
+| Effect                | Trigger        | Guard                                      | Cost       | Without it               |
+| --------------------- | -------------- | ------------------------------------------ | ---------- | ------------------------ |
+| Type entrance (404)   | document ready | reduced-motion                             | CSS        | type already in place    |
+| Scrawl draw           | document ready | reduced-motion; once                       | CSS        | the scrawl already drawn |
+| Plate placeholder     | load           | reduced-motion; finite, 8 breaths          | CSS        | a static blurred copy    |
+| Rise                  | scroll         | `@supports (animation-timeline)` + r-m     | CSS        | works already in place   |
+| Develop               | scroll         | `@supports (animation-timeline)` + r-m     | CSS        | works already resolved   |
+| Strip arrival         | list of plates | `@view-transition` inside r-m              | CSS        | the jump is instant      |
+| View-transition morph | navigation     | `@view-transition` inside r-m              | CSS        | a plain navigation       |
+| Magnifier             | hover, or hold | fine pointer: hover; else a still hold     | **script** | the gallery is complete  |
+| Title card shrink     | scroll         | `@supports (animation-timeline)` + r-m     | CSS        | a small sticky bar       |
+| Plate strip marquee   | none, endless  | reduced-motion; pauses on hover/hold/focus | CSS        | a static scroll strip    |
 
-**The staggered entrance runs only on the 404**, the one page that opens with a
-block of type; the home page opens with the title card's shrink. Each element
-carries its own step index rather than relying on sibling position, so
-restructuring a page cannot silently resequence it, and **total duration
-including the longest stagger must not exceed 600 ms** — an entrance must never
-be what pushes a passing page into a failing LCP. **Plates never animate on
-load**, only on scroll.
+**The scrawl under the motto draws itself once on load**, left to right, a short
+beat after the page paints: a transform on decoration, never on text or a work,
+and never the LCP. **The staggered entrance runs only on the 404**, the one page
+that opens with a block of type; the home page opens with the title card's
+shrink. Each element carries its own step index rather than relying on sibling
+position, so restructuring a page cannot silently resequence it, and **total
+duration including the longest stagger must not exceed 600 ms** — an entrance
+must never be what pushes a passing page into a failing LCP. **Plates never
+animate on load**, only on scroll.
 
 **A strip jump is an arrival, not a scroll.** A smooth scroll to a work six
 screens down passes five other works at some 16,000px a second: a smear, then a
