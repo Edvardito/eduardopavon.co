@@ -8,7 +8,7 @@ export default {
   'home.heading': 'Eduardo Pavón',
   'home.motto': 'Everything is a drawing.',
   'home.intro':
-    'An empty jacket. A 500-peso bill redrawn line by line. Boxes, wrappers, rubbish bags. Eduardo Pavón draws what nobody looks at twice, in Bic pen, and loads it with what goes unsaid: guilt, desolation, relief.',
+    'Eduardo Pavón is a sorcerer armed with the same Bic pen rattling around the bottom of your bag. Line over line, thousands of times, until an empty jacket weighs as much as a body, a 500-peso bill becomes his own and a trash bag gleams like a relic. He draws guilt, desolation, a riot cop coming apart. And then, against everything: RISE.',
   'gallery.heading': 'Work',
   'gallery.plates': 'Plates',
   'gallery.plateLabel': 'Plate {number}',

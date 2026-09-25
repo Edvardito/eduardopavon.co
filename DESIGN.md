@@ -370,9 +370,11 @@ caps; then a short paragraph at the lede step, in the third person and the
 present tense. It is built from the artist's own material — the things he draws
 and the words he has used for them — and never from a description of the medium,
 which the captions already give and which could introduce anyone who owns a pen.
-Nothing in it is claimed that the artist has not said himself, and it carries no
-adjectives about him. Then the gallery: section label, rule, and a single column
-of plates at the common measure. Then contact, then the colophon.
+Its voice has the drawings' nerve, not a CV's: vivid, direct, a little reckless,
+and in the artist's own words where he has them. Its facts stay his — nothing is
+claimed that his work and his own statements do not carry. Then the gallery:
+section label, rule, and a single column of plates at the common measure. Then
+contact, then the colophon.
 
 **There is no hero.** A frontispiece spread puts one work in a privileged
 position ahead of the others, which is a claim the single column gives up

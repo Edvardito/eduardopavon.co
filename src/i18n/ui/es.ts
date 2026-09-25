@@ -8,7 +8,7 @@ export default {
   'home.heading': 'Eduardo Pavón',
   'home.motto': 'Todo es un dibujo.',
   'home.intro':
-    'Una chamarra vacía. Un billete de 500 dibujado de nuevo, raya por raya. Cajas, envoltorios, bolsas de basura. Eduardo Pavón dibuja con pluma Bic lo que nadie mira dos veces y lo carga de lo que no se dice: culpa, desolación, alivio.',
+    'Eduardo Pavón es un hechicero armado con la misma pluma Bic que traes rodando en la mochila. Raya sobre raya, miles de veces, hasta que una chamarra vacía pesa como un cuerpo, un billete de 500 varos se vuelve suyo y una bolsa de basura brilla como reliquia. Dibuja la culpa, la desolación, a un granadero hecho pedazos. Y luego, contra todo: RISE.',
   'gallery.heading': 'Obra',
   'gallery.plates': 'Láminas',
   'gallery.plateLabel': 'Lámina {number}',
