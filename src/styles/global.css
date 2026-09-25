@@ -695,11 +695,38 @@
       }
     }
 
-    /* Done by the line a strip jump lands on, so an arriving work never rests low. */
     .reveal {
       animation: reveal linear both;
       animation-timeline: view();
       animation-range: entry 0% entry calc(100svh - var(--plate-jump));
+    }
+
+    /* The plate and its caption, each on its own timeline, so the caption follows a beat behind.
+       Transform only: done by the line a strip jump lands on, so an arriving work rests in place. */
+    @keyframes rise {
+      from {
+        transform: translateY(min(22vh, 14rem));
+      }
+    }
+
+    .cadence .plate,
+    .cadence .caption {
+      animation: rise linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry calc(100svh - var(--plate-jump));
+    }
+
+    /* The drawing alone resolves out of its placeholder, never text; not the first plate, which paints on load. */
+    @keyframes develop {
+      from {
+        opacity: 0;
+      }
+    }
+
+    .cadence > :not(:first-child) .plate img {
+      animation: develop linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry calc((100svh - var(--plate-jump)) * 0.6);
     }
 
     /* Half the track, which holds the list twice, so no seam shows. */
