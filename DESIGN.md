@@ -172,17 +172,18 @@ the colour removed still tells the catalogue from the catalogued, because
 nothing describing a specific drawing is ever set in Super or in capitals. The
 name is not type at all: it is the logo (§6).
 
-**The artist's own lettering is the one exception, and it is in ink.** The motto
-and his tag RISE are set the way he letters them in the drawings — heavy,
-slanted, the motto hollow like RISE and FOCUS — in `--color-ink`, because they
-are his voice, not the site's furniture. The motto is outline only, so a line
-that large carries no mass of ink (principle 1). The slant is a skew of Super,
-not a drawn italic, and it belongs to these two and nothing else: one class,
-`.lettering`, carries it. **The motto stays on one line whatever the word**: its
-size is the column divided by its own length, at 0.72em a character (Super's
-capitals average 0.687em) plus 2.6em for the sparkles and the slant, so a longer
-word in another language sets smaller rather than overflowing. That constant
-belongs to the typeface, not to the word.
+**The artist's own lettering is the one exception.** The motto and his tag RISE
+are set the way he letters them in the drawings — heavy and slanted. The motto
+is solid `--color-pen`: it is the site presenting him, so it speaks in the
+site's blue, which is lighter than ink and never outweighs a work (principle 1).
+RISE, inside his statement, and the four-point sparkles beside the motto stay
+`--color-ink`: they are his marks. The slant is a skew of Super, not a drawn
+italic, and it belongs to these two and nothing else: one class, `.lettering`,
+carries it. **The motto stays on one line whatever the word**: its size is the
+column divided by its own length, at 0.72em a character (Super's capitals
+average 0.687em) plus 2.6em for the sparkles and the slant, so a longer word in
+another language sets smaller rather than overflowing. That constant belongs to
+the typeface, not to the word.
 
 **Three weights exist and each belongs to one role.** Super belongs to the
 display role and is the only weight it sets. The text role has exactly **400 and

@@ -157,7 +157,7 @@
     color: var(--color-pen);
   }
 
-  /* His own lettering, the motto and RISE: ink, not pen, and slanted like his hand. */
+  /* His own lettering, the motto and RISE: heavy and slanted like his hand. */
   .lettering {
     color: var(--color-ink);
     transform: skewX(var(--slant));
@@ -225,7 +225,7 @@
     border-block-start: var(--rule-width) solid var(--color-pen);
   }
 
-  /* Hollow, so a line that large carries no mass of ink. */
+  /* Solid pen: the site presents him; the sparkles stay ink, drawn from his hand. */
   .motto {
     /* One line with its sparkles, whatever the word: Super's capitals average 0.687em, the sparkles take 2.6em. */
     font-size: min(
@@ -235,12 +235,12 @@
     line-height: var(--leading-display);
     white-space: nowrap;
     text-align: center;
-    -webkit-text-fill-color: transparent;
-    -webkit-text-stroke: max(1.5px, 0.03em) currentColor;
+    color: var(--color-pen);
   }
 
   .sparkle {
     display: inline-block;
+    color: var(--color-ink);
     inline-size: 0.6em;
     block-size: 0.8em;
     margin-inline: 0.3em;
