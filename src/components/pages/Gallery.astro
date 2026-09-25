@@ -6,8 +6,7 @@ import ArtworkCard from '~/components/ui/ArtworkCard.astro';
 import GlassFilter from '~/components/ui/GlassFilter.astro';
 import Logo from '~/components/ui/Logo.astro';
 import PlateIndex from '~/components/ui/PlateIndex.astro';
-import Scribble from '~/components/ui/Scribble.astro';
-import { SLOT, splitAroundSlot, useTranslations, type Locale } from '~/i18n';
+import { useTranslations, type Locale } from '~/i18n';
 import BaseLayout from '~/layouts/BaseLayout.astro';
 
 interface Props {
@@ -16,8 +15,6 @@ interface Props {
 
 const { locale } = Astro.props;
 const tr = useTranslations(locale);
-
-const [mottoBefore, mottoAfter] = splitAroundSlot(tr('home.motto', { word: SLOT }));
 
 const artworks = await getSortedArtworks();
 const featured = artworks[0]!;
@@ -50,14 +47,7 @@ const EAGER_PLATES = 1;
   </div>
 
   <div class="page reveal">
-    <p class="lede">
-      {mottoBefore}
-      <span class="scribbled">
-        {tr('home.mottoWord')}
-        <Scribble />
-      </span>
-      {mottoAfter}
-    </p>
+    <p class="lede">{tr('home.motto')}</p>
     <p class="measure statement">{tr('home.intro')}</p>
   </div>
 

@@ -224,24 +224,6 @@
     margin-block-start: var(--space-section);
   }
 
-  /* The motto's one drawn word. */
-  .scribbled {
-    position: relative;
-    display: inline-block;
-  }
-
-  .scribble {
-    position: absolute;
-    inset-inline-start: -0.06em;
-    inset-block-start: 84%;
-    inline-size: calc(100% + 0.12em);
-    block-size: 0.34em;
-    overflow: visible;
-    color: var(--color-pen);
-    stroke-width: max(2px, 0.05em);
-    pointer-events: none;
-  }
-
   .statement {
     margin-inline: auto;
     margin-block-start: var(--space-row);
@@ -673,18 +655,6 @@
       opacity: 1;
       transform: none;
     }
-  }
-
-  /* The scrawl draws itself once, a beat after the page paints; it is decoration, never text. */
-  @keyframes scribble {
-    from {
-      transform: scaleX(0);
-    }
-  }
-
-  .scribble {
-    transform-origin: left;
-    animation: scribble var(--duration-long) var(--ease-page) var(--duration-short) both;
   }
 
   .enter {

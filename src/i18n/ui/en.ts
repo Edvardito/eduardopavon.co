@@ -6,10 +6,9 @@ export default {
 
   'home.title': 'Eduardo Pavón — Bic ballpoint pen drawing',
   'home.heading': 'Eduardo Pavón',
-  'home.motto': 'Everything is a {word}.',
-  'home.mottoWord': 'drawing',
+  'home.motto': 'Everything is a drawing.',
   'home.intro':
-    'Eduardo Pavón draws with a Bic ballpoint pen on paper and plastic canvas, building each image stroke by stroke out of texture, light and shadow. In his work, everyday things like jackets, boxes and wrappers become portraits of states of mind.',
+    'An empty jacket. A 500-peso bill redrawn line by line. Boxes, wrappers, rubbish bags. Eduardo Pavón draws what nobody looks at twice, in Bic pen, and loads it with what goes unsaid: guilt, desolation, relief.',
   'gallery.heading': 'Work',
   'gallery.plates': 'Plates',
   'gallery.plateLabel': 'Plate {number}',

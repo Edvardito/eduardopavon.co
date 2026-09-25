@@ -6,10 +6,9 @@ export default {
 
   'home.title': 'Eduardo Pavón — Dibujo a pluma Bic',
   'home.heading': 'Eduardo Pavón',
-  'home.motto': 'Todo es un {word}.',
-  'home.mottoWord': 'dibujo',
+  'home.motto': 'Todo es un dibujo.',
   'home.intro':
-    'Eduardo Pavón dibuja con pluma Bic sobre papel y lona plástica, y construye cada imagen trazo a trazo, a base de texturas, luces y sombras. En su obra, objetos cotidianos como chamarras, cajas y envoltorios se convierten en retratos de estados de ánimo.',
+    'Una chamarra vacía. Un billete de 500 dibujado de nuevo, raya por raya. Cajas, envoltorios, bolsas de basura. Eduardo Pavón dibuja con pluma Bic lo que nadie mira dos veces y lo carga de lo que no se dice: culpa, desolación, alivio.',
   'gallery.heading': 'Obra',
   'gallery.plates': 'Láminas',
   'gallery.plateLabel': 'Lámina {number}',
