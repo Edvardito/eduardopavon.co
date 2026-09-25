@@ -84,7 +84,7 @@
     --section-head-block: calc(
       var(--text-label) * var(--leading-text) + var(--space-caption) + var(--rule-width)
     );
-    /* `cqi` is <main>'s width, so these resolve only inside it; 100vw would count the scrollbar. */
+    /* `cqi` is <main>'s width: 100vw would count the scrollbar. */
     --logo-full: min(var(--logo-max), (100cqi - var(--space-margin) * 2) / var(--logo-ratio));
     --logo-rest: min(var(--logo-collapsed), var(--logo-full));
     --masthead-collapsed: calc(var(--logo-rest) + var(--space-caption) * 2 + var(--strip-block));
@@ -96,7 +96,7 @@
     /* Clear of a finger at 320px; a touch lens must sit beside it, not under it. */
     --loupe-size-touch: 8rem;
     --loupe-zoom: 3.3;
-    /* The map is drawn to this ratio, so it follows the size; must exceed the largest displacement. */
+    /* Follows the size, as the map is drawn to this ratio; must exceed the widest bend. */
     --loupe-pad: calc(var(--loupe-size) * 3 / 22);
 
     --container-plate: 56rem;
@@ -127,7 +127,7 @@
 }
 
 @layer components {
-  /* What the masthead sums measure. Containment is not a backdrop root, so the glass still samples. */
+  /* The width the masthead sums measure; containment is no backdrop root. */
   main {
     container-type: inline-size;
   }
@@ -225,9 +225,9 @@
     border-block-start: var(--rule-width) solid var(--color-pen);
   }
 
-  /* Solid pen: the site presents him; the sparkles stay ink, drawn from his hand. */
+  /* Pen: the site presenting him. */
   .motto {
-    /* One line with its sparkles, whatever the word: Super's capitals average 0.687em, the sparkles take 2.6em. */
+    /* One line whatever the word: 0.72em a capital, 2.6em for the sparkles. */
     font-size: min(
       var(--text-motto),
       (100cqi - var(--space-margin) * 2) / (var(--motto-chars) * 0.72 + 2.6)
@@ -238,6 +238,7 @@
     color: var(--color-pen);
   }
 
+  /* His mark, so ink. */
   .sparkle {
     display: inline-block;
     color: var(--color-ink);
@@ -390,12 +391,12 @@
 
   .plate-strip {
     view-transition-name: plate-strip;
-    /* Holds the hidden folio labels; unanchored, they escape the scroll box and widen the page. */
+    /* Holds the sr-only folio labels, or they escape and widen the page. */
     position: relative;
     background-color: var(--color-pen);
     color: var(--color-ground);
     padding-block: var(--space-caption);
-    /* The page margin sits here, outside the loop, so it never opens a seam in it. */
+    /* The page margin, outside the loop, so it opens no seam. */
     padding-inline: var(--space-margin);
     /* Scrollable even when static: the only path without the marquee. */
     overflow-x: auto;
@@ -420,7 +421,7 @@
     --entry-gap: 0.9em;
     display: flex;
     gap: var(--entry-gap);
-    /* A gap after the last entry too, so the loop's seam is the same gap as every other. */
+    /* A gap after the last entry too, so the seam matches every other gap. */
     padding-inline-end: var(--entry-gap);
     font-size: var(--text-strip);
   }
@@ -433,8 +434,9 @@
     flex: none;
   }
 
-  /* No second readable colour on pen: red 2.15:1, ink 1.86:1. Super has no `tnum`; Bold does. */
+  /* No second readable colour on pen: red 2.15:1, ink 1.86:1. */
   .plate-index__folio {
+    /* Super has no `tnum`; Bold does. */
     font-family: var(--font-text);
     font-variant-numeric: tabular-nums;
     font-weight: var(--font-weight-bold);
@@ -469,7 +471,7 @@
   .cadence > * {
     inline-size: 100%;
     max-inline-size: var(--container-plate);
-    /* Below the whole sticky stack, and a row clear of it: a work on the edge reads as a failed load. */
+    /* A row below the sticky stack: a work on its edge reads as a failed load. */
     scroll-margin-block-start: var(--plate-jump);
   }
 
@@ -737,7 +739,7 @@
       animation-range: entry 0% entry 90%;
     }
 
-    /* The work and its caption as one piece, or the record drifts from what it describes. */
+    /* Work and caption as one piece, or the record drifts from its work. */
     .cadence figure {
       --reveal-from: min(22vh, 14rem);
       animation-range: entry 0% entry var(--arrival-end);
@@ -821,7 +823,7 @@
       }
     }
 
-    /* At rest it is already collapsed, so a fragment scroll before the timeline resolves lands right. */
+    /* Collapsed at rest, so a fragment scroll before the timeline resolves still lands. */
     .masthead {
       margin-block-end: calc(var(--space-section) + var(--logo-full) - var(--logo-rest));
       animation: masthead-hold linear both;
@@ -831,7 +833,7 @@
       animation: titlecard linear both;
     }
 
-    /* One collapse for both. `scroll()`, not `scroll(root)`: minified, an argument kills it. */
+    /* `scroll()`, not `scroll(root)`: minified into the shorthand, an argument kills it. */
     .masthead,
     .titlecard__logo {
       animation-timeline: scroll();
