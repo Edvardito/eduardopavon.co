@@ -54,6 +54,11 @@ what gives the JSON-LD an `acquireLicensePage` to point at.
   entry uses the orientation-consistent reading. The artist should re-measure
   before Phase 3 shows the work full size beside those numbers.
 - **Confirm the gallery `order`** reflects how the artist wants the work hung.
+- **Is `desilusion` titled _Desilusión_ or _La desolación_?** The artist's July
+  2026 post names a 60 × 90 cm drawing _La desolación_; the entry says
+  _Desilusión_. Confirm before Phase 3 gives the work its own page.
+- **The artist approves the home statement and motto.** They speak for his work
+  and interpret his drawings; he signs them off before launch.
 - **Confirm the eight English artwork titles.** Reverting one is deleting a
   line; the entry then falls back to Spanish on its own.
 - **Confirm the Typekit licence permits self-hosting** Polymath Text.

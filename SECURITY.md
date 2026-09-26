@@ -104,10 +104,11 @@ blocks, so `script-src` and `style-src` carry hashes rather than
 Two accommodations, both deliberate:
 
 - **`style-src-attr 'unsafe-inline'`.** Every plate carries its aspect ratio,
-  its placeholder and its view-transition name in a `style` attribute, and a
-  hash cannot cover an attribute. Scoping the exception to `style-src-attr`
-  keeps `style-src` itself hash-only, so a `<style>` block still cannot be
-  injected. A style attribute cannot execute script.
+  its placeholder and its view-transition name, and the home page's motto its
+  length, as custom properties in a `style` attribute, and a hash cannot cover
+  an attribute. Scoping the exception to `style-src-attr` keeps `style-src`
+  itself hash-only, so a `<style>` block still cannot be injected. A style
+  attribute cannot execute script.
 - **`img-src 'self' data:`.** The blurred placeholder on each plate is an
   inlined `data:` URI.
 

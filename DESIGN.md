@@ -125,12 +125,12 @@ always built it — never from fading ink, which collapses contrast (~3.5:1 at
 
 | #   | Role             | Size    | Weight  | Case     | Colour |
 | --- | ---------------- | ------- | ------- | -------- | ------ |
-| 1   | display          | display | heavy   | upper    | pen    |
-| 2   | section label    | label   | bold    | upper    | pen    |
+| 1   | display          | display | super   | upper    | pen    |
+| 2   | section label    | label   | super   | upper    | pen    |
 | 3   | work title       | lede    | bold    | sentence | ink    |
 | 4   | prose / lede     | body    | regular | sentence | ink    |
 | 5   | catalogue line   | caption | regular | sentence | ink    |
-| 6   | folio / colophon | label   | bold    | upper    | pen    |
+| 6   | folio / colophon | label   | super   | upper    | pen    |
 
 Levels 2 and 6 share a treatment and differ only by position; both are
 furniture, and furniture should be one thing.
@@ -169,8 +169,9 @@ work's voice: prose, work titles, catalogue lines. One family cannot separate
 the two by letterform, so **weight and case** carry the split: the site speaks
 in Super capitals, the work in sentence case at 400 and 700. A screenshot with
 the colour removed still tells the catalogue from the catalogued, because
-nothing describing a specific drawing is ever set in Super or in capitals. The
-name is not type at all: it is the logo (§6).
+nothing describing a specific drawing is ever set in Super or in capitals —
+except in the list of plates, which is the site's contents and speaks in its
+voice, on its own pen field. The name is not type at all: it is the logo (§6).
 
 **The artist's own lettering is the one exception.** The motto and his tag RISE
 are set the way he letters them in the drawings — heavy and slanted. The motto
@@ -180,10 +181,10 @@ RISE, inside his statement, and the four-point sparkles beside the motto stay
 `--color-ink`: they are his marks. The slant is a skew of Super, not a drawn
 italic, and it belongs to these two and nothing else: one class, `.lettering`,
 carries it. **The motto stays on one line whatever the word**: its size is the
-column divided by its own length, at 0.72em a character (Super's capitals
-average 0.687em) plus 2.6em for the sparkles and the slant, so a longer word in
-another language sets smaller rather than overflowing. That constant belongs to
-the typeface, not to the word.
+column divided by its own length, at Super's measured advance per capital plus
+room for the sparkles and the slant, so a longer word in another language sets
+smaller rather than overflowing. The constant belongs to the typeface, not to
+the word.
 
 **Three weights exist and each belongs to one role.** Super belongs to the
 display role and is the only weight it sets. The text role has exactly **400 and
@@ -211,12 +212,15 @@ anything that has to be smaller than the strip belongs to the text role.
 **Three text steps** — caption, body, lede — a major third (1.25) apart. The
 display role does not use them: it has **two optical steps of its own**,
 `--text-label` and `--text-strip`, set by what each has to do rather than by a
-ratio, plus `--text-display`, which is fluid because its size is the measure it
-must fill. The two optical steps are set against the collapsed logo: each must
-stay visibly quieter than the name. A fourth text step or a third display step
-needs a role no current one serves — not something that looks slightly too big.
-A step that stops being used gets deleted: a token nothing references is one
-more thing to keep true.
+ratio, plus two fluid steps whose size is the measure they must fill:
+`--text-display`, the 404's numeral, and `--text-motto`, the artist's lettering
+on the home page. The text role has one fluid step of its own,
+`--text-statement`: the lede step grown for the one paragraph that has to hold
+up under the motto. The two optical steps are set against the collapsed logo:
+each must stay visibly quieter than the name. A fourth text step or a third
+display step needs a role no current one serves — not something that looks
+slightly too big. A step that stops being used gets deleted: a token nothing
+references is one more thing to keep true.
 
 Relationships that live nowhere in CSS:
 
@@ -359,11 +363,12 @@ A very tall work is very tall. Nothing is cropped or distorted, at any width,
 for any ratio (§3).
 
 **Phase 3's morph.** `view-transition-name` sits on the element whose box is
-exactly the work's box. Because that box carries the work's own aspect ratio,
-the gallery→detail morph interpolates two boxes of equal proportion and reads as
-one object moving rather than a stretch. A uniform measure makes this easier:
-every morph starts from the same width. The glazing fades out during it — the
-detail page is unglazed.
+exactly the work's box. Today only a `:target` plate is named (§7); the detail
+route widens that selector, it does not add a second naming mechanism. Because
+that box carries the work's own aspect ratio, the gallery→detail morph
+interpolates two boxes of equal proportion and reads as one object moving rather
+than a stretch. A uniform measure makes this easier: every morph starts from the
+same width. The glazing fades out during it — the detail page is unglazed.
 
 ---
 
@@ -638,9 +643,9 @@ list ends with one entry gap and nothing else: the page margin is the strip's
 own padding, outside the loop, or it opens a hole two margins wide at the seam.
 The duplicate is `aria-hidden` and out of the tab order, so nothing is announced
 or focusable twice. The duration is fixed rather than derived from the content,
-so adding works makes the strip longer and its pace slower. It is tuned to hold
-about 40px a second over today's list; a wider face or a larger strip step
-changes the pace, so retune it with them.
+so adding works makes the strip longer and its pace slower. It is tuned to
+today's list at today's step; a wider face or a larger strip step changes the
+pace, so retune it with them.
 
 **It is a marquee or a scroll strip, and never both at once.** The two cannot
 share one element: the track's translate and the container's scroll offset
@@ -948,25 +953,24 @@ including the longest stagger must not exceed 600 ms** — an entrance must neve
 be what pushes a passing page into a failing LCP. **Plates never animate on
 load**, only on scroll.
 
-**A strip jump is an arrival, not a scroll.** A smooth scroll to a work six
-screens down passes five other works at some 16,000px a second: a smear, then a
-landing with no event, and CSS cannot slow or re-ease the browser's own scroll.
-So a row is a navigation to the same page — `?p=<slug>#<slug>`, because a bare
-fragment stays in the document and gets no view transition — and the page is not
-scrolled at all. The page being left dissolves, the logo morphs into its
-collapsed size, the section head glides to its pin, and **the chosen work rises
-from below the screen into the place the jump lands it**, arriving as its
-placeholder if the drawing is still in flight. Only a `:target` plate is ever
-named — each plate carries its name as a custom property and CSS applies it to
-the target alone — so the arriving work enters rather than morphing from
-wherever it sat before, the one the reader leaves fades where it is, and nothing
-streaks. There is no `scroll-behavior: smooth`: it would turn the arriving
-page's fragment scroll back into the smear. The query changes nothing the page
-renders; the canonical URL stays the edition's. Where view transitions are
-missing or motion is reduced, the jump is an instant load at the same landing
-point.
+**A strip jump is an arrival, not a scroll.** A smooth scroll to a distant work
+smears through every work between, then lands with no event, and CSS cannot slow
+or re-ease the browser's own scroll. So a row is a navigation to the same page —
+`?p=<slug>#<slug>`, because a bare fragment stays in the document and gets no
+view transition — and the page is not scrolled at all. The page being left
+dissolves, the logo morphs into its collapsed size, the section head glides to
+its pin, and **the chosen work rises from below the screen into the place the
+jump lands it**, arriving as its placeholder if the drawing is still in flight.
+Only a `:target` plate is ever named — each plate carries its name as a custom
+property and CSS applies it to the target alone — so the arriving work enters
+rather than morphing from wherever it sat before, the one the reader leaves
+fades where it is, and nothing streaks. There is no `scroll-behavior: smooth`:
+it would turn the arriving page's fragment scroll back into the smear. The query
+changes nothing the page renders; the canonical URL stays the edition's. Where
+view transitions are missing or motion is reduced, the jump is an instant load
+at the same landing point.
 
-**Works rise, and text only ever moves.** Each plate starts a fifth of a screen
+**Works rise, and text only ever moves.** Each plate starts well below its place
 low and floats up as it enters, a little slower than the scroll, and **its
 caption moves with it as one piece**: a caption on its own timeline trails its
 work and reads as belonging to something else. The rise is done by the line a
@@ -1217,6 +1221,12 @@ whose job is seeing a work whole.
 **Does the gallery keep a visible section label?** On a page whose whole body is
 the gallery, "Obra" names the obvious. Keep it for now: it is the seam where a
 second section — a series, a year range — attaches, and removing it is one line.
+
+**Does the prominence test still hold at the top of the home page?** §5 allows
+one blue element larger than body per viewport height. The first viewport now
+carries the logo, the list of plates and the motto in solid pen, by the owner's
+choice. Either the test counts only the gallery column below the statement, or
+the motto goes back to ink. Decide, then state the test the page actually meets.
 
 **Does the two-tier pipeline want its own skill?** It lives in `add-artwork`
 today. Leave it there until a second operation needs it — a skill per procedure

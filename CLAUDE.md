@@ -121,8 +121,9 @@ the license string.
   text), `src/i18n/` (`t`, `statusLabel`, `formatDimensions`,
   `splitAroundSlot`), `src/site.ts` (names, licence, `rightsStatement`).
   `scripts/` imports `src/site.ts` directly — Node strips the types.
-- Translated sentences that contain a link use `SLOT` + `splitAroundSlot()`,
-  which throws if a translation drops the placeholder.
+- Translated sentences that contain a link, or a set-apart word such as the
+  statement's RISE, use `SLOT` + `splitAroundSlot()`, which throws if a
+  translation drops the placeholder.
 - Components group by role: `layout/`, `pages/`, `seo/`, `ui/`. `pages/` holds a
   page's whole body so the locale routes can share one implementation; a file
   under `src/pages/` is a route and cannot be imported as that shared body.

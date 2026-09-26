@@ -46,7 +46,10 @@ served from `/fr/` the moment it is in the list.
 ## 2. Create the UI message file
 
 Copy `src/i18n/ui/es.ts` to `src/i18n/ui/fr.ts` and translate the values. Keep
-every key, keep `{placeholders}` intact.
+every key, keep `{placeholders}` intact. Two values are the artist's own words,
+not copy: `home.rise` stays `RISE`, and `home.motto` is his word for himself,
+translated only if he agrees. The motto sizes itself to its length, so a longer
+word needs no CSS change.
 
 Register it in `src/i18n/index.ts`:
 
