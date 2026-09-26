@@ -74,7 +74,7 @@
     --logo-ratio: calc(1017 / 140);
     --logo-collapsed: 64px;
     /* The top of the page: the full width, up to this height. */
-    --logo-max: 100px;
+    --logo-max: 150px;
     /* His lettering's lean: the motto and RISE. */
     --slant: -12deg;
     --rule-width: 1px;
