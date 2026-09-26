@@ -402,9 +402,10 @@ first plate.
 only page that does not.
 
 **Must not:** give any plate a size, span or cap of its own; show more than one
-blue element larger than body size per viewport height (principle 2's prominence
-test — screenshot a viewport and count); force `100svh` at narrow widths, where
-it strands content below the fold.
+blue element larger than body size per viewport height within the gallery column
+(principle 2's prominence test — screenshot a viewport and count; the masthead
+and the motto above the gallery are the page's opening and sit outside it);
+force `100svh` at narrow widths, where it strands content below the fold.
 
 ### Artwork detail — Phase 3, specified not built
 
@@ -1221,12 +1222,6 @@ whose job is seeing a work whole.
 **Does the gallery keep a visible section label?** On a page whose whole body is
 the gallery, "Obra" names the obvious. Keep it for now: it is the seam where a
 second section — a series, a year range — attaches, and removing it is one line.
-
-**Does the prominence test still hold at the top of the home page?** §5 allows
-one blue element larger than body per viewport height. The first viewport now
-carries the logo, the list of plates and the motto in solid pen, by the owner's
-choice. Either the test counts only the gallery column below the statement, or
-the motto goes back to ink. Decide, then state the test the page actually meets.
 
 **Does the two-tier pipeline want its own skill?** It lives in `add-artwork`
 today. Leave it there until a second operation needs it — a skill per procedure
