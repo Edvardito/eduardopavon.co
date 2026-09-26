@@ -11,20 +11,21 @@
   --color-pen-pale: #90b6ff;
 
   /* Self-hosted at build time; the stacks come from astro.config.ts. */
-  --font-display: var(--font-irregardless);
+  --font-display: var(--font-polymath-super);
   --font-text: var(--font-polymath);
 
-  --font-weight-regular: 400;
   --font-weight-bold: 700;
-  /* The top of this face; there is no 900 in it. */
-  --font-weight-heavy: 800;
+  /* Super: the display face's only weight. */
+  --font-weight-super: 900;
 
-  --text-label: 2.5rem;
-  --text-strip: 2.5rem;
+  --text-label: 1.875rem;
+  --text-strip: 1.125rem;
   --text-caption: 0.85rem;
   --text-body: 1.0625rem;
   --text-lede: 1.328rem;
   --text-display: clamp(4.5rem, 1.25rem + 9.3vw, 9.3rem);
+  --text-motto: clamp(2.25rem, 1rem + 5.5vw, 5rem);
+  --text-statement: clamp(var(--text-lede), 1rem + 0.8vw, 1.65rem);
 
   --leading-display: 0.92;
   --leading-tight: 1.15;
@@ -69,18 +70,33 @@
     --glass-cast: 0.2;
     --glass-sheen: 0.55;
 
-    --titlecard-min: 50px;
+    /* The logo's viewBox; every logo box derives from it, so the mark never distorts. */
+    --logo-ratio: calc(1017 / 140);
+    --logo-collapsed: 64px;
+    /* The top of the page: the full width, up to this height. */
+    --logo-max: 150px;
+    /* His lettering's lean: the motto and RISE. */
+    --slant: -12deg;
+    --rule-width: 1px;
 
-    --masthead-collapsed: calc(
-      var(--titlecard-min) * var(--leading-display) + var(--text-strip) * var(--leading-text) +
-        var(--space-caption) * 4
+    /* The sticky stack, summed from its parts so the offsets cannot drift from it. */
+    --strip-block: calc(var(--text-strip) * var(--leading-text) + var(--space-caption) * 2);
+    --section-head-block: calc(
+      var(--text-label) * var(--leading-text) + var(--space-caption) + var(--rule-width)
     );
+    /* `cqi` is <main>'s width: 100vw would count the scrollbar. */
+    --logo-full: min(var(--logo-max), (100cqi - var(--space-margin) * 2) / var(--logo-ratio));
+    --logo-rest: min(var(--logo-collapsed), var(--logo-full));
+    --masthead-collapsed: calc(var(--logo-rest) + var(--space-caption) * 2 + var(--strip-block));
+    --plate-jump: calc(var(--masthead-collapsed) + var(--section-head-block) + var(--space-row));
+    /* The line a strip jump lands a work on; an arriving work's motion is done by it. */
+    --arrival-end: calc(100svh - var(--plate-jump));
 
     --loupe-size: 11rem;
     /* Clear of a finger at 320px; a touch lens must sit beside it, not under it. */
     --loupe-size-touch: 8rem;
     --loupe-zoom: 3.3;
-    /* The map is drawn to this ratio, so it follows the size; must exceed the largest displacement. */
+    /* Follows the size, as the map is drawn to this ratio; must exceed the widest bend. */
     --loupe-pad: calc(var(--loupe-size) * 3 / 22);
 
     --container-plate: 56rem;
@@ -101,12 +117,6 @@
     view-transition-name: masthead;
   }
 
-  ::view-transition-old(root),
-  ::view-transition-new(root) {
-    animation-duration: var(--duration-long);
-    animation-timing-function: var(--ease-page);
-  }
-
   /* Two-ply, so one ply always contrasts. */
   :focus-visible {
     outline: 2px solid var(--color-ink);
@@ -117,6 +127,11 @@
 }
 
 @layer components {
+  /* The width the masthead sums measure; containment is no backdrop root. */
+  main {
+    container-type: inline-size;
+  }
+
   .page {
     margin-inline: auto;
     inline-size: 100%;
@@ -129,19 +144,28 @@
   }
 
   .display,
-  .furniture {
+  .furniture,
+  .lettering,
+  .plate-index {
     font-family: var(--font-display);
+    font-weight: var(--font-weight-super);
     text-transform: uppercase;
+  }
+
+  .display,
+  .furniture {
     color: var(--color-pen);
+  }
+
+  /* His own lettering, the motto and RISE: heavy and slanted like his hand. */
+  .lettering {
+    color: var(--color-ink);
+    transform: skewX(var(--slant));
   }
 
   .display {
     font-size: var(--text-display);
-    font-feature-settings: 'ss02' 1;
-    font-weight: var(--font-weight-heavy);
     line-height: var(--leading-display);
-    /* These alternates collide under negative tracking. */
-    letter-spacing: 0;
     text-wrap: balance;
   }
 
@@ -149,6 +173,7 @@
     position: sticky;
     inset-block-start: 0;
     z-index: 20;
+    margin-block-end: var(--space-section);
   }
 
   .titlecard,
@@ -163,27 +188,33 @@
     padding-block: var(--space-caption);
   }
 
-  /* 4.912 is this name's advance per 1px. Re-measure if the name changes. */
-  .titlecard__name {
-    display: block;
+  .logo {
     inline-size: 100%;
-    /* Resting small: without scroll timelines it would never shrink. */
-    font-size: var(--titlecard-min);
-    line-height: var(--leading-display);
-    white-space: nowrap;
-    text-align: center;
-    text-wrap: nowrap;
+    aspect-ratio: var(--logo-ratio);
+    color: var(--color-pen);
+  }
+
+  /* Resting small: without scroll timelines it would never shrink. */
+  .titlecard__logo {
+    margin-inline: auto;
+    inline-size: calc(var(--logo-rest) * var(--logo-ratio));
+  }
+
+  /* Outside <main>, so it cannot read the cqi tokens. */
+  .running-head {
+    display: block;
+    inline-size: min(100%, var(--logo-collapsed) * var(--logo-ratio));
   }
 
   .furniture {
     font-size: var(--text-label);
-    font-weight: var(--font-weight-bold);
     line-height: var(--leading-text);
     letter-spacing: var(--tracking-label);
   }
 
   /* Under the masthead's z-index, so it tucks rather than overlaps. */
   .section-head {
+    view-transition-name: section-head;
     position: sticky;
     inset-block-start: var(--masthead-collapsed);
     z-index: 10;
@@ -191,16 +222,44 @@
 
   .rule {
     border: 0;
-    border-block-start: 1px solid var(--color-pen);
+    border-block-start: var(--rule-width) solid var(--color-pen);
   }
 
-  .lede {
-    font-size: clamp(1.75rem, 1rem + 3.5vw, 3.4rem);
-    line-height: var(--leading-tight);
+  /* Pen: the site presenting him. */
+  .motto {
+    /* One line whatever the word: 0.72em a capital, 2.6em for the sparkles. */
+    font-size: min(
+      var(--text-motto),
+      (100cqi - var(--space-margin) * 2) / (var(--motto-chars) * 0.72 + 2.6)
+    );
+    line-height: var(--leading-display);
+    white-space: nowrap;
     text-align: center;
-    text-transform: uppercase;
+    color: var(--color-pen);
+  }
+
+  /* His mark, so ink. */
+  .sparkle {
+    display: inline-block;
+    color: var(--color-ink);
+    inline-size: 0.6em;
+    block-size: 0.8em;
+    margin-inline: 0.3em;
+    vertical-align: -0.02em;
+  }
+
+  /* Inline-block, or the slant does not apply. */
+  .rise {
+    display: inline-block;
+    letter-spacing: 0.04em;
+  }
+
+  .statement {
+    margin-inline: auto;
+    margin-block-start: var(--space-row);
+    font-size: var(--text-statement);
+    text-align: center;
     text-wrap: balance;
-    margin-block-start: var(--space-section);
   }
 
   .link {
@@ -244,6 +303,7 @@
 
   /* A percentage height does not resolve against this ratio, so it would crop. */
   .plate {
+    view-transition-class: plate;
     position: relative;
     inline-size: 100%;
     aspect-ratio: var(--plate-w) / var(--plate-h);
@@ -330,9 +390,14 @@
   }
 
   .plate-strip {
+    view-transition-name: plate-strip;
+    /* Holds the sr-only folio labels, or they escape and widen the page. */
+    position: relative;
     background-color: var(--color-pen);
     color: var(--color-ground);
     padding-block: var(--space-caption);
+    /* The page margin, outside the loop, so it opens no seam. */
+    padding-inline: var(--space-margin);
     /* Scrollable even when static: the only path without the marquee. */
     overflow-x: auto;
     /* Or the block axis becomes a scroll target too, for nothing to scroll. */
@@ -353,13 +418,12 @@
   }
 
   .plate-index {
+    --entry-gap: 0.9em;
     display: flex;
-    gap: 0.9em;
-    padding-inline: var(--space-margin);
-    font-family: var(--font-display);
+    gap: var(--entry-gap);
+    /* A gap after the last entry too, so the seam matches every other gap. */
+    padding-inline-end: var(--entry-gap);
     font-size: var(--text-strip);
-    font-weight: var(--font-weight-bold);
-    text-transform: uppercase;
   }
 
   .plate-index--clone {
@@ -372,8 +436,12 @@
 
   /* No second readable colour on pen: red 2.15:1, ink 1.86:1. */
   .plate-index__folio {
+    /* Super has no `tnum`; Bold does. */
+    font-family: var(--font-text);
     font-variant-numeric: tabular-nums;
-    font-weight: var(--font-weight-regular);
+    font-weight: var(--font-weight-bold);
+    /* Bold's line box sits lower than Super's; at 1 it cannot grow the strip. */
+    line-height: 1;
   }
 
   .plate-index__link {
@@ -403,8 +471,8 @@
   .cadence > * {
     inline-size: 100%;
     max-inline-size: var(--container-plate);
-    /* The strip jumps here; a work on the edge reads as a failed load. */
-    scroll-margin-block-start: var(--space-row);
+    /* A row below the sticky stack: a work on its edge reads as a failed load. */
+    scroll-margin-block-start: var(--plate-jump);
   }
 
   .cadence > :nth-child(5n + 1) {
@@ -426,7 +494,7 @@
     content: '';
     display: block;
     margin-block-start: var(--space-row);
-    border-block-start: 1px solid var(--color-pen);
+    border-block-start: var(--rule-width) solid var(--color-pen);
   }
 
   .loupe {
@@ -594,10 +662,11 @@
   .plate[data-lens-touch] img {
     -webkit-user-drag: none;
   }
-}
 
-@view-transition {
-  navigation: auto;
+  /* Only the work a jump lands on is captured, so it enters and nothing streaks. */
+  .cadence > :target .plate {
+    view-transition-name: var(--plate-vt);
+  }
 }
 
 /* Every displaced start state lives in here, or content strands invisible. */
@@ -619,26 +688,74 @@
     animation-delay: calc(var(--enter-step, 0) * 70ms);
   }
 
-  html {
-    scroll-behavior: smooth;
+  @view-transition {
+    navigation: auto;
+  }
+
+  ::view-transition-group(*),
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: var(--duration-long);
+    animation-timing-function: var(--ease-page);
+  }
+
+  /* The work the strip sent the reader to rises into its place. */
+  @keyframes plate-arrive {
+    from {
+      transform: translateY(100vh);
+    }
+  }
+
+  ::view-transition-new(.plate):only-child {
+    animation: plate-arrive var(--duration-long) var(--ease-page) both;
+  }
+
+  /* The marquee restarts on arrival: swap the line rather than ghost two. */
+  ::view-transition-old(plate-strip) {
+    animation: none;
+    opacity: 0;
+  }
+
+  ::view-transition-new(plate-strip) {
+    animation: none;
   }
 
   @supports (animation-timeline: view()) {
     /* Transform only: a scroll-linked opacity rests, and faded ink fails AA. */
     @keyframes reveal {
       from {
-        transform: translateY(3rem);
-      }
-      to {
-        transform: none;
+        transform: translateY(var(--reveal-from));
       }
     }
 
-    /* `entry` alone: a plate taller than the viewport never reaches `cover`. */
-    .reveal {
+    .reveal,
+    .cadence figure {
       animation: reveal linear both;
       animation-timeline: view();
+    }
+
+    .reveal {
+      --reveal-from: 3rem;
       animation-range: entry 0% entry 90%;
+    }
+
+    /* Work and caption as one piece, or the record drifts from its work. */
+    .cadence figure {
+      --reveal-from: min(22vh, 14rem);
+      animation-range: entry 0% entry var(--arrival-end);
+    }
+
+    /* The drawing alone, never text; not the first plate, which paints on load. */
+    @keyframes develop {
+      from {
+        opacity: 0;
+      }
+    }
+
+    .cadence > :not(:first-child) .plate img {
+      animation: develop linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry calc(var(--arrival-end) * 0.6);
     }
 
     /* Half the track, which holds the list twice, so no seam shows. */
@@ -660,7 +777,8 @@
       }
 
       .plate-strip__track {
-        animation: plate-strip 48s linear infinite;
+        /* Fixed, not derived: tuned to ~39px/s over today's list, so more works run slower. */
+        animation: plate-strip 45s linear infinite;
       }
 
       .plate-strip:hover .plate-strip__track,
@@ -670,13 +788,10 @@
       }
     }
 
-    /* No transform gives "one line, full width, getting smaller". */
+    /* A transform would not shrink the sticky bar; `to` is the resting size. */
     @keyframes titlecard {
       from {
-        font-size: max(var(--titlecard-min), calc((100vw - 2 * var(--space-margin)) / 4.912));
-      }
-      to {
-        font-size: var(--titlecard-min);
+        inline-size: calc(var(--logo-full) * var(--logo-ratio));
       }
     }
 
@@ -701,9 +816,26 @@
       animation: loupe-waiting 1.1s ease-in-out infinite;
     }
 
-    .titlecard__name {
+    /* The masthead gives back in margin what the logo loses, so nothing below it moves. */
+    @keyframes masthead-hold {
+      from {
+        margin-block-end: var(--space-section);
+      }
+    }
+
+    /* Collapsed at rest, so a fragment scroll before the timeline resolves still lands. */
+    .masthead {
+      margin-block-end: calc(var(--space-section) + var(--logo-full) - var(--logo-rest));
+      animation: masthead-hold linear both;
+    }
+
+    .titlecard__logo {
       animation: titlecard linear both;
-      /* `scroll()`, not `scroll(root)`: minified into the shorthand, an argument kills it. */
+    }
+
+    /* `scroll()`, not `scroll(root)`: minified into the shorthand, an argument kills it. */
+    .masthead,
+    .titlecard__logo {
       animation-timeline: scroll();
       animation-range: 0 30svh;
     }

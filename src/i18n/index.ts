@@ -48,7 +48,7 @@ export function statusLabel(status: ArtworkStatus, locale: Locale): string {
 /** Marks where an inline element belongs inside a translated sentence. */
 export const SLOT = '<<slot>>';
 
-/** Splits around {@link SLOT} so a link keeps each language's word order. Throws if absent. */
+/** Splits around {@link SLOT}, so each language keeps its word order. Throws if absent. */
 export function splitAroundSlot(message: string): [before: string, after: string] {
   const parts = message.split(SLOT);
   if (parts.length !== 2) {

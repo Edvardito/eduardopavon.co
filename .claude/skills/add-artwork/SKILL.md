@@ -82,7 +82,7 @@ Add `src/content/artworks/<slug>.yaml`:
 title:
   es: Billete falso
 medium:
-  es: Pluma bic sobre papel
+  es: Pluma Bic sobre papel
 dimensions:
   width: 37
   height: 25.5

@@ -1,0 +1,23 @@
+---
+import { useTranslations, type Locale } from '~/i18n';
+
+interface Props {
+  locale: Locale;
+  class?: string;
+}
+
+const { locale, class: className } = Astro.props;
+const tr = useTranslations(locale);
+---
+
+{/* The mark is drawn; the name stays text, so readers and crawlers get "Eduardo Pavón". */}
+<svg
+  class:list={['logo', className]}
+  viewBox="0 0 1017 140"
+  fill="currentColor"
+  aria-hidden="true"
+  focusable="false"
+>
+  <path d="m74.3 92-11 16.8H.3l50.5-77.6H113L102 48H62.7L54 61.4h36.6l-11 16.8H43L34 92zm50.2-60.8-11 16.8H159l-28.7 44h-22.6l24.8-38.2h-22.8l-35.8 55h68.3l50.5-77.6zm127 0L211.7 92H189l39.6-60.8H206l-50.5 77.6h68.4l50.4-77.6zm104.2 0-50.5 77.6h-22.8l13.6-21h-22.7l-13.6 21h-22.8l50.5-77.6zM307 71l15-23h-22.7l-15 23zm80.7 9.5 6.1 28.2h-20.5l-4.9-26.3h-10.2l-17 26.3h-22.9l50.5-77.6h65.3L402 80.6zm.4-13.9L400.4 48h-19.7l-12.2 18.7zm61-35.5L438.3 48h45.6l-28.7 44h-22.6l24.8-38.2h-22.8l-35.8 55H467l50.5-77.6zm149.9 0-50.5 77.6h-68.4l50.5-77.6zM565.3 48h-22.7l-28.8 44h22.8zm101 37.6h-42.6l-15 23.2h-22.8l50.5-77.6h65.2zM655 68.8 668.7 48h-20.4l-13.6 20.8zm124.5-37.6-50.4 77.6h-22.9l13.6-21h-22.7l-13.6 21h-22.8l50.5-77.6zM731 71l15-23h-22.7l-15 23zm106-40-52.1 61H781l24.5-61h-21.9l-31.1 77.7h42.7l66.5-77.6zM942.6 0H916l-27.1 25.5H911zm-7.3 31.2-50.5 77.6h-68.4L867 31.2zM901.6 48h-22.7L850 92h22.7zm46.8-16.8-50.5 77.6h22.8L960.3 48H983l-39.6 60.8h22.8l50.5-77.6z"></path>
+</svg>
+<span class="sr-only">{tr('home.heading')}</span>

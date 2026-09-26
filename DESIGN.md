@@ -125,12 +125,12 @@ always built it — never from fading ink, which collapses contrast (~3.5:1 at
 
 | #   | Role             | Size    | Weight  | Case     | Colour |
 | --- | ---------------- | ------- | ------- | -------- | ------ |
-| 1   | display          | display | heavy   | upper    | pen    |
-| 2   | section label    | label   | bold    | upper    | pen    |
+| 1   | display          | display | super   | upper    | pen    |
+| 2   | section label    | label   | super   | upper    | pen    |
 | 3   | work title       | lede    | bold    | sentence | ink    |
 | 4   | prose / lede     | body    | regular | sentence | ink    |
 | 5   | catalogue line   | caption | regular | sentence | ink    |
-| 6   | folio / colophon | label   | bold    | upper    | pen    |
+| 6   | folio / colophon | label   | super   | upper    | pen    |
 
 Levels 2 and 6 share a treatment and differ only by position; both are
 furniture, and furniture should be one thing.
@@ -142,8 +142,8 @@ ground. A printed object has one ground: a decision, not an omission.
 **`--color-pen` is decorative everywhere except links and the focus ring**,
 which are informational and hold 3:1 (1.4.11). Rules, folios, section labels and
 the glazing edge carry nothing the text does not already carry. Links are
-underlined — meaning is never colour alone (1.4.1) — with the one stated
-exception in §6.
+underlined — meaning is never colour alone (1.4.1) — with two stated exceptions,
+both in §6: the list of plates, and the running head, which is the logo.
 
 **Focus** (2.4.11 / 2.4.13) is two-ply: an inner ring in `--color-ground` inside
 an outer ring in `--color-ink`, so one ply always contrasts — against the
@@ -161,44 +161,66 @@ refused whatever it measures.
 
 ### Typography
 
-**Two faces, and the split is the same one the palette makes.** `--font-display`
-(Irregardless Variable) is the site's voice: the display step, section labels,
-folios, the colophon. `--font-text` (Polymath Text) is the work's voice: prose,
-work titles, catalogue lines. A reader can tell the catalogue from the
-catalogued by the letterforms alone, which is what makes principle 2 legible
-even in a screenshot with the colour removed.
+**One family, two roles, and the split is the same one the palette makes.**
+Everything is Polymath Text. `--font-display` is its **Super** weight (900), and
+it is the site's voice: the display step, section labels, the list of plates,
+the colophon. `--font-text` is the same family at 400 and 700, and it is the
+work's voice: prose, work titles, catalogue lines. One family cannot separate
+the two by letterform, so **weight and case** carry the split: the site speaks
+in Super capitals, the work in sentence case at 400 and 700. A screenshot with
+the colour removed still tells the catalogue from the catalogued, because
+nothing describing a specific drawing is ever set in Super or in capitals —
+except in the list of plates, which is the site's contents and speaks in its
+voice, on its own pen field. The name is not type at all: it is the logo (§6).
 
-**The weight axis belongs to the display face**, which is variable over
-**300–800 — there is no 900 in it.** Two positions are used: **heavy** (the top
-of the range) for the name, and **bold**, the step below, for everything else it
-sets — section labels and the masthead strip. The name is the heaviest thing on
-the site and nothing else may match it.
+**The artist's own lettering is the one exception.** The motto and his tag RISE
+are set the way he letters them in the drawings — heavy and slanted. The motto
+is solid `--color-pen`: it is the site presenting him, so it speaks in the
+site's blue, which is lighter than ink and never outweighs a work (principle 1).
+RISE, inside his statement, and the four-point sparkles beside the motto stay
+`--color-ink`: they are his marks. The slant is a skew of Super, not a drawn
+italic, and it belongs to these two and nothing else: one class, `.lettering`,
+carries it. **The motto stays on one line whatever the word**: its size is the
+column divided by its own length, at Super's measured advance per capital plus
+room for the sparkles and the slant, so a longer word in another language sets
+smaller rather than overflowing. The constant belongs to the typeface, not to
+the word.
 
-**The wide round alternates belong to the name alone.** They are the face's
-signature, and set on section labels or on the strip they read light and airy at
-those sizes, where the plain forms are denser for the same weight. One rule
-carries them, on `.display`; nothing else turns them on.
+**Three weights exist and each belongs to one role.** Super belongs to the
+display role and is the only weight it sets. The text role has exactly **400 and
+700, plus both italics**, and its hierarchy is carried by size, space and
+**italic**, not by weight. Asking either role for anything else gets the nearest
+real weight or a synthesised one: a display element asking for 700 silently
+renders 900, and a text element asking for 500 or 600 gets a different
+letterform badly drawn. Italic has one standing job: a plate's descriptive line,
+where a catalogue has always used it.
 
-**The text face has exactly two weights — 400 and 700 — plus both italics.** Its
-hierarchy is therefore carried by size, space and **italic**, not by weight.
-Asking it for 500 or 600 gets a synthesised approximation, which is a different
-letterform badly drawn; the rule is that no text-face element may request a
-weight other than 400 or 700. Italic has one standing job: a plate's descriptive
-line, where a catalogue has always used it.
+**Super is a subset without substitutions.** The kit serves it with kerning but
+no GSUB, so it has no tabular figures, no case forms and no stylistic sets.
+Anything that must align figures sets in the text role: the folios in the list
+of plates are Bold for that reason.
 
-**The display face has a floor: 30px.** It is condensed, with tall wide-round
-caps, and below that it stops reading as type and starts reading as texture. No
-step the display face uses may fall under the floor; test-enforced (§10). The
-consequence is a real constraint, not a note: **this face cannot do small
-furniture.** Anything that has to be small belongs to the text face.
+**The display role has a floor: 18px**, and it is set by eye, not by contrast.
+Pen and ground measure 8.3:1 either way round, AAA at any size, so contrast sets
+no floor for this role; Super also reads as type well below it. The floor
+records the smallest step the role has been tuned to — the list of plates, which
+has to sit clearly under the name — so a smaller one is a decision with a diff
+rather than a drift. No step the display role uses may fall under it;
+test-enforced (§10). **The display role still does not do small furniture:**
+anything that has to be smaller than the strip belongs to the text role.
 
 **Three text steps** — caption, body, lede — a major third (1.25) apart. The
-display face does not use them: it has **two optical steps of its own**,
+display role does not use them: it has **two optical steps of its own**,
 `--text-label` and `--text-strip`, set by what each has to do rather than by a
-ratio, plus `--text-display`, which is fluid because its size is the measure it
-must fill. A fourth text step or a third display step needs a role no current
-one serves — not something that looks slightly too big. A step that stops being
-used gets deleted: a token nothing references is one more thing to keep true.
+ratio, plus two fluid steps whose size is the measure they must fill:
+`--text-display`, the 404's numeral, and `--text-motto`, the artist's lettering
+on the home page. The text role has one fluid step of its own,
+`--text-statement`: the lede step grown for the one paragraph that has to hold
+up under the motto. The two optical steps are set against the collapsed logo:
+each must stay visibly quieter than the name. A fourth text step or a third
+display step needs a role no current one serves — not something that looks
+slightly too big. A step that stops being used gets deleted: a token nothing
+references is one more thing to keep true.
 
 Relationships that live nowhere in CSS:
 
@@ -213,21 +235,18 @@ Relationships that live nowhere in CSS:
 Text-spacing overrides (1.4.12) must break nothing: no step sets line height in
 px, and no box holding text has a fixed height.
 
-**Delivery.** Both faces are Adobe Typekit families, **self-hosted at build
+**Delivery.** Polymath Text is an Adobe Typekit family, **self-hosted at build
 time** through Astro's Adobe provider — `fontProviders.adobe({ id })` against
 the kit id, in `astro.config.ts`. A runtime `use.typekit.net` stylesheet would
 cost render-blocking requests on a third-party origin, no fallback metrics, and
 every visitor's IP sent to Adobe; self-hosting removes all three. `font-display`
 needs its own fix, below.
 
-Three properties the self-hosted files must keep, each of which would break the
-design silently if it went:
-
-- **The variable weight axis.** Request `['300 800']`, or the faces arrive as
-  static instances and 700 and 800 are synthesised.
-- **`ss02`**, which carries the name's wide round alternates at a measured
-  advance of 4.912 per 1px — the title card's divisor.
-- **Generated fallback metrics**, so the swap cannot shift layout.
+The family is requested as **two entries**, one per role: Super roman alone for
+the display role, so no Super italic ships, and 400/700 with italics for the
+text role. Astro hashes each entry's name, so both can be called Polymath Text.
+Each gets **generated fallback metrics** of its own, so the swap cannot shift
+layout; that is the one property the self-hosted files must keep.
 
 **`font-display: swap`, and the config must be what decides it.** Typekit
 publishes its kit CSS with `font-display: auto`, the Adobe provider reads that
@@ -238,8 +257,10 @@ faces carry `swap` on their own, so built HTML showing both values is the
 symptom of this going wrong. A CI step fails if any page ships
 `font-display:auto`.
 
-Only the display face is preloaded: it sets the name, which is the largest thing
-on the page.
+**No face is preloaded.** The largest paint is never display type: it is the
+lede, set in the text role, or the first plate. Under swap it paints in the
+fallback first, and a preload only competes with it for the connection; measured
+on a throttled connection, every preload made the LCP later.
 
 ### Space and grid
 
@@ -342,11 +363,12 @@ A very tall work is very tall. Nothing is cropped or distorted, at any width,
 for any ratio (§3).
 
 **Phase 3's morph.** `view-transition-name` sits on the element whose box is
-exactly the work's box. Because that box carries the work's own aspect ratio,
-the gallery→detail morph interpolates two boxes of equal proportion and reads as
-one object moving rather than a stretch. A uniform measure makes this easier:
-every morph starts from the same width. The glazing fades out during it — the
-detail page is unglazed.
+exactly the work's box. Today only a `:target` plate is named (§7); the detail
+route widens that selector, it does not add a second naming mechanism. Because
+that box carries the work's own aspect ratio, the gallery→detail morph
+interpolates two boxes of equal proportion and reads as one object moving rather
+than a stretch. A uniform measure makes this easier: every morph starts from the
+same width. The glazing fades out during it — the detail page is unglazed.
 
 ---
 
@@ -357,13 +379,19 @@ detail page is unglazed.
 **Job:** show the body of work in sequence and let a reader judge it without
 clicking.
 
-**Structure.** A **masthead** that stays: the artist's name as one line filling
-the page, with the **list of plates** as a pen band directly beneath it. The two
-stick together and the name shrinks inside them. Then the **statement** — the
+**Structure.** A **masthead** that stays: the logo filling the width of the
+page, with the **list of plates** as a pen band directly beneath it. The two
+stick together and the logo shrinks inside them. Then the **statement** — the
 one element at the top of the page that scrolls away, which is what tells the
-reader the page has started moving: large, centred, in caps. Then the gallery:
-section label, rule, and a single column of plates at the common measure. Then
-contact, then the colophon.
+reader the page has started moving. It is the artist's own word for himself,
+from his Instagram bio, in his own lettering (§3), between two of his four-point
+sparkles (§6); then a short paragraph at the lede step, in the third person and
+the present tense. It names the qualities of the practice — the detail, the
+patience, the hyperrealism, the critical stance, the refusal to hurry — and
+never an individual work, which the plates already show. Its voice has the
+drawings' nerve, not a CV's, and nothing is claimed that the artist and his work
+do not carry. Then the gallery: section label, rule, and a single column of
+plates at the common measure. Then contact, then the colophon.
 
 **There is no hero.** A frontispiece spread puts one work in a privileged
 position ahead of the others, which is a claim the single column gives up
@@ -374,9 +402,10 @@ first plate.
 only page that does not.
 
 **Must not:** give any plate a size, span or cap of its own; show more than one
-blue element larger than body size per viewport height (principle 2's prominence
-test — screenshot a viewport and count); force `100svh` at narrow widths, where
-it strands content below the fold.
+blue element larger than body size per viewport height within the gallery column
+(principle 2's prominence test — screenshot a viewport and count; the masthead
+and the motto above the gallery are the page's opening and sit outside it);
+force `100svh` at narrow widths, where it strands content below the fold.
 
 ### Artwork detail — Phase 3, specified not built
 
@@ -444,12 +473,13 @@ Leaving any of them on `auto` puts it in DOM order.
 longest edge, generated by the import script, inlined as a data URI and blurred
 on its own layer so the blur never touches the drawing. It breathes slowly while
 it waits. The real image is opaque and exactly the same proportion, so it covers
-the placeholder the moment it paints: no load hook, no script, nothing to clean
-up. A plate with no placeholder falls back to a wash of ink. The plate
-**clips**, because the placeholder's blur would otherwise spill past it. That is
-not a crop: the box takes its ratio from the asset, so the image can never
-exceed it. States: rest; hover or a still hold (the magnifier engages; under a
-mouse the cursor hides); reduced motion (no pulse, no lag).
+the placeholder the moment it paints, or develops over it as the plate rises
+(§7): no load hook, no script, nothing to clean up. A plate with no placeholder
+falls back to a wash of ink. The plate **clips**, because the placeholder's blur
+would otherwise spill past it. That is not a crop: the box takes its ratio from
+the asset, so the image can never exceed it. States: rest; hover or a still hold
+(the magnifier engages; under a mouse the cursor hides); reduced motion (no
+pulse, no lag).
 
 **The glass material.** One material, three objects: the **glazing** fixed over
 a plate, the **loupe** held over the work on hover, and the **title bar** the
@@ -599,18 +629,24 @@ the verified pair inverted, so nothing in it may be faded.
 palette here, so the folio takes the title's colour and is separated from it by
 weight and by its tabular figures instead. The red works only on an ink field.
 
-They are set in the **display face**, like the name above them — without its
-wide round alternates, which belong to the name alone — and set **tight**: folio
-and title almost touching, entries barely apart, so the band reads as one
+The titles are set in the **display role**, Super capitals, and set **tight**:
+folio and title almost touching, entries barely apart, so the band reads as one
 running line rather than a row of labels. **The folio is one weight lighter than
-the title** — 400 against the strip's 700 — so the number recedes and the title
-leads. A wider gap reads as two labels, not one line.
+the title** — Bold against Super — so the number recedes and the title leads. It
+sets in the text role, because Super has no tabular figures (§3); its line box
+is held inside the title's, or two faces' metrics on one baseline grow the strip
+past the sum `--masthead-collapsed` is built from. A wider gap reads as two
+labels, not one line.
 
 **The line moves, endlessly.** The track holds the list twice and travels
-exactly half its own width, so the seam never shows; the duplicate is
-`aria-hidden` and out of the tab order, so nothing is announced or focusable
-twice. The duration is fixed rather than derived from the content, so adding
-works makes the strip longer and its pace slower.
+exactly half its own width, so the seam never shows. That holds only if each
+list ends with one entry gap and nothing else: the page margin is the strip's
+own padding, outside the loop, or it opens a hole two margins wide at the seam.
+The duplicate is `aria-hidden` and out of the tab order, so nothing is announced
+or focusable twice. The duration is fixed rather than derived from the content,
+so adding works makes the strip longer and its pace slower. It is tuned to
+today's list at today's step; a wider face or a larger strip step changes the
+pace, so retune it with them.
 
 **It is a marquee or a scroll strip, and never both at once.** The two cannot
 share one element: the track's translate and the container's scroll offset
@@ -639,12 +675,12 @@ the pointer at the top of every page in exchange for nothing: the strip has
 nothing to scroll vertically.
 
 No buttons, no autoplay control, no script — the whole thing is CSS. Every row
-links to that work's plate below, scrolling smoothly (§7); rows clear 24px
-(2.5.8). **This is the one place links are not underlined at rest:** when every
-row is a link the underline is a texture rather than a signal, the list's
-semantics carry the affordance, and hover and focus restore the rule. In Phase 3
-the rows retarget to the detail route and gain a current-item marker; nothing
-else changes.
+links to that work's plate below (§7, the arrival); rows clear 24px (2.5.8).
+**This is the one place links are not underlined at rest:** when every row is a
+link the underline is a texture rather than a signal, the list's semantics carry
+the affordance, and hover and focus restore the rule. In Phase 3 the rows
+retarget to the detail route and gain a current-item marker; nothing else
+changes.
 
 **The plate carries no status mark.** A caption that ends on the catalogue line
 reads as a catalogue line; a chip after it reads as commerce, and whether a work
@@ -658,6 +694,11 @@ The labels stay in the message files because those two consumers use them. This
 holds on every archetype, Phase 3's detail page included: no badge, chip,
 bracketed note or caption suffix. A page that needs to state availability is a
 new decision with its own entry here.
+
+**The sparkle.** His four-point star, from the RISE borders, drawn as inline SVG
+filled with `currentColor` and `aria-hidden`; it flanks the motto and nowhere
+else. It is the fourth drawn glyph on the site, after the logo and the two
+contact glyphs, and still not a system: each is written where it is used.
 
 **The contact section.** The last thing the gallery says, sitting between the
 closing rule and the colophon: section label, rule, one line of prose at the
@@ -731,43 +772,77 @@ taller than the sum `--masthead-collapsed` is built from, and the sticky section
 head below pins to that sum.
 
 **The title card.** The home page's masthead, and the site's one piece of
-theatre. The name is **always one line**, sized to fill the width of the page —
-never wrapped, never two lines. What changes on scroll is its **font-size**,
-falling to `--titlecard-min` over the first third of a screen and then holding
-while the page runs on beneath it.
+theatre. The artist's name is **the logo**: a drawn mark, one path, filled in
+`currentColor` so it is `--color-pen` like every other piece of the site's
+voice. It is **always one line** and its proportion is fixed. At the top of the
+page it spans the title card's content box, up to `--logo-max` tall — on a wide
+screen a full-width mark is a banner, not a name — and over the first third of a
+screen it shrinks to its collapsed size and then holds while the page runs on
+beneath it.
 
-- **It is a sticky bar only as tall as its own text plus padding**, so it costs
+- **Its proportion is the viewBox, 1017 × 140, and nothing may distort it.** The
+  mark is sized by width and its height follows from the ratio; there is no
+  `preserveAspectRatio="none"`, and the viewBox is never cropped, because the
+  capitals sit centred in it with the accent in the top band. Every size in the
+  masthead sum derives from `--logo-ratio`.
+- **Its width comes from its container, never from `100vw`**, which counts a
+  classic scrollbar. The title card's content box is `<main>`'s width less the
+  margins, so `<main>` is the query container the sums measure.
+- **The collapsed size is the smaller of `--logo-collapsed` and the full-width
+  size.** At 320px the content box is 280px and the full-width logo is 38.5px
+  tall, below the collapsed size, so there it does not shrink at all and it
+  never overflows. The collapsed size was chosen against the strip: the name's
+  capitals must stay larger than the strip's, or the contents out-shout the
+  artist.
+- **It is a sticky bar only as tall as its own mark plus padding**, so it costs
   no viewport of its own, and it — with the strip beneath it — must be a child
   of the page's main element: sticky is bounded by its containing block, and
   nested in a section it unsticks the moment that section ends.
-- **The name and the list of plates stick as one block.** They cannot be two
-  sticky elements: the name's height changes as it shrinks, so anything pinned
+- **The logo and the list of plates stick as one block.** They cannot be two
+  sticky elements: the logo's height changes as it shrinks, so anything pinned
   below it at a fixed offset would drift. One sticky wrapper, both inside.
+- **The sticky stack is a sum, and every offset reads it.**
+  `--masthead-collapsed` is the collapsed logo, the title card's padding and the
+  strip's line box and padding; the section head pins at it, and a strip jump
+  lands a row below it and the section head. The mark is a block (the preflight
+  makes every SVG one), or it sits on a baseline with a descender gap under it
+  that no token accounts for.
+- **Nothing below the masthead moves while it shrinks.** Its bottom margin grows
+  by exactly what the logo loses, on the same scroll timeline and range, so the
+  page's geometry is the same at every scroll offset. Every scroll target — a
+  strip jump, find-in-page, focus — therefore lands where the static sums say,
+  with no correction of its own. The masthead owns the whole gap to the
+  statement, so no other margin can collapse with its growth and swallow it.
 - **Its resting size is the small one.** The large size lives in the keyframe,
   so a browser without scroll timelines — or a reader who has asked for no
   motion — gets a modest bar rather than one permanently covering a quarter of
   the page.
-- **It is the one place the site animates a layout property.** No transform
-  reproduces "one line, always filling the page, getting smaller"; a scale would
-  change the width too. It is a single text node, and the cost is bounded to it.
-- **Its width divisor is tied to one string.** The size is the page's inner
-  width divided by the measured advance of _this name_, in this face, in caps
-  with the wide round alternates, per 1px of font-size. **Change the artist's
-  name and it must be measured again**, or the line stops filling the page. This
-  is the only value in the system that depends on its content.
+- **It is the one place the site animates layout.** A transform would scale the
+  mark but not the sticky bar around it, and the section head pinned under it
+  would drift. The logo's width and the masthead's margin are one gesture on one
+  timeline, and the cost is bounded to those two elements.
+- **The name stays text.** The mark is `aria-hidden`; the `<h1>` holds the name
+  in a visually hidden span, so readers and crawlers get "Eduardo Pavón" and the
+  drawing is not asked to carry it.
 
 - **The name is the glass.** The page blurs as it passes _behind_ it: a
   translucent ground with a backdrop blur on the title card itself, not a
   blurred band below the whole masthead — under an opaque strip that blurs
   nothing but the content just emerging. The masthead must not be an isolated
   stacking context, or the backdrop root becomes the masthead itself and there
-  is nothing behind it to sample.
+  is nothing behind it to sample. `<main>`'s container type is containment, not
+  a backdrop root, so the glass still samples through it.
 
-**The masthead.** On every page but the home page: the artist's name set as
-furniture, in pen, linking home — a running head, not a banner. **The home page
-does not carry it**, because there the name _is_ the display step: the cover
-sets the name large, interior pages carry the running head. The two share a
-`view-transition-name`, so navigating between them morphs one into the other.
+**The masthead.** On every page but the home page: the logo, in pen, linking
+home — a running head, not a banner. **The home page does not carry it**,
+because there the logo _is_ the title card: the cover sets it large, interior
+pages carry the running head at the collapsed size. The two share a
+`view-transition-name`, set on the mark itself on both pages, so the morph is
+one box of one proportion scaling, never a stretch. The link's box is exactly
+the mark's, it clears 24px at every width (2.5.8), and it takes the two-ply
+focus ring. **It is the second link that is not underlined**: a drawing cannot
+carry an underline, and it is a standalone link rather than a link inside text,
+which is what 1.4.1 concerns. Its accessible name is the visually hidden name.
 
 **The colophon (footer).** A section label in pen, the rule, then rights,
 licence and the site's own credit at caption size in ink. The credit names
@@ -863,9 +938,10 @@ the main path.
 | --------------------- | -------------- | ------------------------------------------ | ---------- | ----------------------- |
 | Type entrance (404)   | document ready | reduced-motion                             | CSS        | type already in place   |
 | Plate placeholder     | load           | reduced-motion; finite, 8 breaths          | CSS        | a static blurred copy   |
-| Scroll reveal         | scroll         | `@supports (animation-timeline)` + r-m     | CSS        | works already visible   |
-| Smooth scroll         | list of plates | reduced-motion                             | CSS        | the jump is instant     |
-| View-transition morph | navigation     | `@view-transition` opt-in                  | CSS        | a plain navigation      |
+| Rise                  | scroll         | `@supports (animation-timeline)` + r-m     | CSS        | works already in place  |
+| Develop               | scroll         | `@supports (animation-timeline)` + r-m     | CSS        | works already resolved  |
+| Strip arrival         | list of plates | `@view-transition` inside r-m              | CSS        | the jump is instant     |
+| View-transition morph | navigation     | `@view-transition` inside r-m              | CSS        | a plain navigation      |
 | Magnifier             | hover, or hold | fine pointer: hover; else a still hold     | **script** | the gallery is complete |
 | Title card shrink     | scroll         | `@supports (animation-timeline)` + r-m     | CSS        | a small sticky bar      |
 | Plate strip marquee   | none, endless  | reduced-motion; pauses on hover/hold/focus | CSS        | a static scroll strip   |
@@ -878,14 +954,44 @@ including the longest stagger must not exceed 600 ms** — an entrance must neve
 be what pushes a passing page into a failing LCP. **Plates never animate on
 load**, only on scroll.
 
-**The scroll reveal moves, it does not fade.** With `animation-timeline: view()`
-opacity is a _function of scroll position_, not a transition that finishes, so a
-reader who stops mid-entry rests at whatever contrast the fade is passing
-through. Ink needs **0.712** opacity to hold the 7:1 floor and **0.580** to
-clear AA at all, so no fade starting at zero is survivable. Flooring the fade
-tunes to one palette value and says nothing about the next element put inside a
-`.reveal`; transform-only cannot fail, and is the same rule §9 states as "no
-muted ink".
+**A strip jump is an arrival, not a scroll.** A smooth scroll to a distant work
+smears through every work between, then lands with no event, and CSS cannot slow
+or re-ease the browser's own scroll. So a row is a navigation to the same page —
+`?p=<slug>#<slug>`, because a bare fragment stays in the document and gets no
+view transition — and the page is not scrolled at all. The page being left
+dissolves, the logo morphs into its collapsed size, the section head glides to
+its pin, and **the chosen work rises from below the screen into the place the
+jump lands it**, arriving as its placeholder if the drawing is still in flight.
+Only a `:target` plate is ever named — each plate carries its name as a custom
+property and CSS applies it to the target alone — so the arriving work enters
+rather than morphing from wherever it sat before, the one the reader leaves
+fades where it is, and nothing streaks. There is no `scroll-behavior: smooth`:
+it would turn the arriving page's fragment scroll back into the smear. The query
+changes nothing the page renders; the canonical URL stays the edition's. Where
+view transitions are missing or motion is reduced, the jump is an instant load
+at the same landing point.
+
+**Works rise, and text only ever moves.** Each plate starts well below its place
+low and floats up as it enters, a little slower than the scroll, and **its
+caption moves with it as one piece**: a caption on its own timeline trails its
+work and reads as belonging to something else. The rise is done by the line a
+strip jump lands on, so an arriving work rests exactly in place. Translate only,
+so the lens stays on the cursor. With `animation-timeline: view()` opacity is a
+_function of scroll position_, not a transition that finishes, so a reader who
+stops mid-entry rests at whatever contrast a fade is passing through. Ink needs
+**0.712** opacity to hold the 7:1 floor and **0.580** to clear AA at all, so no
+fade starting at zero is survivable on anything holding text — the same rule §9
+states as "no muted ink". The statement keeps the older, shorter rise.
+
+**The drawing develops, and that is the one thing allowed to rest unresolved.**
+As a plate rises, its image layer alone fades up over the work's own blurred
+placeholder, like a print in the tray. It is a stated exception to "the work is
+never shown other than as it is", and it is bounded three ways: it is **done by
+60% of the way to the landing line**, so a partly developed work can only rest
+in the band just above the bottom edge of the screen; it **never touches text**,
+because the layer holds only the drawing; and it **never runs on the first
+plate**, which paints on load and may be the LCP. The lens, glazing and
+placeholder are other layers and are never faded.
 
 **There is no scroll-linked specular.** On a light ground a travelling highlight
 reads as a reflex passing over the work rather than as light on glass. **The
@@ -1076,7 +1182,7 @@ Load-bearing; everything else here is advisory prose.
 | No colour literal under `src/` outside `@theme`      | `tests/design.test.ts`  |
 | Exactly one client script, within its byte budget    | `tests/design.test.ts`  |
 | Every `animation` sits inside a reduced-motion guard | `tests/design.test.ts`  |
-| The display face never sets below 30px               | `tests/design.test.ts`  |
+| The display role never sets below 18px               | `tests/design.test.ts`  |
 | Both image tiers, own budgets, no orphans            | `tests/content.test.ts` |
 | No face ships `font-display:auto`                    | `ci.yml`, post-build    |
 | Every published URL gets its CSP header              | `ci.yml`, post-build    |

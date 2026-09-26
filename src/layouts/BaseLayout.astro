@@ -14,7 +14,7 @@ interface Props {
   path: string;
   ogImage: ImageMetadata;
   ogImageAlt: string;
-  /** False where the page sets the artist's name at display size itself. */
+  /** False where the page carries the logo as its own title card. */
   masthead?: boolean;
   /** Where the language switcher points, when it cannot be this page's own path. */
   languagePath?: string;
@@ -46,8 +46,8 @@ const {
       ogImageAlt={ogImageAlt}
       noindex={noindex}
     />
-    {/* Only the display face is preloaded: it sets the largest text on the page. */}
-    <Font cssVariable="--font-irregardless" preload />
+    {/* No preload: measured, it only delays the LCP (DESIGN.md §3). */}
+    <Font cssVariable="--font-polymath-super" />
     <Font cssVariable="--font-polymath" />
     <slot name="head" />
   </head>

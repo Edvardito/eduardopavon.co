@@ -1,12 +1,15 @@
 export default {
   'site.title': 'Eduardo Pavón',
-  'site.tagline': 'Dibujo a pluma bic',
+  'site.tagline': 'Dibujo a pluma Bic',
   'site.description':
-    'Obra del artista Eduardo Pavón: dibujos hechos con pluma bic sobre papel y lona plástica. Galería de piezas originales.',
+    'Obra del artista Eduardo Pavón: dibujos hechos con pluma Bic sobre papel y lona plástica. Galería de piezas originales.',
 
-  'home.title': 'Eduardo Pavón — Dibujo a pluma bic',
+  'home.title': 'Eduardo Pavón — Dibujo a pluma Bic',
   'home.heading': 'Eduardo Pavón',
-  'home.intro': 'Dibujo a pluma bic sobre papel y lona plástica.',
+  'home.motto': 'Hechicero',
+  'home.intro':
+    'Eduardo Pavón dibuja desde la Ciudad de México con una pluma Bic y una paciencia que ya casi no existe. Trazo a trazo, a su propia cadencia, construye imágenes hiperrealistas donde cada pliegue, cada textura y cada sombra está puesta a mano. Su obra mira de frente al poder, al dinero y al vértigo, y responde con lo único que no se deja acelerar: el tiempo. Cada raya es una pequeña insurrección; juntas levantan una barricada de tinta contra un mundo que no se detiene. Y detrás de ella, sin pedirle permiso a nadie: {rise}',
+  'home.rise': 'RISE',
   'gallery.heading': 'Obra',
   'gallery.plates': 'Láminas',
   'gallery.plateLabel': 'Lámina {number}',
@@ -35,7 +38,7 @@ export default {
 
   'a11y.skipToContent': 'Saltar al contenido',
 
-  'seo.knowsAbout': 'Dibujo, Pluma bic, Arte contemporáneo',
+  'seo.knowsAbout': 'Dibujo, Pluma Bic, Arte contemporáneo',
 
   'notFound.title': 'Página no encontrada — Eduardo Pavón',
   'notFound.heading': 'Página no encontrada',
