@@ -22,11 +22,19 @@ const cacheDir = cacheRoot
 
 // Typekit's own font-display would beat the `display` below. See DESIGN.md.
 type AdobeProvider = ReturnType<typeof fontProviders.adobe>;
+type ProviderStorage = Parameters<NonNullable<AdobeProvider['init']>>[0]['storage'];
+
+// The kit's cache key never changes with the kit, so a cached copy goes stale.
+const uncached = {
+  getItem: async (_key: string, init?: () => unknown) => (init ? init() : null),
+  setItem: () => {},
+} as ProviderStorage;
 
 function adobe(config: { id: string }): AdobeProvider {
   const provider = fontProviders.adobe(config);
   return {
     ...provider,
+    init: (context) => provider.init?.({ ...context, storage: uncached }),
     async resolveFont(options) {
       const resolved = await provider.resolveFont(options);
       if (!resolved) return resolved;
@@ -61,7 +69,7 @@ const FONTS = [
   },
 ] satisfies NonNullable<AstroUserConfig['fonts']>;
 
-// Astro only warns when a face is missing, and CI never holds the stale cache.
+// Astro only warns when a face is missing.
 const requireFontFaces: AstroIntegration = {
   name: 'require-font-faces',
   hooks: {
@@ -95,7 +103,7 @@ const requireFontFaces: AstroIntegration = {
       if (missing.length > 0) {
         throw new Error(
           `Font faces missing from the build: ${missing.join(', ')}. ` +
-            'A stale font cache is the usual cause (DESIGN.md §3).',
+            'The provider logged why above (DESIGN.md §3).',
         );
       }
       if (autoDisplay) throw new Error('A face shipped font-display:auto (DESIGN.md §3).');

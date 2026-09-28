@@ -256,12 +256,14 @@ faces carry `swap` on their own, so built HTML showing both values is the
 symptom of this going wrong. The build fails if any face ships
 `font-display:auto`.
 
-**Every configured face must ship.** The provider caches the kit's metadata, and
-a face missing from a stale cache costs Astro only a warning: its role falls
-back to `system-ui` and the build succeeds. So the build fails when a configured
-weight and style has no face in the pages it wrote. It is a build check, not a
-CI one, because CI never holds the stale cache; the deploy does. On Vercel the
-cure is a redeploy with the build cache off.
+**Every configured face must ship, so the kit is read live.** The provider
+caches the kit's metadata under a key that never changes with the kit, so a
+restored build cache keeps serving the kit as it was, and a face missing from it
+costs Astro only a warning: the role falls back to `system-ui` and the build
+succeeds. `astro.config.ts` gives the provider no cache, so every build reads
+the kit as published; the font files stay cached. And the build fails when a
+configured weight and style has no face in the pages it wrote, whatever the
+cause — a face gone from the kit, or a fetch that failed.
 
 **No face is preloaded.** The largest paint is never display type: it is the
 lede, set in the text role, or the first plate. Under swap it paints in the
