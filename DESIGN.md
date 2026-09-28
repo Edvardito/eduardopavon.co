@@ -239,8 +239,7 @@ px, and no box holding text has a fixed height.
 time** through Astro's Adobe provider — `fontProviders.adobe({ id })` against
 the kit id, in `astro.config.ts`. A runtime `use.typekit.net` stylesheet would
 cost render-blocking requests on a third-party origin, no fallback metrics, and
-every visitor's IP sent to Adobe; self-hosting removes all three. `font-display`
-needs its own fix, below.
+every visitor's IP sent to Adobe; self-hosting removes all three.
 
 The family is requested as **two entries**, one per role: Super roman alone for
 the display role, so no Super italic ships, and 400/700 with italics for the
@@ -254,8 +253,15 @@ value out of it, and Astro resolves a provider's value ahead of the configured
 one — so a face ships `auto`, which Chrome treats as block, unless the provider
 value is dropped. `astro.config.ts` drops it. Only the _generated fallback_
 faces carry `swap` on their own, so built HTML showing both values is the
-symptom of this going wrong. A CI step fails if any page ships
+symptom of this going wrong. The build fails if any face ships
 `font-display:auto`.
+
+**Every configured face must ship.** The provider caches the kit's metadata, and
+a face missing from a stale cache costs Astro only a warning: its role falls
+back to `system-ui` and the build succeeds. So the build fails when a configured
+weight and style has no face in the pages it wrote. It is a build check, not a
+CI one, because CI never holds the stale cache; the deploy does. On Vercel the
+cure is a redeploy with the build cache off.
 
 **No face is preloaded.** The largest paint is never display type: it is the
 lede, set in the text role, or the first plate. Under swap it paints in the
@@ -1184,7 +1190,8 @@ Load-bearing; everything else here is advisory prose.
 | Every `animation` sits inside a reduced-motion guard | `tests/design.test.ts`  |
 | The display role never sets below 18px               | `tests/design.test.ts`  |
 | Both image tiers, own budgets, no orphans            | `tests/content.test.ts` |
-| No face ships `font-display:auto`                    | `ci.yml`, post-build    |
+| No face ships `font-display:auto`                    | `astro.config.ts`       |
+| Every configured face ships                          | `astro.config.ts`       |
 | Every published URL gets its CSP header              | `ci.yml`, post-build    |
 
 The colour guard allows derived forms — any colour function whose arguments
