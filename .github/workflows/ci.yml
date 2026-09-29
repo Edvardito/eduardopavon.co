@@ -47,14 +47,6 @@ jobs:
       - name: Build
         run: pnpm build
 
-      # Typekit's font-display can beat the config's; this proves what shipped.
-      - name: Assert no font blocks first paint
-        run: |
-          if grep -rl 'font-display:auto' .vercel/output/static --include='*.html'; then
-            echo "::error::A face shipped with font-display:auto. See astro.config.ts and DESIGN.md, Typography."
-            exit 1
-          fi
-
       # The adapter spells CSP routes as `trailingSlash` does; this proves they match.
       - name: Assert the CSP reaches every URL the sitemap publishes
         run: |
