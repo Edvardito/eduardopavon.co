@@ -27,7 +27,7 @@ export const ARTIST_CONTACT = {
 /** Credit for the site itself — distinct from the authorship of the work. */
 export const SITE_AUTHOR = {
   name: 'Eduardo Aire Torres',
-  url: 'https://github.com/eduairet',
+  url: 'https://www.eduairet.com',
 } as const;
 
 export const ARTWORK_STATUSES = ['framed', 'sold'] as const;
