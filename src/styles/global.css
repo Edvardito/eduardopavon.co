@@ -398,7 +398,7 @@
     padding-block: var(--space-caption);
     /* The page margin, outside the loop, so it opens no seam. */
     padding-inline: var(--space-margin);
-    /* Scrollable even when static: the only path without the marquee. */
+    /* Scrollable when static, under reduced motion: its only path then. */
     overflow-x: auto;
     /* Or the block axis becomes a scroll target too, for nothing to scroll. */
     overflow-y: hidden;
@@ -604,39 +604,36 @@
     }
   }
 
-  /* The script's touch path: the same query, so size and placement follow the input. */
-  @media not all and (hover: hover) and (pointer: fine) {
-    /* On :root, so the derived pad follows it. */
-    :root {
-      --loupe-size: var(--loupe-size-touch);
-    }
+  /* The script sets it when a finger is the input; on :root, so the derived pad follows. */
+  :root[data-lens-touch] {
+    --loupe-size: var(--loupe-size-touch);
+  }
 
-    /* Fixed, outside the plate's clip, held just above the finger; beside it near the top. */
-    .loupe {
-      /* Its radius plus a fingertip. */
-      --lens-reach: calc(var(--loupe-size) * 0.75);
-      /* 0 while there is room above, the full reach once the top edge takes it. */
-      --lens-slide: clamp(
-        0px,
-        (var(--lens-reach) + var(--loupe-size) * 0.6 - var(--lens-y)) * 4,
-        var(--lens-reach)
-      );
-      --lens-dx: calc(
-        clamp(
-            var(--loupe-size) * 0.6,
-            var(--lens-x) +
-              clamp(-1 * var(--lens-slide), (50vw - var(--lens-x)) * 1000, var(--lens-slide)),
-            100vw - var(--loupe-size) * 0.6
-          ) -
-          var(--lens-x)
-      );
-      --lens-dy: calc(
-        max(var(--lens-y) - var(--lens-reach), var(--loupe-size) * 0.6) - var(--lens-y)
-      );
-      position: fixed;
-      /* Above the masthead's 20: an instrument in the hand, and only while held. */
-      z-index: 30;
-    }
+  /* Fixed, outside the plate's clip, held just above the finger; beside it near the top. */
+  [data-lens-touch] .loupe {
+    /* Its radius plus a fingertip. */
+    --lens-reach: calc(var(--loupe-size) * 0.75);
+    /* 0 while there is room above, the full reach once the top edge takes it. */
+    --lens-slide: clamp(
+      0px,
+      (var(--lens-reach) + var(--loupe-size) * 0.6 - var(--lens-y)) * 4,
+      var(--lens-reach)
+    );
+    --lens-dx: calc(
+      clamp(
+          var(--loupe-size) * 0.6,
+          var(--lens-x) +
+            clamp(-1 * var(--lens-slide), (50vw - var(--lens-x)) * 1000, var(--lens-slide)),
+          100vw - var(--loupe-size) * 0.6
+        ) -
+        var(--lens-x)
+    );
+    --lens-dy: calc(
+      max(var(--lens-y) - var(--lens-reach), var(--loupe-size) * 0.6) - var(--lens-y)
+    );
+    position: fixed;
+    /* Above the masthead's 20: an instrument in the hand, and only while held. */
+    z-index: 30;
   }
 
   /* Visible while empty: waiting reads as loading. */
@@ -652,14 +649,14 @@
     opacity: 1;
   }
 
-  /* Set by the script, so without it a held plate keeps the system menu. */
-  .plate[data-lens-touch] {
+  /* Without the script a held plate keeps the system menu; a cursor gets it back on entry. */
+  [data-lens-touch] .plate {
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     user-select: none;
   }
 
-  .plate[data-lens-touch] img {
+  [data-lens-touch] .plate img {
     -webkit-user-drag: none;
   }
 
@@ -720,6 +717,42 @@
     animation: none;
   }
 
+  /* One list's width, whatever the copy count, so no seam shows. */
+  @keyframes plate-strip {
+    to {
+      transform: translateX(calc(-100% / var(--copies)));
+    }
+  }
+
+  /* On every input, and paused by every input: a hover, a press or hold, focus. */
+  .plate-index--clone {
+    display: flex;
+  }
+
+  /* Still scrolls to a focused row; just cannot be dragged off the loop. */
+  .plate-strip {
+    overflow-x: hidden;
+  }
+
+  .plate-strip__track {
+    /* Fixed, not derived: tuned to ~39px/s over today's list, so more works run slower. */
+    animation: plate-strip 45s linear infinite;
+  }
+
+  /* A held finger is the script's mark: touch :active arrives late, or only on release. */
+  .plate-strip:active .plate-strip__track,
+  .plate-strip[data-held] .plate-strip__track,
+  .plate-strip:focus-within .plate-strip__track {
+    animation-play-state: paused;
+  }
+
+  /* A tap leaves :hover stuck on touch, which would hold the line after release. */
+  @media (any-hover: hover) {
+    .plate-strip:hover .plate-strip__track {
+      animation-play-state: paused;
+    }
+  }
+
   @supports (animation-timeline: view()) {
     /* Transform only: a scroll-linked opacity rests, and faded ink fails AA. */
     @keyframes reveal {
@@ -756,36 +789,6 @@
       animation: develop linear both;
       animation-timeline: view();
       animation-range: entry 0% entry calc(var(--arrival-end) * 0.6);
-    }
-
-    /* Half the track, which holds the list twice, so no seam shows. */
-    @keyframes plate-strip {
-      to {
-        transform: translateX(-50%);
-      }
-    }
-
-    /* Hover is what makes an undraggable marquee acceptable. */
-    @media (hover: hover) and (pointer: fine) {
-      .plate-index--clone {
-        display: flex;
-      }
-
-      /* Still scrolls to a focused row; just cannot be dragged off the loop. */
-      .plate-strip {
-        overflow-x: hidden;
-      }
-
-      .plate-strip__track {
-        /* Fixed, not derived: tuned to ~39px/s over today's list, so more works run slower. */
-        animation: plate-strip 45s linear infinite;
-      }
-
-      .plate-strip:hover .plate-strip__track,
-      .plate-strip:active .plate-strip__track,
-      .plate-strip:focus-within .plate-strip__track {
-        animation-play-state: paused;
-      }
     }
 
     /* A transform would not shrink the sticky bar; `to` is the resting size. */

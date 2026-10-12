@@ -66,8 +66,9 @@ These hold across every phase. Breaking one is a foundation change, not a
 feature.
 
 1. **No UI framework, and one sanctioned client script.** Zero client JS by
-   default; `src/scripts/magnifier.ts` is the single exception, split by input
-   (hover for a mouse, a still hold for a finger) and budgeted. Test-enforced.
+   default; `src/scripts/magnifier.ts` is the single exception, split by the
+   pointer in use, per gesture (hover for a cursor, a still hold for a finger,
+   both on one device) and budgeted. Test-enforced.
 2. **The supply-chain posture in @SECURITY.md holds**: pnpm only, frozen
    lockfile, exact pins, no unsanctioned lifecycle scripts, release cooldown on.
 3. **Static output.** On-demand rendering is per-route and exceptional; never

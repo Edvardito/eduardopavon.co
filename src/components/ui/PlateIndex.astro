@@ -10,6 +10,8 @@ interface Props {
 const { artworks, locale } = Astro.props;
 const tr = useTranslations(locale);
 const headingId = 'plates-heading';
+// The copies after the first must span the band (DESIGN.md §6).
+const copies = 3;
 
 const entries = artworks.map((artwork, index) => ({
   id: artwork.id,
@@ -23,13 +25,13 @@ const entries = artworks.map((artwork, index) => ({
 ---
 
 <div class="plate-strip">
-  {/* The duplicate closes the marquee loop: hidden and out of the tab order. */}
+  {/* The copies close the marquee loop: hidden and out of the tab order. */}
   <h2 class="sr-only" id={headingId}>
     {tr('gallery.plates')}
   </h2>
 
-  <div class="plate-strip__track">
-    {[false, true].map((isClone) => (
+  <div class="plate-strip__track" style={`--copies:${copies}`}>
+    {Array.from({ length: copies }, (_, copy) => copy > 0).map((isClone) => (
       <ol
         class:list={['plate-index', isClone && 'plate-index--clone']}
         aria-labelledby={isClone ? undefined : headingId}
@@ -45,7 +47,7 @@ const entries = artworks.map((artwork, index) => ({
             >
               <span class="plate-index__folio">
                 <span aria-hidden="true">{entry.folio}</span>
-                <span class="sr-only">{entry.label}</span>
+                {!isClone && <span class="sr-only">{entry.label}</span>}
               </span>
               <span class="plate-index__title">{entry.line}</span>
             </a>
