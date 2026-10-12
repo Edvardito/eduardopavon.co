@@ -648,19 +648,21 @@ labels, not one line.
 
 **The line moves, endlessly.** The track holds the list three times and travels
 exactly one list, a third of its own width, so the seam never shows. That holds
-only while the copies after the first cover the band: **two lists and the page
-margin must be at least the widest viewport**, or the line runs out before the
-loop restarts and shows empty field. Today's list is 1,762px, so the band is
-covered to about 3,600px; two copies covered only one list and a margin, and
-left a hole on any screen wider than about 1,870px. Adding works only widens the
-list; removing them shrinks it, so recheck the sum then. It also holds only if
-each list ends with one entry gap and nothing else: the page margin is the
-strip's own padding, outside the loop, or it opens a hole two margins wide at
-the seam. The copies are `aria-hidden` and out of the tab order, so nothing is
-announced or focusable twice. The duration is fixed rather than derived from the
-content, so adding works makes the strip longer and its pace slower. It is tuned
-to today's list at today's step; a wider face or a larger strip step changes the
-pace, so retune it with them.
+only while the copies after the first cover the band: **two lists must be at
+least the widest viewport**, or the line runs out before the loop restarts and
+shows empty field. Today's list is 1,762px, so the band is covered to about
+3,500px; two copies covered only one list, and left a hole on any screen wider
+than about 1,870px. Adding works only widens the list; removing them shrinks it,
+so recheck the sum then. It also holds only if each list ends with one entry gap
+and nothing else, or the seam opens a hole. **A moving line keeps no left
+margin**: the track starts at the band's edge, because an empty margin cannot
+survive a loop — whatever has slid into it is cleared at once on each restart.
+The page margin returns whenever the strip is still. The copies are
+`aria-hidden` and out of the tab order, so nothing is announced or focusable
+twice. The duration is fixed rather than derived from the content, so adding
+works makes the strip longer and its pace slower. It is tuned to today's list at
+today's step; a wider face or a larger strip step changes the pace, so retune it
+with them.
 
 **It is a marquee or a scroll strip, and never both at once.** The two cannot
 share one element: the track's translate and the container's scroll offset
@@ -670,18 +672,25 @@ overshoot is always exactly the distance the track travels — so the reader's
 motion setting decides which of the two they get, and nothing else does. Not the
 pointer: a device with a finger and a trackpad has both.
 
-- **Wherever motion is allowed, on every input**, it is a marquee. It **pauses
-  under a hovering cursor, under a press or a held finger, and on
-  focus-within**, resumes from where it stopped on release, and it is not
-  draggable. It stays programmatically scrollable, so a focused row is still
-  scrolled into view, and because the tab order contains only the real list and
-  not the copies, focus can never carry it past the safe offset. Hover pauses it
-  only where some pointer can hover (`any-hover`): touch leaves `:hover` stuck
-  after a tap, which would hold the line after the finger has gone. **A held
-  finger is not `:active`**: Chromium sets it only as the finger lifts, and iOS
-  only under a touch listener. So the magnifier marks the band while a finger is
-  down on it (§7), and the line pauses on the mark; `:active` stays for a mouse
-  press. Without the script a held finger does not stop it.
+- **Wherever motion is allowed and the script has run, on every input**, it is a
+  marquee. The script is the condition because a finger's only pause is the
+  script's mark: without it the strip stays the static one, so nothing ever
+  moves that a reader cannot stop. The mark lands before first paint, so the
+  line never visibly jumps from rest to motion. It **pauses under a hovering
+  cursor, under a press or a held finger, and on focus-within**, resumes from
+  where it stopped on release, and it is not draggable. It stays
+  programmatically scrollable, so a focused row is still scrolled into view, and
+  because the tab order contains only the real list and not the copies, focus
+  can never carry it past the safe offset. Hover pauses it only where some
+  pointer can hover (`any-hover`): touch leaves `:hover` stuck after a tap,
+  which would hold the line after the finger has gone. **A held finger is not
+  `:active`**: Chromium sets it only as the finger lifts, and iOS only under a
+  touch listener. So the magnifier marks the band while a finger is down on it
+  (§7), and the line pauses on the mark; `:active` stays for a mouse press. **A
+  held row is a pause, not a jump**: it shows no link preview, and a finger held
+  longer than a tap neither follows the link on lift nor opens the long-press
+  menu. A tap still follows it, and a mouse keeps its own menu and its slow
+  click.
 - **Under `prefers-reduced-motion`** it does not move at all, the copies are not
   rendered, and it is an ordinary horizontal scroll strip, swipeable on touch.
 
@@ -691,7 +700,8 @@ way to pause it. Every input has the same one, and it sits on the thing that
 moves: rest a cursor on it, hold a finger on it or tab into it, and it stops
 where it is; let go and it resumes from there, not from the start. A reader who
 wants it still for good has the system's reduced-motion setting, under which it
-never starts. Nothing in it exists only there: every title and year is in the
+never starts, and it never starts where the script that gives a finger its pause
+is not running. Nothing in it exists only there: every title and year is in the
 caption under its plate, and the real list is in the accessibility tree whether
 the line moves or not. A hold is the touch reader's hover, so touch now has the
 pause the desktop always relied on, rather than a different object.
@@ -705,12 +715,13 @@ the pointer at the top of every page in exchange for nothing: the strip has
 nothing to scroll vertically.
 
 No buttons, no autoplay control and no script of its own — the whole thing is
-CSS, borrowing only the magnifier's mark for a held finger. Every row links to
-that work's plate below (§7, the arrival); rows clear 24px (2.5.8). **This is
-the one place links are not underlined at rest:** when every row is a link the
-underline is a texture rather than a signal, the list's semantics carry the
-affordance, and hover and focus restore the rule. In Phase 3 the rows retarget
-to the detail route and gain a current-item marker; nothing else changes.
+CSS, borrowing only the magnifier's marks: that the page is scripted, and that a
+finger is held. Every row links to that work's plate below (§7, the arrival);
+rows clear 24px (2.5.8). **This is the one place links are not underlined at
+rest:** when every row is a link the underline is a texture rather than a
+signal, the list's semantics carry the affordance, and hover and focus restore
+the rule. In Phase 3 the rows retarget to the detail route and gain a
+current-item marker; nothing else changes.
 
 **The plate carries no status mark.** A caption that ends on the catalogue line
 reads as a catalogue line; a chip after it reads as commerce, and whether a work
@@ -955,11 +966,11 @@ not a lens, and the finger becomes the handle it is moved by. It takes
 inside it would be captured by the scroll reveal's transform. It sits above the
 masthead because it is an instrument in the hand and exists only while held.
 
-**The finger makes it this lens, not the device.** The script marks the page
-when a finger is the input and clears the mark when a cursor enters a plate; the
-touch size, the fixed placement and the long-press refusals all key to that
-mark. The size is set on `:root`, so `--loupe-pad` still derives from it there.
-A device with a finger and a cursor gets both lenses, one at a time.
+**The finger makes it this lens, not the device.** The script records the input
+in use on the page — a finger touching a plate, or a cursor entering one — and
+the touch size, the fixed placement and the long-press refusals all key to that
+record. The size is set on `:root`, so `--loupe-pad` still derives from it
+there. A device with a finger and a cursor gets both lenses, one at a time.
 
 **Prev/next — Phase 3.** Bottom-right of the detail page, small, in the text
 face and in pen, each target ≥24×24px (2.5.8). The list of plates with the
@@ -970,17 +981,17 @@ the main path.
 
 ## 7. Motion and interaction
 
-| Effect                | Trigger        | Guard                                        | Cost                           | Without it              |
-| --------------------- | -------------- | -------------------------------------------- | ------------------------------ | ----------------------- |
-| Type entrance (404)   | document ready | reduced-motion                               | CSS                            | type already in place   |
-| Plate placeholder     | load           | reduced-motion; finite, 8 breaths            | CSS                            | a static blurred copy   |
-| Rise                  | scroll         | `@supports (animation-timeline)` + r-m       | CSS                            | works already in place  |
-| Develop               | scroll         | `@supports (animation-timeline)` + r-m       | CSS                            | works already resolved  |
-| Strip arrival         | list of plates | `@view-transition` inside r-m                | CSS                            | the jump is instant     |
-| View-transition morph | navigation     | `@view-transition` inside r-m                | CSS                            | a plain navigation      |
-| Magnifier             | hover, or hold | per gesture: a cursor hovers, a finger holds | **script**                     | the gallery is complete |
-| Title card shrink     | scroll         | `@supports (animation-timeline)` + r-m       | CSS                            | a small sticky bar      |
-| Plate strip marquee   | none, endless  | reduced-motion; pauses on hover/hold/focus   | CSS; a held finger, the script | a static scroll strip   |
+| Effect                | Trigger        | Guard                                               | Cost                                | Without it              |
+| --------------------- | -------------- | --------------------------------------------------- | ----------------------------------- | ----------------------- |
+| Type entrance (404)   | document ready | reduced-motion                                      | CSS                                 | type already in place   |
+| Plate placeholder     | load           | reduced-motion; finite, 8 breaths                   | CSS                                 | a static blurred copy   |
+| Rise                  | scroll         | `@supports (animation-timeline)` + r-m              | CSS                                 | works already in place  |
+| Develop               | scroll         | `@supports (animation-timeline)` + r-m              | CSS                                 | works already resolved  |
+| Strip arrival         | list of plates | `@view-transition` inside r-m                       | CSS                                 | the jump is instant     |
+| View-transition morph | navigation     | `@view-transition` inside r-m                       | CSS                                 | a plain navigation      |
+| Magnifier             | hover, or hold | per gesture: a cursor hovers, a finger holds        | **script**                          | the gallery is complete |
+| Title card shrink     | scroll         | `@supports (animation-timeline)` + r-m              | CSS                                 | a small sticky bar      |
+| Plate strip marquee   | none, endless  | r-m + the script's mark; pauses on hover/hold/focus | CSS, started and held by the script | a static scroll strip   |
 
 **The staggered entrance runs only on the 404**, the one page that opens with a
 block of type; the home page opens with the title card's shrink. Each element
@@ -1123,12 +1134,14 @@ back — at once on the plate, and as the pinch begins anywhere else.
 
 **A hold is a look; a tap is a tap.** While the lens is up, the plate refuses
 the system's long-press — the save-image callout, the context menu, selection,
-the image drag — and lifting the finger does not click. Those refusals are keyed
-to the mark the script sets when a finger is the input, so without the script a
-held plate keeps the system menu, and a cursor that enters a plate gets its menu
-and image drag back. A tap stays a native click, which in Phase 3 navigates; the
-lens appearing is the signal that the touch has become a look. The lens closes
-on lift, on cancel and on Escape.
+the image drag — and lifting the finger does not click. The callout, selection
+and drag refusals key to the script's record of a finger as the input, so
+without the script a held plate keeps the system menu, and a cursor that enters
+a plate gets its menu and image drag back. The menu and the click are one rule
+for the plate and the list of plates alike: a finger held past a tap's length on
+either is never a click or a menu. A tap stays a native click, which in Phase 3
+navigates; the lens appearing is the signal that the touch has become a look.
+The lens closes on lift, on cancel and on Escape.
 
 **Why a held, moved finger passes.** Nothing happens on touch-down, and lifting
 undoes the lens (2.5.2). The function needs no path: holding still anywhere

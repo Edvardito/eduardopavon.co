@@ -453,6 +453,11 @@
     text-decoration: none;
   }
 
+  /* With the script, a held row pauses the line: no preview, and the script refuses the jump. */
+  [data-input] .plate-index__link {
+    -webkit-touch-callout: none;
+  }
+
   /* Every row is a link, so an underline is texture, not signal. */
   .plate-index__link:hover .plate-index__title,
   .plate-index__link:focus-visible .plate-index__title {
@@ -605,12 +610,12 @@
   }
 
   /* The script sets it when a finger is the input; on :root, so the derived pad follows. */
-  :root[data-lens-touch] {
+  :root[data-input='touch'] {
     --loupe-size: var(--loupe-size-touch);
   }
 
   /* Fixed, outside the plate's clip, held just above the finger; beside it near the top. */
-  [data-lens-touch] .loupe {
+  [data-input='touch'] .loupe {
     /* Its radius plus a fingertip. */
     --lens-reach: calc(var(--loupe-size) * 0.75);
     /* 0 while there is room above, the full reach once the top edge takes it. */
@@ -650,13 +655,13 @@
   }
 
   /* Without the script a held plate keeps the system menu; a cursor gets it back on entry. */
-  [data-lens-touch] .plate {
+  [data-input='touch'] .plate {
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     user-select: none;
   }
 
-  [data-lens-touch] .plate img {
+  [data-input='touch'] .plate img {
     -webkit-user-drag: none;
   }
 
@@ -724,17 +729,19 @@
     }
   }
 
-  /* On every input, and paused by every input: a hover, a press or hold, focus. */
-  .plate-index--clone {
+  /* Only once the script marks the page, so a held finger can always stop it. */
+  [data-input] .plate-index--clone {
     display: flex;
   }
 
   /* Still scrolls to a focused row; just cannot be dragged off the loop. */
-  .plate-strip {
+  [data-input] .plate-strip {
     overflow-x: hidden;
+    /* A moving line has no empty margin to keep, or each loop restart clears it at once. */
+    padding-inline-start: 0;
   }
 
-  .plate-strip__track {
+  [data-input] .plate-strip__track {
     /* Fixed, not derived: tuned to ~39px/s over today's list, so more works run slower. */
     animation: plate-strip 45s linear infinite;
   }
