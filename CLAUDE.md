@@ -95,7 +95,9 @@ is already optimal. Because one route is on-demand, Astro also builds its
 (`src/image-endpoint.ts`) outside dev, so the function never carries sharp.
 
 **Motion is CSS only**, double-guarded (DESIGN.md §3, Motion). A client-side
-router or animation library breaks the one-script rule.
+router or animation library breaks the one-script rule. The one coupling: the
+list of plates moves only under `<html data-input>`, which `magnifier.ts` sets,
+so renaming that attribute silently stops the line.
 
 **Artwork field shapes come from the collection.** Import
 `CollectionEntry<'artworks'>` (re-exported as `Artwork` from `~/artworks`)

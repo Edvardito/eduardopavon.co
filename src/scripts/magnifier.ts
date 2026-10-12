@@ -5,14 +5,12 @@ const REDUCED_MOTION = matchMedia('(prefers-reduced-motion: reduce)');
 const FOLLOW_LERP = 0.2;
 const HOLD_MS = 300;
 
-type Point = Touch | MouseEvent;
-
-// The input in use picks the lens, never the device.
 let touch = false;
 
 const use = (finger: boolean): void => {
   for (const hide of dismiss) hide();
-  document.documentElement.toggleAttribute('data-lens-touch', (touch = finger));
+  touch = finger;
+  document.documentElement.dataset.input = touch ? 'touch' : 'cursor';
 };
 
 function attach(plate: HTMLElement): () => void {
@@ -52,7 +50,7 @@ function attach(plate: HTMLElement): () => void {
     frame ||= requestAnimationFrame(step);
   };
 
-  const track = (point: Point): void => {
+  const track = (point: MouseEvent): void => {
     targetX = point.clientX - rect.left;
     targetY = point.clientY - rect.top;
     schedule();
@@ -64,7 +62,7 @@ function attach(plate: HTMLElement): () => void {
     delete lens?.dataset.active;
   };
 
-  const show = (point: Point): void => {
+  const show = (point: MouseEvent): void => {
     rect = plate.getBoundingClientRect();
     track(point);
     if (!lens) {
@@ -80,7 +78,6 @@ function attach(plate: HTMLElement): () => void {
         src: source,
       });
     }
-    // A touch lens sits outside the plate's clip.
     const parent = touch ? document.body : plate;
     if (lens.parentNode != parent) {
       parent.append(lens);
@@ -92,7 +89,6 @@ function attach(plate: HTMLElement): () => void {
     schedule();
   };
 
-  // A mouse or pen hovers; a finger holds.
   plate.onpointerenter = (event) => {
     if (event.pointerType != 'touch') {
       use(false);
@@ -102,39 +98,41 @@ function attach(plate: HTMLElement): () => void {
   plate.onpointermove = track;
   plate.onpointerleave = () => touch || hide();
 
-  plate.addEventListener(
-    'touchstart',
-    ({ touches }) => {
+  plate.onpointerdown = (event) => {
+    if (event.pointerType == 'touch') {
       use(true);
-      if (!touches[1]) hold = window.setTimeout(show, HOLD_MS, touches[0]);
-    },
-    { passive: true },
-  );
+      if (event.isPrimary) hold = window.setTimeout(show, HOLD_MS, event);
+    }
+  };
   // Only a cancelable touchmove refuses a pan; a handler property is non-passive.
   plate.ontouchmove = (event) => {
     if (active && event.cancelable && !event.touches[1]) event.preventDefault();
   };
-  // The browser took it for a pan or pinch.
-  plate.onpointercancel = hide;
-  // A hold is a look: no menu, no click. CSS refuses the drag.
-  plate.oncontextmenu = plate.ontouchend = (event: Event) => {
-    if (active && touch) event.preventDefault();
-    if (event.type == 'touchend') hide();
-  };
+  // Lifted, or the browser took it for a pan or pinch.
+  plate.onpointercancel = plate.ontouchend = hide;
 
   return hide;
 }
 
 const dismiss = [...document.querySelectorAll<HTMLElement>('.plate[data-lens]')].map(attach);
 
-// Hover and hold content is dismissible (1.4.13).
+// Now the page is scripted, the strip may move.
+use(false);
+
+// Dismissible hover and hold content (1.4.13).
 document.onkeydown = (event) => {
   if (event.key === 'Escape') use(touch);
 };
 
-// Touch :active is late or never, so a held strip is marked.
-const press = ({ target, touches }: TouchEvent): void => {
-  (target as Element).closest('.plate-strip')?.toggleAttribute('data-held', !!touches[0]);
+// A held finger looks or pauses: no menu, no click; touch :active comes late.
+let pressed = 0;
+const press = (event: Event): void => {
+  const on = (event.target as Element).closest('.plate, .plate-strip');
+  const start = event.type == 'touchstart';
+  if (start) pressed = event.timeStamp;
+  else if (on?.hasAttribute('data-held') && event.timeStamp - pressed > HOLD_MS)
+    event.preventDefault();
+  if (event.type != 'contextmenu') on?.toggleAttribute('data-held', start);
 };
 document.addEventListener('touchstart', press, { passive: true });
-document.ontouchend = press;
+document.oncontextmenu = document.ontouchend = document.ontouchcancel = press;
